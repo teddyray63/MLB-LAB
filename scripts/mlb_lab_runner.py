@@ -3,13 +3,22 @@ from pathlib import Path
 import requests
 import pandas as pd
 from pybaseball import statcast, playerid_reverse_lookup
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.utils import get_column_letter
 
 TODAY = date.today()
 START = (TODAY - timedelta(days=120)).isoformat()
 END = TODAY.isoformat()
 
 REPORT = Path("reports/mlb-lab-v5-matchup-engine.md")
+WORKBOOK = Path("reports/mlb-lab-v5-matchup-engine.xlsx")
 CACHE = Path("data/cache/statcast_cache.pkl")
+
+HEADER_FILL = PatternFill("solid", start_color="1F4E78", end_color="1F4E78")
+HEADER_FONT = Font(name="Calibri", bold=True, color="FFFFFF")
+BODY_FONT = Font(name="Calibri")
+TITLE_FONT = Font(name="Calibri", bold=True, size=14)
 
 TEAM_CODES = {
     "Arizona Diamondbacks": "AZ", "Athletics": "ATH", "Atlanta Braves": "ATL",
@@ -410,6 +419,36 @@ def hitter_pool_md(df):
 
     return md_table(headers, rows)
 
+def hitter_vs_pitch_rows(sc, hitters, pitches):
+    if sc.empty or hitters.empty or not pitches or "batter_name" not in sc.columns or "pitch_type" not in sc.columns:
+        return []
+
+    names = set(hitters["Hitter"].astype(str).str.lower())
+    rows = []
+
+    for pitch in pitches:
+        pitch_df = sc[sc["pitch_type"] == pitch]
+
+        for name in names:
+            h = pitch_df[pitch_df["batter_name"].astype(str).str.lower() == name]
+
+            if h.empty:
+                continue
+
+            avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(h)
+
+            if pa < 3:
+                continue
+
+            rows.append({
+                "Pitch": pitch, "Hitter": name.title(), "PA": pa,
+                "AVG": avg, "SLG": slg, "ISO": iso, "wOBA": woba or 0,
+                "xwOBA": xwoba or 0, "Barrel%": barrel, "HardHit%": hard, "Whiff%": whiff,
+            })
+
+    rows.sort(key=lambda r: r["wOBA"], reverse=True)
+    return rows[:30]
+
 def hitter_vs_pitch(sc, hitters, pitches):
     headers = ["Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
 
@@ -546,6 +585,132 @@ def game_card(i, g, sc):
 {game_dissection(sc, g, away_hitters, home_hitters)}
 """
 
+def write_sheet(wb, title, headers, rows, pct_cols=None, dec_cols=None):
+    ws = wb.create_sheet(title[:31])
+    pct_cols = pct_cols or set()
+    dec_cols = dec_cols or set()
+
+    for c, h in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=c, value=h)
+        cell.font = HEADER_FONT
+        cell.fill = HEADER_FILL
+        cell.alignment = Alignment(horizontal="center")
+
+    for r, row in enumerate(rows, 2):
+        for c, h in enumerate(headers, 1):
+            val = row.get(h, "")
+            cell = ws.cell(row=r, column=c, value=val)
+            cell.font = BODY_FONT
+            if h in pct_cols and isinstance(val, (int, float)):
+                cell.number_format = "0.0%"
+            elif h in dec_cols and isinstance(val, (int, float)):
+                cell.number_format = "0.000"
+
+    if rows:
+        ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}{len(rows) + 1}"
+    ws.freeze_panes = "A2"
+
+    for c, h in enumerate(headers, 1):
+        width = max(len(str(h)), 10)
+        for row in rows[:200]:
+            v = row.get(h, "")
+            width = max(width, len(str(v)))
+        ws.column_dimensions[get_column_letter(c)].width = min(width + 2, 40)
+
+    return ws
+
+PCT_COLS = {"Barrel%", "HardHit%", "Whiff%"}
+DEC_COLS = {"AVG", "SLG", "ISO", "wOBA", "xwOBA"}
+
+def build_workbook(games, sc):
+    wb = Workbook()
+    wb.remove(wb.active)
+
+    slate_rows = [{
+        "#": i, "Game": g["game"], "Park": g["park"],
+        "Away SP": g["away_sp"], "Home SP": g["home_sp"], "Time (UTC)": g["time"],
+    } for i, g in enumerate(games, 1)]
+    write_sheet(wb, "Slate", ["#", "Game", "Park", "Away SP", "Home SP", "Time (UTC)"], slate_rows)
+
+    master_rows = []
+    game_cache = []
+
+    for i, g in enumerate(games, 1):
+        away_hitters = team_hitter_pool(sc, g["away_code"])
+        home_hitters = team_hitter_pool(sc, g["home_code"])
+        away_mix = major_pitches(sc, g["away_sp"], g.get("away_sp_id"))
+        home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
+
+        home_vs_away = hitter_vs_pitch_rows(sc, home_hitters, away_mix)
+        away_vs_home = hitter_vs_pitch_rows(sc, away_hitters, home_mix)
+
+        for r in home_vs_away:
+            master_rows.append({
+                "Game #": i, "Game": g["game"], "Hitter Team": g["home_team"],
+                "Opp SP": g["away_sp"], **r,
+            })
+        for r in away_vs_home:
+            master_rows.append({
+                "Game #": i, "Game": g["game"], "Hitter Team": g["away_team"],
+                "Opp SP": g["home_sp"], **r,
+            })
+
+        game_cache.append((i, g, away_hitters, home_hitters, home_vs_away, away_vs_home))
+
+    master_headers = ["Game #", "Game", "Hitter Team", "Opp SP", "Pitch", "Hitter",
+                       "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    master_rows.sort(key=lambda r: r["wOBA"], reverse=True)
+    write_sheet(wb, "Master Matchups", master_headers, master_rows, PCT_COLS, DEC_COLS)
+
+    matchup_headers = ["Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    pool_headers = ["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+
+    for i, g, away_hitters, home_hitters, home_vs_away, away_vs_home in game_cache:
+        tab = f"G{i} {g['away_code']}@{g['home_code']}"
+        sub = wb.create_sheet(tab[:31])
+        sub["A1"] = g["game"]
+        sub["A1"].font = TITLE_FONT
+        sub["A2"] = f"{g['park']} | Away SP: {g['away_sp']} | Home SP: {g['home_sp']}"
+        sub["A2"].font = BODY_FONT
+
+        row_ptr = 4
+        row_ptr = write_block(sub, row_ptr, f"{g['home_team']} Hitters vs {g['away_sp']} Pitch Mix",
+                               matchup_headers, home_vs_away, PCT_COLS, DEC_COLS)
+        row_ptr = write_block(sub, row_ptr, f"{g['away_team']} Hitters vs {g['home_sp']} Pitch Mix",
+                               matchup_headers, away_vs_home, PCT_COLS, DEC_COLS)
+        row_ptr = write_block(sub, row_ptr, f"{g['away_team']} Hitter Pool",
+                               pool_headers, away_hitters.to_dict("records"), PCT_COLS, DEC_COLS)
+        row_ptr = write_block(sub, row_ptr, f"{g['home_team']} Hitter Pool",
+                               pool_headers, home_hitters.to_dict("records"), PCT_COLS, DEC_COLS)
+
+        for col, width in zip("ABCDEFGHIJK", [16, 22, 8, 8, 8, 8, 8, 8, 9, 10, 9]):
+            sub.column_dimensions[col].width = width
+
+    WORKBOOK.parent.mkdir(parents=True, exist_ok=True)
+    wb.save(WORKBOOK)
+    print(f"Updated {WORKBOOK}")
+
+def write_block(ws, start_row, title, headers, rows, pct_cols, dec_cols):
+    ws.cell(row=start_row, column=1, value=title).font = Font(bold=True, size=12)
+    start_row += 1
+
+    for c, h in enumerate(headers, 1):
+        cell = ws.cell(row=start_row, column=c, value=h)
+        cell.font = HEADER_FONT
+        cell.fill = HEADER_FILL
+
+    for r, row in enumerate(rows, start_row + 1):
+        for c, h in enumerate(headers, 1):
+            val = row.get(h, "")
+            cell = ws.cell(row=r, column=c, value=val)
+            cell.font = BODY_FONT
+            if h in pct_cols and isinstance(val, (int, float)):
+                cell.number_format = "0.0%"
+            elif h in dec_cols and isinstance(val, (int, float)):
+                cell.number_format = "0.000"
+
+    return start_row + len(rows) + 3
+
 def main():
     games = get_schedule()
     sc = load_statcast()
@@ -586,6 +751,8 @@ Removed:
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(report, encoding="utf-8")
     print(f"Updated {REPORT}")
+
+    build_workbook(games, sc)
 
 if __name__ == "__main__":
     main()
