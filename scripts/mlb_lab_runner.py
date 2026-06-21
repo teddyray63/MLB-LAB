@@ -1,186 +1,213 @@
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
-import json, urllib.request
+import requests
+import pandas as pd
+from pybaseball import statcast, batting_stats, pitching_stats
 
-TODAY = date.today().isoformat()
-SEASON = date.today().year
-REPORT = Path("reports/mlb-lab-v3-game-dissection-report.md")
+TODAY = date.today()
+SEASON = TODAY.year
+REPORT = Path("reports/mlb-lab-v4-v5-daily-report.md")
 
-PARK = {"Coors Field":20,"Sutter Health Park":16,"Yankee Stadium":15,"Citizens Bank Park":15,
-"Truist Park":14,"Globe Life Field":14,"Chase Field":13,"Comerica Park":11,"Wrigley Field":10,
-"T-Mobile Park":10,"Daikin Park":10,"Tropicana Field":10,"loanDepot park":10,"Kauffman Stadium":8}
+START = (TODAY - timedelta(days=45)).isoformat()
+END = TODAY.isoformat()
 
-def j(url):
-    with urllib.request.urlopen(url, timeout=30) as r:
-        return json.loads(r.read().decode())
+def get_json(url):
+    return requests.get(url, timeout=30).json()
 
-def n(x):
-    try: return float(x)
-    except: return 0
+def clean(x):
+    return "—" if x is None or x == "" else x
 
-def s(x): return "—" if x in [None,"","null"] else x
+def get_schedule():
+    url = f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={TODAY}&hydrate=probablePitcher,venue,team"
+    games = []
+    data = get_json(url)
 
-def get_pitcher(team):
-    p = team.get("probablePitcher")
-    if not p: return {"id":None,"name":"TBD","hand":"—"}
-    return {"id":p.get("id"),"name":p.get("fullName","TBD"),"hand":p.get("pitchHand",{}).get("code","—")}
+    for d in data.get("dates", []):
+        for g in d.get("games", []):
+            away = g["teams"]["away"]["team"]
+            home = g["teams"]["home"]["team"]
+            away_sp = g["teams"]["away"].get("probablePitcher", {})
+            home_sp = g["teams"]["home"].get("probablePitcher", {})
 
-def pitcher_stats(pid):
-    if not pid: return {}
+            games.append({
+                "game": f"{away['name']} @ {home['name']}",
+                "away_team": away["name"],
+                "home_team": home["name"],
+                "away_id": away["id"],
+                "home_id": home["id"],
+                "park": g["venue"]["name"],
+                "time": g.get("gameDate"),
+                "away_sp": away_sp.get("fullName", "TBD"),
+                "home_sp": home_sp.get("fullName", "TBD"),
+                "away_sp_id": away_sp.get("id"),
+                "home_sp_id": home_sp.get("id"),
+            })
+
+    return games
+
+def load_statcast():
     try:
-        u=f"https://statsapi.mlb.com/api/v1/people/{pid}?hydrate=stats(group=[pitching],type=[season,gameLog],season={SEASON})"
-        d=j(u)["people"][0]["stats"]
-        season=d[0]["splits"][0]["stat"] if d and d[0].get("splits") else {}
-        logs=d[1]["splits"][:5] if len(d)>1 and d[1].get("splits") else []
-        return {"season":season,"logs":logs}
-    except: return {"season":{},"logs":[]}
+        return statcast(start_dt=START, end_dt=END)
+    except Exception:
+        return pd.DataFrame()
 
-def team_hitting(tid):
+def load_fangraphs():
     try:
-        u=f"https://statsapi.mlb.com/api/v1/teams/{tid}/stats?stats=season&group=hitting&season={SEASON}"
-        return j(u)["stats"][0]["splits"][0]["stat"]
-    except: return {}
+        bat = batting_stats(SEASON, qual=0)
+    except Exception:
+        bat = pd.DataFrame()
 
-def team_pitching(tid):
     try:
-        u=f"https://statsapi.mlb.com/api/v1/teams/{tid}/stats?stats=season&group=pitching&season={SEASON}"
-        return j(u)["stats"][0]["splits"][0]["stat"]
-    except: return {}
+        pit = pitching_stats(SEASON, qual=0)
+    except Exception:
+        pit = pd.DataFrame()
 
-def pitcher_risk(st):
-    era,whip,hr9,bb9,k9 = map(n,[st.get("era"),st.get("whip"),st.get("homeRunsPer9"),st.get("walksPer9Inn"),st.get("strikeoutsPer9Inn")])
-    score=8
-    if era>=5: score+=6
-    elif era>=4.25: score+=4
-    elif era>=3.75: score+=2
-    if whip>=1.45: score+=5
-    elif whip>=1.30: score+=3
-    elif whip>=1.20: score+=1
-    if hr9>=1.6: score+=5
-    elif hr9>=1.2: score+=3
-    elif hr9>=.9: score+=1
-    if bb9>=3.8: score+=3
-    elif bb9>=3.0: score+=2
-    if k9 and k9<6.5: score+=3
-    elif k9 and k9<8: score+=1
-    return min(score,25)
+    return bat, pit
 
-def offense_score(st):
-    ops,avg,hr,runs = map(n,[st.get("ops"),st.get("avg"),st.get("homeRuns"),st.get("runs")])
-    score=8
-    if ops>=.780: score+=6
-    elif ops>=.730: score+=4
-    elif ops>=.700: score+=2
-    if avg>=.260: score+=3
-    elif avg>=.245: score+=2
-    if hr>=100: score+=3
-    elif hr>=80: score+=2
-    if runs>=400: score+=3
-    elif runs>=350: score+=2
-    return min(score,20)
+def player_name_match(df, name):
+    if df.empty or not name or name == "TBD":
+        return pd.DataFrame()
 
-def bullpen_score(st):
-    era,whip,hr9 = map(n,[st.get("era"),st.get("whip"),st.get("homeRunsPer9")])
-    score=8
-    if era>=4.75: score+=5
-    elif era>=4.25: score+=3
-    if whip>=1.40: score+=4
-    elif whip>=1.30: score+=2
-    if hr9>=1.4: score+=3
-    elif hr9>=1.1: score+=2
-    return min(score,15)
+    first_last = name.lower()
+    parts = name.split()
+    if len(parts) >= 2:
+        savant_name = f"{parts[-1]}, {' '.join(parts[:-1])}".lower()
+    else:
+        savant_name = first_last
 
-def tier(x):
-    return "Priority" if x>=75 else "Watch" if x>=60 else "Low" if x>=45 else "Ignore"
+    if "player_name" in df.columns:
+        return df[df["player_name"].str.lower().isin([first_last, savant_name])]
 
-def ptable(label,p,ps,risk):
-    st=ps.get("season",{})
-    logs=ps.get("logs",[])
-    out=f"""
-### {label}: {p['name']} ({p['hand']})
+    return pd.DataFrame()
 
-| Stat | Value |
-|---|---:|
-| ERA | {s(st.get('era'))} |
-| WHIP | {s(st.get('whip'))} |
-| K/9 | {s(st.get('strikeoutsPer9Inn'))} |
-| BB/9 | {s(st.get('walksPer9Inn'))} |
-| HR/9 | {s(st.get('homeRunsPer9'))} |
-| IP | {s(st.get('inningsPitched'))} |
-| H | {s(st.get('hits'))} |
-| R | {s(st.get('runs'))} |
-| HR | {s(st.get('homeRuns'))} |
-| Risk Score | {risk} |
+def pitcher_pitch_table(sc, pitcher_name):
+    p = player_name_match(sc, pitcher_name)
+    if p.empty:
+        return "| Pitch | Batter Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | HardHit% | Whiff% |\n|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| — | — | — | — | — | — | — | — | — | — | — |\n"
 
-#### Last 5 Starts / Appearances
+    rows = []
+    total_pitches = len(p)
 
-| Date | Opponent | IP | H | ER | BB | K | HR |
-|---|---|---:|---:|---:|---:|---:|---:|
-"""
-    if not logs:
-        out+="| — | — | — | — | — | — | — | — |\n"
-    for g in logs:
-        stat=g.get("stat",{})
-        opp=g.get("opponent",{}).get("name","—")
-        out+=f"| {g.get('date','—')} | {opp} | {s(stat.get('inningsPitched'))} | {s(stat.get('hits'))} | {s(stat.get('earnedRuns'))} | {s(stat.get('baseOnBalls'))} | {s(stat.get('strikeOuts'))} | {s(stat.get('homeRuns'))} |\n"
+    for (pitch, stand), g in p.groupby(["pitch_type", "stand"]):
+        events = g.dropna(subset=["events"])
+        ab_events = events[~events["events"].isin(["walk", "hit_by_pitch", "sac_bunt", "sac_fly"])]
+        ab = len(ab_events)
+
+        singles = (events["events"] == "single").sum()
+        doubles = (events["events"] == "double").sum()
+        triples = (events["events"] == "triple").sum()
+        hrs = (events["events"] == "home_run").sum()
+        hits = singles + doubles + triples + hrs
+        tb = singles + 2*doubles + 3*triples + 4*hrs
+
+        avg = hits / ab if ab else 0
+        slg = tb / ab if ab else 0
+        iso = slg - avg if ab else 0
+        woba = g["woba_value"].mean() if "woba_value" in g else 0
+        xwoba = g["estimated_woba_using_speedangle"].mean() if "estimated_woba_using_speedangle" in g else 0
+
+        hard = 0
+        if "launch_speed" in g:
+            bbe = g["launch_speed"].dropna()
+            hard = (bbe >= 95).mean() if len(bbe) else 0
+
+        whiff = 0
+        if "description" in g:
+            swings = g[g["description"].isin(["swinging_strike", "swinging_strike_blocked", "foul", "hit_into_play"])]
+            whiffs = g[g["description"].isin(["swinging_strike", "swinging_strike_blocked"])]
+            whiff = len(whiffs) / len(swings) if len(swings) else 0
+
+        usage = len(g) / total_pitches if total_pitches else 0
+
+        rows.append([
+            pitch, stand, usage, len(g), avg, slg, iso, woba, xwoba, hard, whiff
+        ])
+
+    out = "| Pitch | Batter Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | HardHit% | Whiff% |\n"
+    out += "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n"
+
+    for r in sorted(rows, key=lambda x: (x[1], -x[2])):
+        out += f"| {r[0]} | vs {r[1]} | {r[2]:.1%} | {r[3]} | {r[4]:.3f} | {r[5]:.3f} | {r[6]:.3f} | {r[7]:.3f} | {r[8]:.3f} | {r[9]:.1%} | {r[10]:.1%} |\n"
+
+    return out
+
+def fangraphs_pitcher_row(pit, name):
+    if pit.empty or name == "TBD":
+        return {}
+
+    m = pit[pit["Name"].str.lower() == name.lower()]
+    if m.empty:
+        return {}
+
+    r = m.iloc[0]
+    keys = ["ERA", "WHIP", "K/9", "BB/9", "HR/9", "IP", "K%", "BB%", "SIERA", "xFIP"]
+    return {k: clean(r[k]) if k in r else "—" for k in keys}
+
+def fangraphs_team_bats(bat, team):
+    if bat.empty or "Team" not in bat.columns:
+        return pd.DataFrame()
+
+    team_code = team.split()[-1]
+    t = bat[bat["Team"].astype(str).str.contains(team_code, case=False, na=False)]
+
+    cols = [c for c in ["Name", "Team", "PA", "AVG", "OBP", "SLG", "ISO", "wOBA", "wRC+", "HR", "Barrel%", "HardHit%"] if c in t.columns]
+    return t[cols].sort_values("PA", ascending=False).head(9) if cols else pd.DataFrame()
+
+def markdown_df(df):
+    if df.empty:
+        return "| Player | Data |\n|---|---|\n| — | — |\n"
+    return df.to_markdown(index=False)
+
+def pitcher_profile(title, name, pit, sc):
+    fg = fangraphs_pitcher_row(pit, name)
+
+    out = f"\n### {title}: {name}\n\n"
+    out += "| Stat | Value |\n|---|---:|\n"
+    for k in ["ERA", "WHIP", "K/9", "BB/9", "HR/9", "IP", "K%", "BB%", "SIERA", "xFIP"]:
+        out += f"| {k} | {fg.get(k, '—')} |\n"
+
+    out += "\n#### Pitch Arsenal vs L/R\n\n"
+    out += pitcher_pitch_table(sc, name)
     return out
 
 def main():
-    data=j(f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={TODAY}&hydrate=probablePitcher,venue,team")
-    games=[]
+    games = get_schedule()
+    sc = load_statcast()
+    bat, pit = load_fangraphs()
 
-    for d in data.get("dates",[]):
-        for g in d.get("games",[]):
-            away=g["teams"]["away"]["team"]; home=g["teams"]["home"]["team"]
-            ap=get_pitcher(g["teams"]["away"]); hp=get_pitcher(g["teams"]["home"])
-            aps=pitcher_stats(ap["id"]); hps=pitcher_stats(hp["id"])
-            ah=team_hitting(away["id"]); hh=team_hitting(home["id"])
-            abp=team_pitching(away["id"]); hbp=team_pitching(home["id"])
-
-            ar=pitcher_risk(aps.get("season",{})); hr=pitcher_risk(hps.get("season",{}))
-            env=PARK.get(g["venue"]["name"],10)
-            off=max(offense_score(ah),offense_score(hh))
-            pen=max(bullpen_score(abp),bullpen_score(hbp))
-            matchup=20 if max(ar,hr)>=20 and off>=15 else 16 if max(ar,hr)>=16 else 12
-            total=env+max(ar,hr)+off+pen+matchup
-
-            games.append(dict(game=f"{away['name']} @ {home['name']}",away=away,home=home,park=g["venue"]["name"],
-            time=g.get("gameDate","—"),ap=ap,hp=hp,aps=aps,hps=hps,ah=ah,hh=hh,abp=abp,hbp=hbp,
-            ar=ar,hr=hr,env=env,off=off,pen=pen,matchup=matchup,total=total,tier=tier(total)))
-
-    games.sort(key=lambda x:x["total"], reverse=True)
-
-    r=f"""# MLB-LAB V3 Game Dissection Report
+    report = f"""# MLB-LAB V4/V5 Daily Report
 
 Date: {TODAY}
 
-Status: Complete.
+Build: Baseball Savant + FanGraphs + MLB API
 
-Mode: full-slate game dissection engine.
-
-No hard eliminations. Every game receives a card.
+No odds.  
+No CSVs.  
+No shortcut weak-pitch labels.  
+Every game gets full pitch tables vs L/R.
 
 ---
 
-## Slate Index
+# Slate
 
-| Rank | Game | Park | SP Matchup | Env | Pitcher | Offense | Bullpen | Matchup | Total | Tier |
-|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| # | Game | Park | Away SP | Home SP |
+|---:|---|---|---|---|
 """
-    for i,g in enumerate(games,1):
-        r+=f"| {i} | {g['game']} | {g['park']} | {g['ap']['name']} vs {g['hp']['name']} | {g['env']} | {max(g['ar'],g['hr'])} | {g['off']} | {g['pen']} | {g['matchup']} | {g['total']} | {g['tier']} |\n"
 
-    r+="\n---\n\n# Full Game Cards\n"
+    for i, g in enumerate(games, 1):
+        report += f"| {i} | {g['game']} | {g['park']} | {g['away_sp']} | {g['home_sp']} |\n"
 
-    for i,g in enumerate(games,1):
-        attack="Home bats vs away SP" if g["ar"]>=g["hr"] else "Away bats vs home SP"
-        concern=g["ap"]["name"] if g["ar"]>=g["hr"] else g["hp"]["name"]
+    report += "\n---\n\n# Full Game Cards\n"
 
-        r+=f"""
+    for i, g in enumerate(games, 1):
+        away_bats = fangraphs_team_bats(bat, g["away_team"])
+        home_bats = fangraphs_team_bats(bat, g["home_team"])
+
+        report += f"""
 
 ---
 
-## {i}. {g['game']} — {g['tier']} ({g['total']})
+## {i}. {g['game']}
 
 ### Game Context
 
@@ -188,64 +215,58 @@ No hard eliminations. Every game receives a card.
 |---|---|
 | Park | {g['park']} |
 | Time | {g['time']} |
-| Environment | {g['env']} |
-| Pitcher Risk | {max(g['ar'],g['hr'])} |
-| Offense | {g['off']} |
-| Bullpen | {g['pen']} |
-| Matchup Pressure | {g['matchup']} |
-| Total | {g['total']} |
+| Away SP | {g['away_sp']} |
+| Home SP | {g['home_sp']} |
 
-{ptable("Away SP",g["ap"],g["aps"],g["ar"])}
+{pitcher_profile("Away Starting Pitcher", g["away_sp"], pit, sc)}
 
-{ptable("Home SP",g["hp"],g["hps"],g["hr"])}
-
-### Team Offense
-
-| Team | AVG | OPS | Runs | HR | Attack Score |
-|---|---:|---:|---:|---:|---:|
-| {g['away']['name']} | {s(g['ah'].get('avg'))} | {s(g['ah'].get('ops'))} | {s(g['ah'].get('runs'))} | {s(g['ah'].get('homeRuns'))} | {offense_score(g['ah'])} |
-| {g['home']['name']} | {s(g['hh'].get('avg'))} | {s(g['hh'].get('ops'))} | {s(g['hh'].get('runs'))} | {s(g['hh'].get('homeRuns'))} | {offense_score(g['hh'])} |
-
-### Bullpen / Staff Context
-
-| Team | ERA | WHIP | HR/9 | Bullpen/Staff Stress |
-|---|---:|---:|---:|---:|
-| {g['away']['name']} | {s(g['abp'].get('era'))} | {s(g['abp'].get('whip'))} | {s(g['abp'].get('homeRunsPer9'))} | {bullpen_score(g['abp'])} |
-| {g['home']['name']} | {s(g['hbp'].get('era'))} | {s(g['hbp'].get('whip'))} | {s(g['hbp'].get('homeRunsPer9'))} | {bullpen_score(g['hbp'])} |
-
-### Dissection Read
-
-- First attack side: {attack}
-- Main pitcher concern: {concern}
-- Park/environment pressure: {g['env']}
-- Offense pressure: {g['off']}
-- Bullpen/staff pressure: {g['pen']}
-- Research direction: inspect confirmed lineups, pitch mix, hitter handedness, and prop market for this game.
-"""
-
-    r+="""
-
+{pitcher_profile("Home Starting Pitcher", g["home_sp"], pit, sc)}
 
 ---
 
-# V3 Complete
+## {g['away_team']} Projected Hitter Pool
 
-This runner now creates:
+{markdown_df(away_bats)}
 
-- Full slate index
-- Every-game breakdown cards
-- Starting pitcher risk
-- Recent pitcher form
-- Team offense
-- Bullpen/staff context
-- Attack-side read
-- No CSVs
-- No website scraping dependency
+---
+
+## {g['home_team']} Projected Hitter Pool
+
+{markdown_df(home_bats)}
+
+---
+
+## Manual Read Space
+
+### What To Look For
+
+- Which pitcher pitch types are getting hit by LHB?
+- Which pitcher pitch types are getting hit by RHB?
+- Which lineup has more hitters matching those pitch types?
+- Which hitters have strong ISO / wOBA / Barrel% / HardHit%?
+- Which side has the better full-game attack profile?
+
+### MLB-LAB Notes
+
+- Attack Side:
+- Pitcher Concern:
+- Best Hitter Fits:
+- Game Environment:
+- Final Read:
+"""
+
+    report += """
+
+---
+
+# End Report
+
+This is the V4/V5 all-in-one research board.
 """
 
     REPORT.parent.mkdir(exist_ok=True)
-    REPORT.write_text(r, encoding="utf-8")
+    REPORT.write_text(report, encoding="utf-8")
     print(f"Updated {REPORT}")
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
