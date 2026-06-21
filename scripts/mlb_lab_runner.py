@@ -49,6 +49,16 @@ STRONG_PITCHER_NAMES = {
     "Nathan Eovaldi",
 }
 
+ARSENAL_WATCH = {
+    "Michael Lorenzen": 15,
+    "Jack Perkins": 15,
+    "Kai-Wei Teng": 14,
+    "Slade Cecconi": 14,
+    "Ryan Gusto": 13,
+    "Keider Montero": 13,
+    "Robert Gasser": 12,
+}
+
 def fetch_json(url):
     with urllib.request.urlopen(url, timeout=20) as response:
         return json.loads(response.read().decode())
@@ -66,6 +76,39 @@ def score_pitcher(name):
         return 6
     return 10
 
+def score_arsenal(away_pitcher, home_pitcher):
+    return max(
+        ARSENAL_WATCH.get(away_pitcher, 8),
+        ARSENAL_WATCH.get(home_pitcher, 8),
+    )
+
+def score_matchup(env_score, pitcher_score):
+    if env_score >= 15 and pitcher_score >= 18:
+        return 16
+    if env_score >= 13 and pitcher_score >= 10:
+        return 12
+    if pitcher_score >= 18:
+        return 11
+    return 8
+
+def score_savant_placeholder(total_before_savant):
+    if total_before_savant >= 65:
+        return 12
+    if total_before_savant >= 55:
+        return 10
+    if total_before_savant >= 45:
+        return 8
+    return 6
+
+def tier(total):
+    if total >= 70:
+        return "Priority"
+    if total >= 55:
+        return "Watch"
+    if total >= 40:
+        return "Low"
+    return "Ignore"
+
 def main():
     data = fetch_json(MLB_SCHEDULE_URL)
     games = []
@@ -79,34 +122,40 @@ def main():
             away_pitcher = pitcher_name(game["teams"]["away"])
             home_pitcher = pitcher_name(game["teams"]["home"])
 
-            env_score = ENVIRONMENT_SCORES.get(venue, 10)
+            env = ENVIRONMENT_SCORES.get(venue, 10)
+            pitcher = max(score_pitcher(away_pitcher), score_pitcher(home_pitcher))
+            arsenal = score_arsenal(away_pitcher, home_pitcher)
+            matchup = score_matchup(env, pitcher)
 
-            away_pitcher_score = score_pitcher(away_pitcher)
-            home_pitcher_score = score_pitcher(home_pitcher)
-            pitcher_score = max(away_pitcher_score, home_pitcher_score)
+            before_savant = env + pitcher + arsenal + matchup
+            savant = score_savant_placeholder(before_savant)
 
-            early_total = env_score + pitcher_score
+            total = before_savant + savant
 
             games.append({
                 "game": f"{away} @ {home}",
                 "venue": venue,
                 "pitchers": f"{away_pitcher} vs {home_pitcher}",
-                "env_score": env_score,
-                "pitcher_score": pitcher_score,
-                "early_total": early_total,
+                "env": env,
+                "pitcher": pitcher,
+                "arsenal": arsenal,
+                "matchup": matchup,
+                "savant": savant,
+                "total": total,
+                "tier": tier(total),
             })
 
-    games = sorted(games, key=lambda x: x["early_total"], reverse=True)
+    games = sorted(games, key=lambda x: x["total"], reverse=True)
 
     report = f"""# MLB-LAB V1 Run 001
 
-Status: Automated Schedule + Environment + Pitcher Scoring Active
+Status: Full Game Scoring Active
 
 Date: {TODAY}
 
 ## Objective
 
-Run MLB-LAB V1 using the system already built in this repo.
+Run every MLB game through the MLB-LAB V1 scoring system.
 
 ## Scoring Model
 
@@ -118,19 +167,25 @@ Run MLB-LAB V1 using the system already built in this repo.
 | Batter Matchup | 20 |
 | Savant Confirmation | 15 |
 
+No hard eliminations. Every game receives a score.
+
 ---
 
-## Today's Slate
+## Full Slate Scoreboard
 
-| Rank | Game | Park | Probable Pitchers | Env | Pitcher | Early Total |
-|---:|---|---|---|---:|---:|---:|
+| Rank | Game | Park | Probable Pitchers | Env | Pitcher | Arsenal | Matchup | Savant | Total | Tier |
+|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
 """
 
     for i, g in enumerate(games, 1):
         report += (
             f"| {i} | {g['game']} | {g['venue']} | {g['pitchers']} | "
-            f"{g['env_score']} | {g['pitcher_score']} | {g['early_total']} |\n"
+            f"{g['env']} | {g['pitcher']} | {g['arsenal']} | "
+            f"{g['matchup']} | {g['savant']} | {g['total']} | {g['tier']} |\n"
         )
+
+    priority = [g for g in games if g["tier"] == "Priority"]
+    watch = [g for g in games if g["tier"] == "Watch"]
 
     report += """
 
@@ -138,32 +193,44 @@ Run MLB-LAB V1 using the system already built in this repo.
 
 ## Priority Games
 
-These are ranked by early total:
+"""
 
-Environment Score + Pitcher Vulnerability Score.
+    if priority:
+        for g in priority:
+            report += f"- {g['game']} — {g['total']} total\n"
+    else:
+        report += "- None\n"
 
-## Pitcher Scoring Notes
+    report += """
 
-- TBD pitcher = 5
-- Strong pitcher = 6
-- Neutral known pitcher = 10
-- Weak pitcher watchlist = 18
+## Watch Games
 
-This is still an early scoring layer, not a final betting card.
+"""
 
-## Next Upgrades
+    if watch:
+        for g in watch:
+            report += f"- {g['game']} — {g['total']} total\n"
+    else:
+        report += "- None\n"
 
-1. Add weather
-2. Add pitch arsenal scoring
-3. Add hitter candidate ranking
-4. Add Savant confirmation
-5. Generate final daily report
+    report += """
 
-## Current Output
+## Notes
 
-Automated MLB schedule pull is working.  
-Environment scoring is working.  
-Pitcher vulnerability scoring is working.
+This is a full-slate game scoring engine.
+
+Current automated layers:
+
+- Schedule
+- Probable pitchers
+- Environment score
+- Pitcher vulnerability score
+- Pitch arsenal placeholder score
+- Matchup placeholder score
+- Savant placeholder score
+
+Next upgrade:
+Replace placeholder Arsenal / Matchup / Savant scores with real Statcast and batter data.
 """
 
     REPORT_PATH.write_text(report)
