@@ -4,6 +4,7 @@
 |------|------|----------|------------|-----------|---------|
 | baseballr | 10 | 10 | 4 | 3 | 9 |
 | pybaseball | 10 | 10 | 6 | 3 | 10 |
+| MLB-StatsAPI | 9 | 8 | 2 | 5 | 8 |
 
 ## Key Findings
 
@@ -17,13 +18,20 @@
 - Better path toward automation
 - Better path toward ML workflows
 
+### MLB-StatsAPI
+
+- Best official MLB source
+- Excellent live game access
+- Strong schedule and roster data
+
 ## Shared Weaknesses
 
-Both repositories solve:
+All three repositories solve:
 
 - Data acquisition
 - Historical access
 - Statcast retrieval
+- Official MLB data access
 
 Neither repository solves:
 
