@@ -1,228 +1,182 @@
 from datetime import date
 from pathlib import Path
-import json
-import urllib.request
+import json, urllib.request
 
 TODAY = date.today().isoformat()
 SEASON = date.today().year
-REPORT = Path("reports/mlb-lab-v2-daily-report.md")
+REPORT = Path("reports/mlb-lab-v3-game-dissection-report.md")
 
-PARK_SCORE = {
-    "Coors Field": 20,
-    "Sutter Health Park": 16,
-    "Yankee Stadium": 15,
-    "Citizens Bank Park": 15,
-    "Truist Park": 14,
-    "Globe Life Field": 14,
-    "Chase Field": 13,
-    "Comerica Park": 11,
-    "T-Mobile Park": 10,
-    "Tropicana Field": 10,
-    "Daikin Park": 10,
-    "loanDepot park": 10,
-    "Kauffman Stadium": 8,
-    "Wrigley Field": 6,
-}
+PARK = {"Coors Field":20,"Sutter Health Park":16,"Yankee Stadium":15,"Citizens Bank Park":15,
+"Truist Park":14,"Globe Life Field":14,"Chase Field":13,"Comerica Park":11,"Wrigley Field":10,
+"T-Mobile Park":10,"Daikin Park":10,"Tropicana Field":10,"loanDepot park":10,"Kauffman Stadium":8}
 
-def get_json(url):
-    with urllib.request.urlopen(url, timeout=25) as r:
+def j(url):
+    with urllib.request.urlopen(url, timeout=30) as r:
         return json.loads(r.read().decode())
 
-def safe(v):
-    return "—" if v in [None, "", "null"] else v
+def n(x):
+    try: return float(x)
+    except: return 0
 
-def fnum(v):
-    try:
-        return float(v)
-    except:
-        return 0.0
+def s(x): return "—" if x in [None,"","null"] else x
 
-def pitcher(team):
+def get_pitcher(team):
     p = team.get("probablePitcher")
-    if not p:
-        return {"id": None, "name": "TBD", "hand": "—"}
-    return {
-        "id": p.get("id"),
-        "name": p.get("fullName", "TBD"),
-        "hand": p.get("pitchHand", {}).get("code", "—"),
-    }
+    if not p: return {"id":None,"name":"TBD","hand":"—"}
+    return {"id":p.get("id"),"name":p.get("fullName","TBD"),"hand":p.get("pitchHand",{}).get("code","—")}
 
 def pitcher_stats(pid):
-    if not pid:
-        return {}
-    url = f"https://statsapi.mlb.com/api/v1/people/{pid}?hydrate=stats(group=[pitching],type=[season],season={SEASON})"
+    if not pid: return {}
     try:
-        data = get_json(url)
-        splits = data["people"][0]["stats"][0].get("splits", [])
-        return splits[0].get("stat", {}) if splits else {}
-    except:
-        return {}
+        u=f"https://statsapi.mlb.com/api/v1/people/{pid}?hydrate=stats(group=[pitching],type=[season,gameLog],season={SEASON})"
+        d=j(u)["people"][0]["stats"]
+        season=d[0]["splits"][0]["stat"] if d and d[0].get("splits") else {}
+        logs=d[1]["splits"][:5] if len(d)>1 and d[1].get("splits") else []
+        return {"season":season,"logs":logs}
+    except: return {"season":{},"logs":[]}
 
-def pitcher_risk(s):
-    era = fnum(s.get("era"))
-    whip = fnum(s.get("whip"))
-    hr9 = fnum(s.get("homeRunsPer9"))
-    bb9 = fnum(s.get("walksPer9Inn"))
-    k9 = fnum(s.get("strikeoutsPer9Inn"))
-
-    score = 8
-    if era >= 5: score += 6
-    elif era >= 4.25: score += 4
-    elif era >= 3.75: score += 2
-
-    if whip >= 1.45: score += 5
-    elif whip >= 1.30: score += 3
-    elif whip >= 1.20: score += 1
-
-    if hr9 >= 1.6: score += 5
-    elif hr9 >= 1.2: score += 3
-    elif hr9 >= 0.9: score += 1
-
-    if bb9 >= 3.8: score += 3
-    elif bb9 >= 3.0: score += 2
-
-    if k9 and k9 < 6.5: score += 3
-    elif k9 and k9 < 8: score += 1
-
-    return min(score, 25)
-
-def team_stats(team_id):
-    url = f"https://statsapi.mlb.com/api/v1/teams/{team_id}/stats?stats=season&group=hitting&season={SEASON}"
+def team_hitting(tid):
     try:
-        data = get_json(url)
-        return data["stats"][0]["splits"][0]["stat"]
-    except:
-        return {}
+        u=f"https://statsapi.mlb.com/api/v1/teams/{tid}/stats?stats=season&group=hitting&season={SEASON}"
+        return j(u)["stats"][0]["splits"][0]["stat"]
+    except: return {}
 
-def offense_score(s):
-    ops = fnum(s.get("ops"))
-    hr = fnum(s.get("homeRuns"))
-    avg = fnum(s.get("avg"))
+def team_pitching(tid):
+    try:
+        u=f"https://statsapi.mlb.com/api/v1/teams/{tid}/stats?stats=season&group=pitching&season={SEASON}"
+        return j(u)["stats"][0]["splits"][0]["stat"]
+    except: return {}
 
-    score = 8
-    if ops >= .780: score += 6
-    elif ops >= .730: score += 4
-    elif ops >= .700: score += 2
+def pitcher_risk(st):
+    era,whip,hr9,bb9,k9 = map(n,[st.get("era"),st.get("whip"),st.get("homeRunsPer9"),st.get("walksPer9Inn"),st.get("strikeoutsPer9Inn")])
+    score=8
+    if era>=5: score+=6
+    elif era>=4.25: score+=4
+    elif era>=3.75: score+=2
+    if whip>=1.45: score+=5
+    elif whip>=1.30: score+=3
+    elif whip>=1.20: score+=1
+    if hr9>=1.6: score+=5
+    elif hr9>=1.2: score+=3
+    elif hr9>=.9: score+=1
+    if bb9>=3.8: score+=3
+    elif bb9>=3.0: score+=2
+    if k9 and k9<6.5: score+=3
+    elif k9 and k9<8: score+=1
+    return min(score,25)
 
-    if avg >= .260: score += 3
-    elif avg >= .245: score += 2
+def offense_score(st):
+    ops,avg,hr,runs = map(n,[st.get("ops"),st.get("avg"),st.get("homeRuns"),st.get("runs")])
+    score=8
+    if ops>=.780: score+=6
+    elif ops>=.730: score+=4
+    elif ops>=.700: score+=2
+    if avg>=.260: score+=3
+    elif avg>=.245: score+=2
+    if hr>=100: score+=3
+    elif hr>=80: score+=2
+    if runs>=400: score+=3
+    elif runs>=350: score+=2
+    return min(score,20)
 
-    if hr >= 100: score += 3
-    elif hr >= 80: score += 2
+def bullpen_score(st):
+    era,whip,hr9 = map(n,[st.get("era"),st.get("whip"),st.get("homeRunsPer9")])
+    score=8
+    if era>=4.75: score+=5
+    elif era>=4.25: score+=3
+    if whip>=1.40: score+=4
+    elif whip>=1.30: score+=2
+    if hr9>=1.4: score+=3
+    elif hr9>=1.1: score+=2
+    return min(score,15)
 
-    return min(score, 20)
+def tier(x):
+    return "Priority" if x>=75 else "Watch" if x>=60 else "Low" if x>=45 else "Ignore"
 
-def tier(total):
-    if total >= 75: return "Priority"
-    if total >= 60: return "Watch"
-    if total >= 45: return "Low"
-    return "Ignore"
-
-def stat_table(title, p, s, risk):
-    return f"""
-### {title}: {p['name']} ({p['hand']})
+def ptable(label,p,ps,risk):
+    st=ps.get("season",{})
+    logs=ps.get("logs",[])
+    out=f"""
+### {label}: {p['name']} ({p['hand']})
 
 | Stat | Value |
 |---|---:|
-| ERA | {safe(s.get("era"))} |
-| WHIP | {safe(s.get("whip"))} |
-| K/9 | {safe(s.get("strikeoutsPer9Inn"))} |
-| BB/9 | {safe(s.get("walksPer9Inn"))} |
-| HR/9 | {safe(s.get("homeRunsPer9"))} |
-| Innings | {safe(s.get("inningsPitched"))} |
-| Hits Allowed | {safe(s.get("hits"))} |
-| Runs Allowed | {safe(s.get("runs"))} |
-| HR Allowed | {safe(s.get("homeRuns"))} |
-| Pitcher Risk | {risk} |
+| ERA | {s(st.get('era'))} |
+| WHIP | {s(st.get('whip'))} |
+| K/9 | {s(st.get('strikeoutsPer9Inn'))} |
+| BB/9 | {s(st.get('walksPer9Inn'))} |
+| HR/9 | {s(st.get('homeRunsPer9'))} |
+| IP | {s(st.get('inningsPitched'))} |
+| H | {s(st.get('hits'))} |
+| R | {s(st.get('runs'))} |
+| HR | {s(st.get('homeRuns'))} |
+| Risk Score | {risk} |
+
+#### Last 5 Starts / Appearances
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+|---|---|---:|---:|---:|---:|---:|---:|
 """
+    if not logs:
+        out+="| — | — | — | — | — | — | — | — |\n"
+    for g in logs:
+        stat=g.get("stat",{})
+        opp=g.get("opponent",{}).get("name","—")
+        out+=f"| {g.get('date','—')} | {opp} | {s(stat.get('inningsPitched'))} | {s(stat.get('hits'))} | {s(stat.get('earnedRuns'))} | {s(stat.get('baseOnBalls'))} | {s(stat.get('strikeOuts'))} | {s(stat.get('homeRuns'))} |\n"
+    return out
 
 def main():
-    schedule = get_json(
-        f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={TODAY}&hydrate=probablePitcher,venue,team"
-    )
+    data=j(f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={TODAY}&hydrate=probablePitcher,venue,team")
+    games=[]
 
-    games = []
+    for d in data.get("dates",[]):
+        for g in d.get("games",[]):
+            away=g["teams"]["away"]["team"]; home=g["teams"]["home"]["team"]
+            ap=get_pitcher(g["teams"]["away"]); hp=get_pitcher(g["teams"]["home"])
+            aps=pitcher_stats(ap["id"]); hps=pitcher_stats(hp["id"])
+            ah=team_hitting(away["id"]); hh=team_hitting(home["id"])
+            abp=team_pitching(away["id"]); hbp=team_pitching(home["id"])
 
-    for day in schedule.get("dates", []):
-        for g in day.get("games", []):
-            away_team = g["teams"]["away"]["team"]
-            home_team = g["teams"]["home"]["team"]
+            ar=pitcher_risk(aps.get("season",{})); hr=pitcher_risk(hps.get("season",{}))
+            env=PARK.get(g["venue"]["name"],10)
+            off=max(offense_score(ah),offense_score(hh))
+            pen=max(bullpen_score(abp),bullpen_score(hbp))
+            matchup=20 if max(ar,hr)>=20 and off>=15 else 16 if max(ar,hr)>=16 else 12
+            total=env+max(ar,hr)+off+pen+matchup
 
-            away_p = pitcher(g["teams"]["away"])
-            home_p = pitcher(g["teams"]["home"])
+            games.append(dict(game=f"{away['name']} @ {home['name']}",away=away,home=home,park=g["venue"]["name"],
+            time=g.get("gameDate","—"),ap=ap,hp=hp,aps=aps,hps=hps,ah=ah,hh=hh,abp=abp,hbp=hbp,
+            ar=ar,hr=hr,env=env,off=off,pen=pen,matchup=matchup,total=total,tier=tier(total)))
 
-            away_ps = pitcher_stats(away_p["id"])
-            home_ps = pitcher_stats(home_p["id"])
+    games.sort(key=lambda x:x["total"], reverse=True)
 
-            away_ts = team_stats(away_team["id"])
-            home_ts = team_stats(home_team["id"])
-
-            env = PARK_SCORE.get(g["venue"]["name"], 10)
-            away_risk = pitcher_risk(away_ps)
-            home_risk = pitcher_risk(home_ps)
-            pitcher_score = max(away_risk, home_risk)
-
-            away_off = offense_score(away_ts)
-            home_off = offense_score(home_ts)
-            offense = max(away_off, home_off)
-
-            matchup = 10
-            if pitcher_score >= 20 and offense >= 15:
-                matchup = 20
-            elif pitcher_score >= 16 and offense >= 12:
-                matchup = 16
-            elif pitcher_score >= 13:
-                matchup = 12
-
-            total = env + pitcher_score + offense + matchup
-
-            games.append({
-                "game": f"{away_team['name']} @ {home_team['name']}",
-                "away": away_team["name"],
-                "home": home_team["name"],
-                "park": g["venue"]["name"],
-                "time": g.get("gameDate", "—"),
-                "away_p": away_p,
-                "home_p": home_p,
-                "away_ps": away_ps,
-                "home_ps": home_ps,
-                "away_ts": away_ts,
-                "home_ts": home_ts,
-                "away_risk": away_risk,
-                "home_risk": home_risk,
-                "env": env,
-                "pitcher": pitcher_score,
-                "offense": offense,
-                "matchup": matchup,
-                "total": total,
-                "tier": tier(total),
-            })
-
-    games.sort(key=lambda x: x["total"], reverse=True)
-
-    report = f"""# MLB-LAB V2 Daily Report
+    r=f"""# MLB-LAB V3 Game Dissection Report
 
 Date: {TODAY}
 
-Status: Complete automated MLB API report.
+Status: Complete.
 
-Purpose: dissect every game without manual CSVs, website scraping, or hard eliminations.
+Mode: full-slate game dissection engine.
+
+No hard eliminations. Every game receives a card.
 
 ---
 
-## Full Slate Index
+## Slate Index
 
-| Rank | Game | Park | Pitchers | Env | Pitcher | Offense | Matchup | Total | Tier |
-|---:|---|---|---|---:|---:|---:|---:|---:|---|
+| Rank | Game | Park | SP Matchup | Env | Pitcher | Offense | Bullpen | Matchup | Total | Tier |
+|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
 """
+    for i,g in enumerate(games,1):
+        r+=f"| {i} | {g['game']} | {g['park']} | {g['ap']['name']} vs {g['hp']['name']} | {g['env']} | {max(g['ar'],g['hr'])} | {g['off']} | {g['pen']} | {g['matchup']} | {g['total']} | {g['tier']} |\n"
 
-    for i, g in enumerate(games, 1):
-        report += f"| {i} | {g['game']} | {g['park']} | {g['away_p']['name']} vs {g['home_p']['name']} | {g['env']} | {g['pitcher']} | {g['offense']} | {g['matchup']} | {g['total']} | {g['tier']} |\n"
+    r+="\n---\n\n# Full Game Cards\n"
 
-    report += "\n---\n\n# Game Cards\n"
+    for i,g in enumerate(games,1):
+        attack="Home bats vs away SP" if g["ar"]>=g["hr"] else "Away bats vs home SP"
+        concern=g["ap"]["name"] if g["ar"]>=g["hr"] else g["hp"]["name"]
 
-    for i, g in enumerate(games, 1):
-        report += f"""
+        r+=f"""
 
 ---
 
@@ -234,54 +188,64 @@ Purpose: dissect every game without manual CSVs, website scraping, or hard elimi
 |---|---|
 | Park | {g['park']} |
 | Time | {g['time']} |
-| Environment Score | {g['env']} |
-| Pitcher Score | {g['pitcher']} |
-| Offense Score | {g['offense']} |
-| Matchup Score | {g['matchup']} |
-| Total Score | {g['total']} |
-| Tier | {g['tier']} |
+| Environment | {g['env']} |
+| Pitcher Risk | {max(g['ar'],g['hr'])} |
+| Offense | {g['off']} |
+| Bullpen | {g['pen']} |
+| Matchup Pressure | {g['matchup']} |
+| Total | {g['total']} |
 
-{stat_table("Away SP", g["away_p"], g["away_ps"], g["away_risk"])}
+{ptable("Away SP",g["ap"],g["aps"],g["ar"])}
 
-{stat_table("Home SP", g["home_p"], g["home_ps"], g["home_risk"])}
+{ptable("Home SP",g["hp"],g["hps"],g["hr"])}
 
-### Team Offense Snapshot
+### Team Offense
 
-| Team | AVG | OPS | HR | Runs | Offense Read |
+| Team | AVG | OPS | Runs | HR | Attack Score |
 |---|---:|---:|---:|---:|---:|
-| {g['away']} | {safe(g['away_ts'].get('avg'))} | {safe(g['away_ts'].get('ops'))} | {safe(g['away_ts'].get('homeRuns'))} | {safe(g['away_ts'].get('runs'))} | {offense_score(g['away_ts'])} |
-| {g['home']} | {safe(g['home_ts'].get('avg'))} | {safe(g['home_ts'].get('ops'))} | {safe(g['home_ts'].get('homeRuns'))} | {safe(g['home_ts'].get('runs'))} | {offense_score(g['home_ts'])} |
+| {g['away']['name']} | {s(g['ah'].get('avg'))} | {s(g['ah'].get('ops'))} | {s(g['ah'].get('runs'))} | {s(g['ah'].get('homeRuns'))} | {offense_score(g['ah'])} |
+| {g['home']['name']} | {s(g['hh'].get('avg'))} | {s(g['hh'].get('ops'))} | {s(g['hh'].get('runs'))} | {s(g['hh'].get('homeRuns'))} | {offense_score(g['hh'])} |
 
-### MLB-LAB Read
+### Bullpen / Staff Context
 
-- Best attack side: {"Home bats vs away SP" if g["away_risk"] >= g["home_risk"] else "Away bats vs home SP"}
-- Primary pitcher concern: {g["away_p"]["name"] if g["away_risk"] >= g["home_risk"] else g["home_p"]["name"]}
-- Why this game ranks here: park + pitcher risk + offense context + matchup pressure.
-- Next manual check: pitch mix, confirmed lineup, weather/roof, prop market.
+| Team | ERA | WHIP | HR/9 | Bullpen/Staff Stress |
+|---|---:|---:|---:|---:|
+| {g['away']['name']} | {s(g['abp'].get('era'))} | {s(g['abp'].get('whip'))} | {s(g['abp'].get('homeRunsPer9'))} | {bullpen_score(g['abp'])} |
+| {g['home']['name']} | {s(g['hbp'].get('era'))} | {s(g['hbp'].get('whip'))} | {s(g['hbp'].get('homeRunsPer9'))} | {bullpen_score(g['hbp'])} |
+
+### Dissection Read
+
+- First attack side: {attack}
+- Main pitcher concern: {concern}
+- Park/environment pressure: {g['env']}
+- Offense pressure: {g['off']}
+- Bullpen/staff pressure: {g['pen']}
+- Research direction: inspect confirmed lineups, pitch mix, hitter handedness, and prop market for this game.
 """
 
-    report += """
+    r+="""
+
 
 ---
 
-# Build Status
+# V3 Complete
 
-Complete V2 automation:
+This runner now creates:
 
-- Pulls today's full MLB slate
-- Pulls probable pitchers
-- Pulls pitcher season stats
-- Pulls team offense stats
-- Scores every game
-- Builds every game card
-- Produces one daily report
-
-Next version can add true pitch-mix data once a stable source is selected.
+- Full slate index
+- Every-game breakdown cards
+- Starting pitcher risk
+- Recent pitcher form
+- Team offense
+- Bullpen/staff context
+- Attack-side read
+- No CSVs
+- No website scraping dependency
 """
 
     REPORT.parent.mkdir(exist_ok=True)
-    REPORT.write_text(report, encoding="utf-8")
+    REPORT.write_text(r, encoding="utf-8")
     print(f"Updated {REPORT}")
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
