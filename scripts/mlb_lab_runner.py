@@ -5,7 +5,6 @@ import pandas as pd
 from pybaseball import statcast, playerid_reverse_lookup
 
 TODAY = date.today()
-SEASON = TODAY.year
 START = (TODAY - timedelta(days=120)).isoformat()
 END = TODAY.isoformat()
 
@@ -13,9 +12,9 @@ REPORT = Path("reports/mlb-lab-v5-matchup-engine.md")
 CACHE = Path("data/cache/statcast_cache.pkl")
 
 TEAM_CODES = {
-    "Arizona Diamondbacks": "ARI", "Athletics": "ATH", "Atlanta Braves": "ATL",
+    "Arizona Diamondbacks": "AZ", "Athletics": "ATH", "Atlanta Braves": "ATL",
     "Baltimore Orioles": "BAL", "Boston Red Sox": "BOS", "Chicago Cubs": "CHC",
-    "Chicago White Sox": "CHW", "Cincinnati Reds": "CIN", "Cleveland Guardians": "CLE",
+    "Chicago White Sox": "CWS", "Cincinnati Reds": "CIN", "Cleveland Guardians": "CLE",
     "Colorado Rockies": "COL", "Detroit Tigers": "DET", "Houston Astros": "HOU",
     "Kansas City Royals": "KC", "Los Angeles Angels": "LAA", "Los Angeles Dodgers": "LAD",
     "Miami Marlins": "MIA", "Milwaukee Brewers": "MIL", "Minnesota Twins": "MIN",
@@ -30,30 +29,29 @@ def mlb_json(url):
     r.raise_for_status()
     return r.json()
 
-def safe(x, d="—"):
-    return d if x is None or pd.isna(x) else x
-
 def fmt(x, n=3):
     try:
-        if pd.isna(x): return "—"
+        if x is None or pd.isna(x):
+            return "—"
         return f"{float(x):.{n}f}"
     except Exception:
         return "—"
 
 def pct(x):
     try:
-        if pd.isna(x): return "—"
-        return f"{float(x)*100:.1f}%"
+        if x is None or pd.isna(x):
+            return "—"
+        return f"{float(x) * 100:.1f}%"
     except Exception:
         return "—"
 
-def table(headers, rows):
+def md_table(headers, rows):
     out = "| " + " | ".join(headers) + " |\n"
     out += "| " + " | ".join(["---"] * len(headers)) + " |\n"
     if not rows:
         rows = [["No data"] + ["—"] * (len(headers) - 1)]
-    for r in rows:
-        out += "| " + " | ".join(str(x) for x in r) + " |\n"
+    for row in rows:
+        out += "| " + " | ".join(str(x) for x in row) + " |\n"
     return out
 
 def get_schedule():
@@ -79,37 +77,39 @@ def get_schedule():
                 "away_sp": away_sp.get("fullName", "TBD"),
                 "home_sp": home_sp.get("fullName", "TBD"),
             })
+
     return games
 
 def load_statcast():
     CACHE.parent.mkdir(parents=True, exist_ok=True)
 
     try:
+        print(f"Pulling Statcast {START} to {END}")
         sc = statcast(start_dt=START, end_dt=END)
         if not sc.empty:
             sc.to_pickle(CACHE)
-            return prepare_statcast(sc)
+            return prep_statcast(sc)
     except Exception as e:
-        print(f"Savant pull failed: {e}")
+        print(f"Statcast pull failed: {e}")
 
     if CACHE.exists():
-        print("Using cached Statcast data.")
-        return prepare_statcast(pd.read_pickle(CACHE))
+        print("Using cached Statcast.")
+        return prep_statcast(pd.read_pickle(CACHE))
 
     return pd.DataFrame()
 
-def prepare_statcast(sc):
+def prep_statcast(sc):
     sc = sc.copy()
 
     if "inning_topbot" in sc.columns:
         sc["batter_team"] = sc.apply(
-            lambda r: r["away_team"] if r["inning_topbot"] == "Top" else r["home_team"],
+            lambda r: r.get("away_team") if r.get("inning_topbot") == "Top" else r.get("home_team"),
             axis=1
         )
 
     if "batter" in sc.columns:
         try:
-            ids = sorted(sc["batter"].dropna().astype(int).unique())
+            ids = sorted(sc["batter"].dropna().astype(int).unique().tolist())
             lookup = playerid_reverse_lookup(ids, key_type="mlbam")
             lookup["batter_name"] = lookup["name_first"] + " " + lookup["name_last"]
             sc["batter_name"] = sc["batter"].map(dict(zip(lookup["key_mlbam"], lookup["batter_name"])))
@@ -124,24 +124,32 @@ def pitcher_rows(sc, name):
         return pd.DataFrame()
 
     parts = name.split()
+    if len(parts) < 2:
+        return pd.DataFrame()
+
     reverse = f"{parts[-1]}, {' '.join(parts[:-1])}"
     return sc[sc["player_name"].astype(str).str.lower() == reverse.lower()]
 
 def event_stats(df):
+    if df.empty:
+        return 0, 0, 0, None, None, 0, 0, 0, 0
+
     events = df.dropna(subset=["events"]) if "events" in df.columns else pd.DataFrame()
-    ab_events = events[~events["events"].isin(["walk", "hit_by_pitch", "sac_bunt", "sac_fly"])]
+    ab_events = events[~events["events"].isin(["walk", "intent_walk", "hit_by_pitch", "sac_bunt", "sac_fly"])]
     ab = len(ab_events)
 
     singles = (events["events"] == "single").sum()
     doubles = (events["events"] == "double").sum()
     triples = (events["events"] == "triple").sum()
     hrs = (events["events"] == "home_run").sum()
+
     hits = singles + doubles + triples + hrs
-    tb = singles + 2*doubles + 3*triples + 4*hrs
+    tb = singles + 2 * doubles + 3 * triples + 4 * hrs
 
     avg = hits / ab if ab else 0
     slg = tb / ab if ab else 0
     iso = slg - avg if ab else 0
+
     woba = df["woba_value"].mean() if "woba_value" in df.columns else None
     xwoba = df["estimated_woba_using_speedangle"].mean() if "estimated_woba_using_speedangle" in df.columns else None
 
@@ -160,158 +168,206 @@ def event_stats(df):
 
 def pitcher_profile(sc, name):
     p = pitcher_rows(sc, name)
-    if p.empty:
-        return table(["Stat", "Value"], [])
 
-    ip = len(p[p["events"].notna()]) / 3 if "events" in p.columns else 0
-    er = (p["events"] == "home_run").sum() if "events" in p.columns else 0
-    k = p["events"].isin(["strikeout", "strikeout_double_play"]).sum()
-    bb = p["events"].isin(["walk", "intent_walk"]).sum()
-    hr = (p["events"] == "home_run").sum()
-    hits = p["events"].isin(["single", "double", "triple", "home_run"]).sum()
+    if p.empty:
+        return md_table(["Stat", "Value"], [])
+
+    events = p.dropna(subset=["events"])
+    h = events["events"].isin(["single", "double", "triple", "home_run"]).sum()
+    bb = events["events"].isin(["walk", "intent_walk"]).sum()
+    k = events["events"].isin(["strikeout", "strikeout_double_play"]).sum()
+    hr = (events["events"] == "home_run").sum()
+
+    total_events = max(1, len(events))
 
     rows = [
         ["Sample Pitches", len(p)],
-        ["Estimated IP Events", fmt(ip, 1)],
-        ["Hits Allowed", hits],
+        ["Batted/Result Events", len(events)],
+        ["Hits Allowed", h],
         ["Walks", bb],
         ["Strikeouts", k],
         ["Home Runs", hr],
-        ["K Event Rate", pct(k / max(1, len(p.dropna(subset=["events"]))))],
-        ["BB Event Rate", pct(bb / max(1, len(p.dropna(subset=["events"]))))],
-        ["HR Event Rate", pct(hr / max(1, len(p.dropna(subset=["events"]))))],
+        ["K Event Rate", pct(k / total_events)],
+        ["BB Event Rate", pct(bb / total_events)],
+        ["HR Event Rate", pct(hr / total_events)],
     ]
-    return table(["Stat", "Value"], rows)
+
+    return md_table(["Stat", "Value"], rows)
 
 def arsenal(sc, name):
     p = pitcher_rows(sc, name)
     headers = ["Pitch", "Side", "Usage", "Pitches", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
 
-    if p.empty:
-        return table(headers, [])
+    if p.empty or "pitch_type" not in p.columns or "stand" not in p.columns:
+        return md_table(headers, [])
 
     rows = []
-    total = len(p)
+    total = max(1, len(p))
 
     for (pitch, side), g in p.groupby(["pitch_type", "stand"]):
         avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(g)
         rows.append([
-            pitch, f"vs {side}", pct(len(g) / total), len(g),
-            fmt(avg), fmt(slg), fmt(iso), fmt(woba), fmt(xwoba),
-            pct(barrel), pct(hard), pct(whiff)
+            pitch,
+            f"vs {side}",
+            pct(len(g) / total),
+            len(g),
+            fmt(avg),
+            fmt(slg),
+            fmt(iso),
+            fmt(woba),
+            fmt(xwoba),
+            pct(barrel),
+            pct(hard),
+            pct(whiff),
         ])
 
-    rows = sorted(rows, key=lambda r: (r[0], r[1]))
-    return table(headers, rows)
+    return md_table(headers, sorted(rows, key=lambda x: (x[0], x[1])))
 
 def major_pitches(sc, name):
     p = pitcher_rows(sc, name)
-    if p.empty:
+    if p.empty or "pitch_type" not in p.columns:
         return []
+
     mix = p["pitch_type"].value_counts(normalize=True)
     return list(mix[mix >= 0.08].index)
 
-def team_hitter_pool(sc, team):
-    if sc.empty or "batter_team" not in sc.columns or "batter_name" not in sc.columns:
+def last_5_starts(sc, name):
+    p = pitcher_rows(sc, name)
+    headers = ["Date", "Pitches", "Hits", "BB", "K", "HR"]
+
+    if p.empty or "game_date" not in p.columns:
+        return md_table(headers, [])
+
+    rows = []
+
+    for game_date, g in p.groupby("game_date"):
+        events = g.dropna(subset=["events"])
+        hits = events["events"].isin(["single", "double", "triple", "home_run"]).sum()
+        bb = events["events"].isin(["walk", "intent_walk"]).sum()
+        k = events["events"].isin(["strikeout", "strikeout_double_play"]).sum()
+        hr = (events["events"] == "home_run").sum()
+        rows.append([game_date, len(g), hits, bb, k, hr])
+
+    rows = sorted(rows, key=lambda x: str(x[0]), reverse=True)[:5]
+    return md_table(headers, rows)
+
+def team_hitter_pool(sc, team_code):
+    if sc.empty or not team_code or "batter_team" not in sc.columns or "batter_name" not in sc.columns:
         return pd.DataFrame()
 
-    t = sc[sc["batter_team"] == team]
+    t = sc[sc["batter_team"] == team_code]
     rows = []
 
     for name, g in t.groupby("batter_name"):
         if not name or pd.isna(name):
             continue
+
         avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(g)
-        if pa < 20:
+
+        if pa < 10:
             continue
+
         rows.append({
             "Hitter": name,
             "PA": pa,
             "AVG": avg,
             "SLG": slg,
             "ISO": iso,
-            "wOBA": woba,
-            "xwOBA": xwoba,
+            "wOBA": woba if woba is not None else 0,
+            "xwOBA": xwoba if xwoba is not None else 0,
             "Barrel%": barrel,
             "HardHit%": hard,
             "Whiff%": whiff,
         })
 
-    return pd.DataFrame(rows).sort_values(["PA", "wOBA"], ascending=False).head(12)
+    df = pd.DataFrame(rows)
+
+    if df.empty or "PA" not in df.columns:
+        return pd.DataFrame()
+
+    return df.sort_values(["PA", "wOBA"], ascending=[False, False]).head(12)
 
 def hitter_pool_md(df):
+    headers = ["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+
     if df.empty:
-        return table(["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"], [])
+        return md_table(headers, [])
 
     rows = []
     for _, r in df.iterrows():
         rows.append([
-            r["Hitter"], int(r["PA"]), fmt(r["AVG"]), fmt(r["SLG"]), fmt(r["ISO"]),
-            fmt(r["wOBA"]), fmt(r["xwOBA"]), pct(r["Barrel%"]), pct(r["HardHit%"]), pct(r["Whiff%"])
+            r["Hitter"],
+            int(r["PA"]),
+            fmt(r["AVG"]),
+            fmt(r["SLG"]),
+            fmt(r["ISO"]),
+            fmt(r["wOBA"]),
+            fmt(r["xwOBA"]),
+            pct(r["Barrel%"]),
+            pct(r["HardHit%"]),
+            pct(r["Whiff%"]),
         ])
 
-    return table(["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"], rows)
+    return md_table(headers, rows)
 
 def hitter_vs_pitch(sc, hitters, pitches):
     headers = ["Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
 
-    if sc.empty or hitters.empty or not pitches:
-        return table(headers, [])
+    if sc.empty or hitters.empty or not pitches or "batter_name" not in sc.columns or "pitch_type" not in sc.columns:
+        return md_table(headers, [])
 
-    names = set(hitters["Hitter"].str.lower())
+    names = set(hitters["Hitter"].astype(str).str.lower())
     rows = []
 
     for pitch in pitches:
-        g = sc[sc["pitch_type"] == pitch]
+        pitch_df = sc[sc["pitch_type"] == pitch]
+
         for name in names:
-            h = g[g["batter_name"].astype(str).str.lower() == name]
+            h = pitch_df[pitch_df["batter_name"].astype(str).str.lower() == name]
+
             if h.empty:
                 continue
 
             avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(h)
+
             if pa < 3:
                 continue
 
             rows.append([
-                pitch, name.title(), pa, fmt(avg), fmt(slg), fmt(iso),
-                fmt(woba), fmt(xwoba), pct(barrel), pct(hard), pct(whiff)
+                pitch,
+                name.title(),
+                pa,
+                fmt(avg),
+                fmt(slg),
+                fmt(iso),
+                fmt(woba),
+                fmt(xwoba),
+                pct(barrel),
+                pct(hard),
+                pct(whiff),
             ])
 
+    if not rows:
+        return md_table(headers, [])
+
     rows = sorted(rows, key=lambda r: float(r[5]) if r[5] != "—" else 0, reverse=True)[:30]
-    return table(headers, rows)
+    return md_table(headers, rows)
 
-def last_5_starts(sc, name):
-    p = pitcher_rows(sc, name)
-    if p.empty or "game_date" not in p.columns:
-        return table(["Date", "Pitches", "H", "BB", "K", "HR"], [])
-
-    rows = []
-    for game_date, g in p.groupby("game_date"):
-        events = g.dropna(subset=["events"])
-        h = events["events"].isin(["single", "double", "triple", "home_run"]).sum()
-        bb = events["events"].isin(["walk", "intent_walk"]).sum()
-        k = events["events"].isin(["strikeout", "strikeout_double_play"]).sum()
-        hr = (events["events"] == "home_run").sum()
-        rows.append([game_date, len(g), h, bb, k, hr])
-
-    rows = sorted(rows, key=lambda r: str(r[0]), reverse=True)[:5]
-    return table(["Date", "Pitches", "H", "BB", "K", "HR"], rows)
-
-def dissection(sc, g, away_hitters, home_hitters):
+def game_dissection(sc, g, away_hitters, home_hitters):
     away_mix = major_pitches(sc, g["away_sp"])
     home_mix = major_pitches(sc, g["home_sp"])
 
     return f"""
 ## Final Game Dissection
 
-- Away pitcher main pitch mix: {", ".join(away_mix) if away_mix else "No current Statcast sample"}
-- Home pitcher main pitch mix: {", ".join(home_mix) if home_mix else "No current Statcast sample"}
-- Inspect home hitters against: {", ".join(away_mix) if away_mix else "—"}
-- Inspect away hitters against: {", ".join(home_mix) if home_mix else "—"}
-- Lineup advantage check: compare team hitter pools above by wOBA, ISO, Barrel%, HardHit%, Whiff%.
-- Handedness advantage check: use pitcher arsenal vs L/R tables above.
-- Bullpen context: not active in this runner yet.
-- Final MLB-LAB read: use pitch mix + hitter pool + L/R damage profile.
+- Away pitcher pitch mix to inspect: {", ".join(away_mix) if away_mix else "No current Statcast sample"}
+- Home pitcher pitch mix to inspect: {", ".join(home_mix) if home_mix else "No current Statcast sample"}
+- Home hitters should be checked against away SP pitch mix above.
+- Away hitters should be checked against home SP pitch mix above.
+- Lineup advantage: compare wOBA, xwOBA, ISO, Barrel%, HardHit%, Whiff%.
+- Handedness advantage: use pitcher arsenal vs L/R tables.
+- Bullpen context: not included yet.
+- Final MLB-LAB read: decide from pitch mix, hitter pool, L/R damage, and current form.
 """
 
 def game_card(i, g, sc):
@@ -328,7 +384,7 @@ def game_card(i, g, sc):
 
 ## Game Context
 
-{table(["Field", "Value"], [
+{md_table(["Field", "Value"], [
     ["Park", g["park"]],
     ["Time", g["time"]],
     ["Away Team", g["away_team"]],
@@ -373,31 +429,36 @@ def game_card(i, g, sc):
 
 {hitter_vs_pitch(sc, away_hitters, home_mix)}
 
-## {g['away_team']} Team Offense Section
+## {g['away_team']} Team Hitter Pool
 
 {hitter_pool_md(away_hitters)}
 
-## {g['home_team']} Team Offense Section
+## {g['home_team']} Team Hitter Pool
 
 {hitter_pool_md(home_hitters)}
 
-{dissection(sc, g, away_hitters, home_hitters)}
+{game_dissection(sc, g, away_hitters, home_hitters)}
 """
 
 def main():
     games = get_schedule()
     sc = load_statcast()
 
-    report = f"""# MLB-LAB V5.1 Savant-First Pitch Matchup Engine
+    report = f"""# MLB-LAB V5.1 Pitch Matchup Engine
 
 Date: {TODAY}
 
-Core build:
-- MLB Stats API: schedule, teams, parks, probable pitchers
-- Baseball Savant / Statcast: pitch arsenal, L/R splits, hitter pools, hitter vs pitch type
-- FanGraphs removed from required runtime because GitHub Actions can block it
+This runner uses:
+- MLB Stats API for slate, teams, parks, probable pitchers
+- Baseball Savant / Statcast for pitcher arsenal, L/R splits, hitter pools, hitter-vs-pitch matchups
 
-No odds. No CSVs. No betting lines. No weak-pitch shortcuts. No placeholder manual tables.
+Removed:
+- FanGraphs hard dependency
+- sportsbook odds
+- CSV dependency
+- scoring gimmicks
+- weak-pitch labels
+- manual placeholder tables
 
 ---
 
