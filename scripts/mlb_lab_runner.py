@@ -118,4 +118,9 @@ Environment scoring is working.
     print(f"Updated {REPORT_PATH}")
 
 if __name__ == "__main__":
+    
     main()
+TBD pitcher = 5
+Known pitcher = 10
+Weak/unknown matchup = 12
+Environment + pitcher score = first total
