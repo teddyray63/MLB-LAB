@@ -101,82 +101,110 @@ Focus:
 
 - Pitcher vulnerability
 - Environment score
-- ---
+---
+
+# Layer 2 Research — Live Data Pass
+
+## Data Sources Used
+
+- MLB schedule / probable pitchers
+- Weather by stadium city
+- Uploaded Signal Hierarchy Framework
+
+## Environment Scoring
+
+| Game | Park | Weather / Context | Env Score | Notes |
+|---|---|---|---:|---|
+| Brewers @ Braves | Truist Park | Atlanta high 86°F, humid, possible afternoon thunderstorm | 14 | Warm, but weather risk |
+| Reds @ Yankees | Yankee Stadium | New York high 83°F, sun/clouds | 15 | Warm enough for power/contact |
+| Giants @ Marlins | loanDepot park | Miami high 92°F, roof/indoor context likely | 10 | Weather less useful without roof status |
+| Nationals @ Rays | Tropicana Field | Dome | 10 | Neutral controlled environment |
+| White Sox @ Tigers | Comerica Park | Detroit high 76°F | 11 | Mild/neutral |
+| Guardians @ Astros | Daikin Park | Houston storms, roof likely relevant | 10 | Roof/weather uncertainty |
+| Cardinals @ Royals | Kauffman Stadium | Kansas City rain/thunderstorm risk | 8 | Weather risk suppresses confidence |
+| Blue Jays @ Cubs | Wrigley Field | Chicago rain/thunderstorm risk | 6 | Major weather risk; wind still needed |
+| Padres @ Rangers | Globe Life Field | Arlington high 93°F, humid/windy | 14 | Strong heat, roof status needed |
+| Pirates @ Rockies | Coors Field | Denver high 91°F | 20 | Best raw environment |
+| Twins @ D-backs | Chase Field | Phoenix high 107°F, roof status needed | 13 | Extreme heat, roof likely relevant |
+| Angels @ Athletics | Sutter Health Park | Sacramento high 90°F | 16 | Strong heat boost |
+| Red Sox @ Mariners | T-Mobile Park | Seattle high 76°F | 10 | Neutral/slightly mild |
+| Orioles @ Dodgers | Dodger Stadium | Los Angeles high 75°F | 11 | Neutral |
+| Mets @ Phillies | Citizens Bank Park | Philadelphia high 86°F, night game | 15 | Warm night environment |
+
+## Environment Priority List
+
+### Green / Attack First
+
+1. Pirates @ Rockies — 20
+2. Angels @ Athletics — 16
+3. Reds @ Yankees — 15
+4. Mets @ Phillies — 15
+5. Brewers @ Braves — 14
+6. Padres @ Rangers — 14
+
+### Yellow / Need More Data
+
+1. Twins @ D-backs — roof status
+2. Orioles @ Dodgers — pitcher matchup needed
+3. Red Sox @ Mariners — neutral
+4. Nationals @ Rays — dome/neutral
+5. Guardians @ Astros — roof/weather uncertainty
+
+### Red / Deprioritize For Now
+
+1. Blue Jays @ Cubs — rain/thunderstorm risk
+2. Cardinals @ Royals — rain/thunderstorm risk
+
+---
+
+## Pitcher Vulnerability First Pass
+
+| Game | Pitchers | Initial Vulnerability Read |
+|---|---|---|
+| Brewers @ Braves | Robert Gasser vs TBD | Need Braves pitcher. Gasser has elevated ERA, possible Braves bats watch. |
+| Reds @ Yankees | Chase Burns vs TBD | Burns profile appears strong; wait for Yankees pitcher. |
+| Nationals @ Rays | Andrew Alvarez vs Nick Martinez | Martinez strong ERA; Alvarez moderate. Low-priority until splits. |
+| White Sox @ Tigers | Davis Martin vs Justin Verlander | Verlander 12.27 ERA small-sample red flag; Tigers/White Sox needs review. |
+| Guardians @ Astros | Slade Cecconi vs Kai-Wei Teng | Both ERAs above 4.30; possible hitter candidate game. |
+| Cardinals @ Royals | Dustin May vs Stephen Kolek | Both moderate/solid; weather lowers priority. |
+| Pirates @ Rockies | Jared Jones vs Michael Lorenzen | Both ERAs above 6.00; Coors + weak pitching = top research game. |
+| Twins @ D-backs | TBD vs Ryne Nelson | Nelson 4.97 ERA; Twins bats may deserve review. |
+| Angels @ Athletics | TBD vs Jack Perkins | Perkins 6.15 ERA plus hot Sacramento environment = attack watch. |
+| Red Sox @ Mariners | Payton Tolle vs TBD | Tolle solid ERA; needs opposing pitcher. |
+| Orioles @ Dodgers | TBD vs Emmet Sheehan | Sheehan 4.76 ERA; Orioles bats watch if lineup confirms. |
+| Mets @ Phillies | TBD vs Zack Wheeler | Wheeler elite ERA; Phillies side depends on Mets pitcher TBD. |
+
+---
+
+## Current Candidate Games
+
+| Rank | Game | Reason | Status |
+|---:|---|---|---|
+| 1 | Pirates @ Rockies | Coors + two vulnerable pitchers | Priority research |
+| 2 | Angels @ Athletics | Hot environment + Jack Perkins 6.15 ERA | Priority research |
+| 3 | Guardians @ Astros | Both pitchers vulnerable by ERA | Watch |
+| 4 | Mets @ Phillies | Warm night + Phillies offense if Mets pitcher weak | Watch |
+| 5 | Reds @ Yankees | Warm Yankee Stadium, pitcher TBD needed | Watch |
+| 6 | Brewers @ Braves | Warm park, Gasser vulnerability possible | Watch |
+
+---
+
+## Layer 2 Status
+
+Environment pass complete.
+
+Pitcher vulnerability first pass complete.
+
+Next step:
+
+Layer 3 Intelligence Scoring.
+
+Need to score only the best candidate games first:
+
+1. Pirates @ Rockies
+2. Angels @ Athletics
+3. Guardians @ Astros
+4. Mets @ Phillies
 
 # Layer 2 Research
-
-## Environment Analysis
-
-| Game | Environment Notes | Initial Score |
-|--------|--------|--------|
-| Pirates @ Rockies | Coors Field boost | 20 |
-| Blue Jays @ Cubs | Wind dependent | TBD |
-| Padres @ Rangers | Roof dependent | TBD |
-| Twins @ D-backs | Roof dependent | TBD |
-| Mets @ Phillies | Neutral | 10 |
-
-## Pitcher Vulnerability Analysis
-
-Pending
-
-Need:
-
-- HR/9
-- Barrel %
-- Hard Hit %
-- xERA
-- xSLG
-
-for all probable starters.
-
-## Pitch Arsenal Analysis
-
-Pending
-
-Need:
-
-- Pitch mix
-- Velocity
-- Whiff rates
-- Batter pitch-type strengths
-
-## Batter Matchup Analysis
-
-Pending
-
-Need:
-
-- Handedness splits
-- ISO
-- SLG
-- HR rates
-- Recent form
-
-## Candidate Watchlist
-
-### 1. Pirates @ Rockies
-
-Reason:
-Coors Field environment boost.
-
-Status:
-Needs pitcher review.
-
-### 2. Blue Jays @ Cubs
-
-Reason:
-Potential wind game.
-
-Status:
-Needs weather confirmation.
-
-### 3. Mets @ Phillies
-
-Reason:
-Strong offensive talent.
-
-Status:
-Needs matchup review.
-- Pitch arsenal targets
-
 
