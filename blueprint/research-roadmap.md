@@ -33,3 +33,15 @@ Key Questions
 3. Which public metrics are already priced into markets?
 4. What information creates real edge?
 5. How should research become actionable reports?
+
+## Target Architecture
+
+Data Sources
+↓
+Feature Engineering
+↓
+Research Layer
+↓
+Decision Layer
+↓
+Reports
