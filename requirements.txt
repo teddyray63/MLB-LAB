@@ -2,3 +2,5 @@ pybaseball
 pandas
 requests
 tabulate
+markdown
+pytest
