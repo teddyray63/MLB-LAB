@@ -1,21 +1,69 @@
 from datetime import date
 from pathlib import Path
+import json
+import urllib.request
 
 TODAY = date.today().isoformat()
-
 REPORT_PATH = Path("reports/mlb-lab-v1-run-001.md")
 
-SCORING = {
-    "Environment": 20,
-    "Pitcher Vulnerability": 25,
-    "Pitch Arsenal": 20,
-    "Batter Matchup": 20,
-    "Savant Confirmation": 15,
+MLB_SCHEDULE_URL = (
+    f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={TODAY}"
+    "&hydrate=probablePitcher,venue"
+)
+
+ENVIRONMENT_SCORES = {
+    "Coors Field": 20,
+    "Sutter Health Park": 16,
+    "Yankee Stadium": 15,
+    "Citizens Bank Park": 15,
+    "Truist Park": 14,
+    "Globe Life Field": 14,
+    "Chase Field": 13,
+    "Dodger Stadium": 11,
+    "Comerica Park": 11,
+    "T-Mobile Park": 10,
+    "Tropicana Field": 10,
+    "Daikin Park": 10,
+    "loanDepot park": 10,
+    "Kauffman Stadium": 8,
+    "Wrigley Field": 6,
 }
 
-report = f"""# MLB-LAB V1 Run 001
+def fetch_json(url):
+    with urllib.request.urlopen(url) as response:
+        return json.loads(response.read().decode())
 
-Status: Automated Shell Active
+def pitcher_name(team_data):
+    pitcher = team_data.get("probablePitcher")
+    return pitcher.get("fullName", "TBD") if pitcher else "TBD"
+
+def main():
+    data = fetch_json(MLB_SCHEDULE_URL)
+    games = []
+
+    for day in data.get("dates", []):
+        for game in day.get("games", []):
+            away = game["teams"]["away"]["team"]["name"]
+            home = game["teams"]["home"]["team"]["name"]
+            venue = game["venue"]["name"]
+
+            away_pitcher = pitcher_name(game["teams"]["away"])
+            home_pitcher = pitcher_name(game["teams"]["home"])
+
+            env_score = ENVIRONMENT_SCORES.get(venue, 10)
+
+            games.append({
+                "game": f"{away} @ {home}",
+                "venue": venue,
+                "pitchers": f"{away_pitcher} vs {home_pitcher}",
+                "env_score": env_score,
+            })
+
+    games = sorted(games, key=lambda x: x["env_score"], reverse=True)
+
+    report = f"""# MLB-LAB V1 Run 001
+
+Status: Automated Schedule + Environment Active
 
 Date: {TODAY}
 
@@ -27,29 +75,47 @@ Run MLB-LAB V1 using the system already built in this repo.
 
 | Layer | Points |
 |---|---:|
+| Environment | 20 |
+| Pitcher Vulnerability | 25 |
+| Pitch Arsenal | 20 |
+| Batter Matchup | 20 |
+| Savant Confirmation | 15 |
+
+---
+
+## Today's Slate
+
+| Rank | Game | Park | Probable Pitchers | Environment Score |
+|---:|---|---|---|---:|
 """
 
-for layer, points in SCORING.items():
-    report += f"| {layer} | {points} |\n"
+    for i, g in enumerate(games, 1):
+        report += f"| {i} | {g['game']} | {g['venue']} | {g['pitchers']} | {g['env_score']} |\n"
 
-report += """
+    report += """
 
-## Current Automation Status
+---
 
-This script now controls the report generation.
+## Priority Games
+
+These are ranked by environment score only.
 
 Next upgrades:
-1. Pull schedule
-2. Pull probable pitchers
-3. Add weather
-4. Add pitcher scoring
-5. Add hitter candidates
 
-## Output
+1. Add weather
+2. Add pitcher vulnerability scoring
+3. Add pitch arsenal scoring
+4. Add hitter candidate ranking
+5. Generate final daily report
 
-No manual markdown rebuilding needed.
+## Current Output
+
+Automated MLB schedule pull is working.
+Environment scoring is working.
 """
 
-REPORT_PATH.write_text(report)
+    REPORT_PATH.write_text(report)
+    print(f"Updated {REPORT_PATH}")
 
-print(f"Updated {REPORT_PATH}")
+if __name__ == "__main__":
+    main()
