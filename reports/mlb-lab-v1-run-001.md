@@ -89,6 +89,8 @@ Need:
 
 ## Current Status
 
+## Current Status
+
 Layer 1 complete.
 
 Next:
@@ -96,6 +98,85 @@ Next:
 Layer 2 — Research
 
 Focus:
+
 - Pitcher vulnerability
 - Environment score
+- ---
+
+# Layer 2 Research
+
+## Environment Analysis
+
+| Game | Environment Notes | Initial Score |
+|--------|--------|--------|
+| Pirates @ Rockies | Coors Field boost | 20 |
+| Blue Jays @ Cubs | Wind dependent | TBD |
+| Padres @ Rangers | Roof dependent | TBD |
+| Twins @ D-backs | Roof dependent | TBD |
+| Mets @ Phillies | Neutral | 10 |
+
+## Pitcher Vulnerability Analysis
+
+Pending
+
+Need:
+
+- HR/9
+- Barrel %
+- Hard Hit %
+- xERA
+- xSLG
+
+for all probable starters.
+
+## Pitch Arsenal Analysis
+
+Pending
+
+Need:
+
+- Pitch mix
+- Velocity
+- Whiff rates
+- Batter pitch-type strengths
+
+## Batter Matchup Analysis
+
+Pending
+
+Need:
+
+- Handedness splits
+- ISO
+- SLG
+- HR rates
+- Recent form
+
+## Candidate Watchlist
+
+### 1. Pirates @ Rockies
+
+Reason:
+Coors Field environment boost.
+
+Status:
+Needs pitcher review.
+
+### 2. Blue Jays @ Cubs
+
+Reason:
+Potential wind game.
+
+Status:
+Needs weather confirmation.
+
+### 3. Mets @ Phillies
+
+Reason:
+Strong offensive talent.
+
+Status:
+Needs matchup review.
 - Pitch arsenal targets
+
+
