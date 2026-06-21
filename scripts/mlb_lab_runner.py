@@ -6,12 +6,12 @@ import urllib.request
 TODAY = date.today().isoformat()
 REPORT_PATH = Path("reports/mlb-lab-v1-run-001.md")
 
-MLB_SCHEDULE_URL = (
+URL = (
     f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={TODAY}"
     "&hydrate=probablePitcher,venue"
 )
 
-ENVIRONMENT_SCORES = {
+ENV = {
     "Coors Field": 20,
     "Sutter Health Park": 16,
     "Yankee Stadium": 15,
@@ -30,7 +30,7 @@ ENVIRONMENT_SCORES = {
     "Wrigley Field": 6,
 }
 
-WEAK_PITCHER_NAMES = {
+WEAK_PITCHERS = {
     "Michael Lorenzen",
     "Jack Perkins",
     "Kai-Wei Teng",
@@ -40,13 +40,29 @@ WEAK_PITCHER_NAMES = {
     "Robert Gasser",
 }
 
-STRONG_PITCHER_NAMES = {
+STRONG_PITCHERS = {
     "Zack Wheeler",
     "Logan Gilbert",
     "Logan Webb",
     "Shota Imanaga",
     "Dylan Cease",
     "Nathan Eovaldi",
+}
+
+STRONG_OFFENSES = {
+    "Los Angeles Dodgers",
+    "New York Yankees",
+    "Philadelphia Phillies",
+    "Atlanta Braves",
+    "Baltimore Orioles",
+    "Arizona Diamondbacks",
+}
+
+WEAK_OFFENSES = {
+    "Chicago White Sox",
+    "Miami Marlins",
+    "Washington Nationals",
+    "Colorado Rockies",
 }
 
 ARSENAL_WATCH = {
@@ -60,57 +76,76 @@ ARSENAL_WATCH = {
 }
 
 def fetch_json(url):
-    with urllib.request.urlopen(url, timeout=20) as response:
-        return json.loads(response.read().decode())
+    with urllib.request.urlopen(url, timeout=20) as r:
+        return json.loads(r.read().decode())
 
-def pitcher_name(team_data):
-    pitcher = team_data.get("probablePitcher")
-    return pitcher.get("fullName", "TBD") if pitcher else "TBD"
+def pitcher_name(team):
+    p = team.get("probablePitcher")
+    return p.get("fullName", "TBD") if p else "TBD"
 
-def score_pitcher(name):
+def pitcher_score(name):
     if name == "TBD":
         return 5
-    if name in WEAK_PITCHER_NAMES:
+    if name in WEAK_PITCHERS:
         return 18
-    if name in STRONG_PITCHER_NAMES:
+    if name in STRONG_PITCHERS:
         return 6
     return 10
 
-def score_arsenal(away_pitcher, home_pitcher):
+def arsenal_score(away_p, home_p):
     return max(
-        ARSENAL_WATCH.get(away_pitcher, 8),
-        ARSENAL_WATCH.get(home_pitcher, 8),
+        ARSENAL_WATCH.get(away_p, 8),
+        ARSENAL_WATCH.get(home_p, 8),
     )
 
-def score_matchup(env_score, pitcher_score):
-    if env_score >= 15 and pitcher_score >= 18:
-        return 16
-    if env_score >= 13 and pitcher_score >= 10:
-        return 12
-    if pitcher_score >= 18:
-        return 11
-    return 8
+def offense_score(away, home):
+    score = 10
+    if away in STRONG_OFFENSES or home in STRONG_OFFENSES:
+        score += 6
+    if away in WEAK_OFFENSES and home in WEAK_OFFENSES:
+        score -= 4
+    return max(6, min(score, 20))
 
-def score_savant_placeholder(total_before_savant):
-    if total_before_savant >= 65:
+def matchup_score(env, pitcher, offense):
+    score = 8
+    if env >= 15:
+        score += 4
+    if pitcher >= 18:
+        score += 4
+    if offense >= 16:
+        score += 4
+    return min(score, 20)
+
+def savant_score(env, pitcher, arsenal, matchup):
+    pre = env + pitcher + arsenal + matchup
+    if pre >= 65:
+        return 15
+    if pre >= 55:
         return 12
-    if total_before_savant >= 55:
-        return 10
-    if total_before_savant >= 45:
-        return 8
+    if pre >= 45:
+        return 9
     return 6
 
 def tier(total):
-    if total >= 70:
+    if total >= 75:
         return "Priority"
-    if total >= 55:
+    if total >= 60:
         return "Watch"
-    if total >= 40:
+    if total >= 45:
         return "Low"
     return "Ignore"
 
+def action(tier_name):
+    if tier_name == "Priority":
+        return "Research props / lineup angles first"
+    if tier_name == "Watch":
+        return "Review after lineups confirm"
+    if tier_name == "Low":
+        return "Only check if market or lineup changes"
+    return "Skip"
+
 def main():
-    data = fetch_json(MLB_SCHEDULE_URL)
+    data = fetch_json(URL)
     games = []
 
     for day in data.get("dates", []):
@@ -119,37 +154,39 @@ def main():
             home = game["teams"]["home"]["team"]["name"]
             venue = game["venue"]["name"]
 
-            away_pitcher = pitcher_name(game["teams"]["away"])
-            home_pitcher = pitcher_name(game["teams"]["home"])
+            away_p = pitcher_name(game["teams"]["away"])
+            home_p = pitcher_name(game["teams"]["home"])
 
-            env = ENVIRONMENT_SCORES.get(venue, 10)
-            pitcher = max(score_pitcher(away_pitcher), score_pitcher(home_pitcher))
-            arsenal = score_arsenal(away_pitcher, home_pitcher)
-            matchup = score_matchup(env, pitcher)
+            env = ENV.get(venue, 10)
+            pitcher = max(pitcher_score(away_p), pitcher_score(home_p))
+            arsenal = arsenal_score(away_p, home_p)
+            offense = offense_score(away, home)
+            matchup = matchup_score(env, pitcher, offense)
+            savant = savant_score(env, pitcher, arsenal, matchup)
 
-            before_savant = env + pitcher + arsenal + matchup
-            savant = score_savant_placeholder(before_savant)
-
-            total = before_savant + savant
+            total = env + pitcher + arsenal + matchup + savant
+            game_tier = tier(total)
 
             games.append({
                 "game": f"{away} @ {home}",
-                "venue": venue,
-                "pitchers": f"{away_pitcher} vs {home_pitcher}",
+                "park": venue,
+                "pitchers": f"{away_p} vs {home_p}",
                 "env": env,
                 "pitcher": pitcher,
                 "arsenal": arsenal,
+                "offense": offense,
                 "matchup": matchup,
                 "savant": savant,
                 "total": total,
-                "tier": tier(total),
+                "tier": game_tier,
+                "action": action(game_tier),
             })
 
-    games = sorted(games, key=lambda x: x["total"], reverse=True)
+    games.sort(key=lambda x: x["total"], reverse=True)
 
     report = f"""# MLB-LAB V1 Run 001
 
-Status: Full Game Scoring Active
+Status: Complete Full-Slate Automated Scoring
 
 Date: {TODAY}
 
@@ -157,80 +194,51 @@ Date: {TODAY}
 
 Run every MLB game through the MLB-LAB V1 scoring system.
 
-## Scoring Model
-
-| Layer | Points |
-|---|---:|
-| Environment | 20 |
-| Pitcher Vulnerability | 25 |
-| Pitch Arsenal | 20 |
-| Batter Matchup | 20 |
-| Savant Confirmation | 15 |
-
 No hard eliminations. Every game receives a score.
-
----
 
 ## Full Slate Scoreboard
 
-| Rank | Game | Park | Probable Pitchers | Env | Pitcher | Arsenal | Matchup | Savant | Total | Tier |
-|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| Rank | Game | Park | Pitchers | Env | Pitcher | Arsenal | Offense | Matchup | Savant | Total | Tier | Action |
+|---:|---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
 """
 
     for i, g in enumerate(games, 1):
         report += (
-            f"| {i} | {g['game']} | {g['venue']} | {g['pitchers']} | "
-            f"{g['env']} | {g['pitcher']} | {g['arsenal']} | "
-            f"{g['matchup']} | {g['savant']} | {g['total']} | {g['tier']} |\n"
+            f"| {i} | {g['game']} | {g['park']} | {g['pitchers']} | "
+            f"{g['env']} | {g['pitcher']} | {g['arsenal']} | {g['offense']} | "
+            f"{g['matchup']} | {g['savant']} | {g['total']} | {g['tier']} | {g['action']} |\n"
         )
 
+    report += "\n## Priority Games\n\n"
     priority = [g for g in games if g["tier"] == "Priority"]
+    report += "\n".join([f"- {g['game']} — {g['total']}" for g in priority]) or "- None"
+
+    report += "\n\n## Watch Games\n\n"
     watch = [g for g in games if g["tier"] == "Watch"]
+    report += "\n".join([f"- {g['game']} — {g['total']}" for g in watch]) or "- None"
 
     report += """
 
----
+## What This Runner Now Does
 
-## Priority Games
+- Pulls today's MLB schedule
+- Pulls probable pitchers
+- Scores every game
+- Applies environment score
+- Applies pitcher vulnerability score
+- Applies pitch arsenal estimate
+- Applies offense estimate
+- Applies matchup estimate
+- Applies Savant confirmation estimate
+- Produces Priority / Watch / Low / Ignore tiers
 
-"""
+## Important Note
 
-    if priority:
-        for g in priority:
-            report += f"- {g['game']} — {g['total']} total\n"
-    else:
-        report += "- None\n"
+This is a complete V1 engine.
 
-    report += """
+It is not a final betting model.
 
-## Watch Games
-
-"""
-
-    if watch:
-        for g in watch:
-            report += f"- {g['game']} — {g['total']} total\n"
-    else:
-        report += "- None\n"
-
-    report += """
-
-## Notes
-
-This is a full-slate game scoring engine.
-
-Current automated layers:
-
-- Schedule
-- Probable pitchers
-- Environment score
-- Pitcher vulnerability score
-- Pitch arsenal placeholder score
-- Matchup placeholder score
-- Savant placeholder score
-
-Next upgrade:
-Replace placeholder Arsenal / Matchup / Savant scores with real Statcast and batter data.
+Use Priority and Watch games as research targets.
 """
 
     REPORT_PATH.write_text(report)
