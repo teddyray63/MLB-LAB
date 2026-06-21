@@ -20,10 +20,13 @@ jobs:
       - name: Run MLB-LAB
         run: python scripts/mlb_lab_runner.py
 
-      - name: Commit updated report
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add reports/mlb-lab-v1-run-001.md
-          git commit -m "Run MLB-LAB automated report" || echo "No changes"
-          git push
+     - name: Commit updated report
+  run: |
+    git config user.name "github-actions"
+    git config user.email "github-actions@github.com"
+
+    git add reports/mlb-lab-v1-run-001.md
+    git commit -m "Run MLB-LAB automated report" || echo "No changes"
+
+    git pull --rebase origin main
+    git push origin main
