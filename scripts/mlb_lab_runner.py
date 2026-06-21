@@ -70,12 +70,16 @@ def get_schedule():
                 "game": f"{away['name']} @ {home['name']}",
                 "away_team": away["name"],
                 "home_team": home["name"],
+                "away_team_id": away["id"],
+                "home_team_id": home["id"],
                 "away_code": TEAM_CODES.get(away["name"], ""),
                 "home_code": TEAM_CODES.get(home["name"], ""),
                 "park": g["venue"]["name"],
                 "time": g.get("gameDate", "—"),
                 "away_sp": away_sp.get("fullName", "TBD"),
                 "home_sp": home_sp.get("fullName", "TBD"),
+                "away_sp_id": away_sp.get("id"),
+                "home_sp_id": home_sp.get("id"),
             })
 
     return games
@@ -119,8 +123,103 @@ def prep_statcast(sc):
 
     return sc
 
-def pitcher_rows(sc, name):
-    if sc.empty or name == "TBD" or "player_name" not in sc.columns:
+def recent_completed_games(team_id, days_back=4):
+    if not team_id:
+        return []
+
+    start = (TODAY - timedelta(days=days_back)).isoformat()
+    end = (TODAY - timedelta(days=1)).isoformat()
+    url = (f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId={team_id}"
+           f"&startDate={start}&endDate={end}&gameType=R")
+
+    try:
+        data = mlb_json(url)
+    except Exception as e:
+        print(f"Schedule lookup failed for team {team_id}: {e}")
+        return []
+
+    game_pks = []
+    for d in data.get("dates", []):
+        for g in d.get("games", []):
+            if g.get("status", {}).get("abstractGameState") == "Final":
+                game_pks.append((d.get("date"), g.get("gamePk")))
+
+    return sorted(game_pks)
+
+def bullpen_usage(team_id, days_back=4):
+    games = recent_completed_games(team_id, days_back)
+
+    if not games:
+        return [], set()
+
+    rows = []
+    appearance_count = {}
+    yesterday = (TODAY - timedelta(days=1)).isoformat()
+
+    for game_date, game_pk in games:
+        try:
+            box = mlb_json(f"https://statsapi.mlb.com/api/v1/game/{game_pk}/boxscore")
+        except Exception as e:
+            print(f"Boxscore lookup failed for game {game_pk}: {e}")
+            continue
+
+        side = None
+        for s in ("home", "away"):
+            if box.get("teams", {}).get(s, {}).get("team", {}).get("id") == team_id:
+                side = s
+                break
+
+        if not side:
+            continue
+
+        team_box = box["teams"][side]
+        pitcher_ids = team_box.get("pitchers", [])
+        players = team_box.get("players", {})
+
+        # First pitcher listed for a team in a completed game is the starter;
+        # everyone after is bullpen usage.
+        for idx, pid in enumerate(pitcher_ids):
+            stats = players.get(f"ID{pid}", {}).get("stats", {}).get("pitching", {})
+
+            if not stats or idx == 0:
+                continue
+
+            name = players.get(f"ID{pid}", {}).get("person", {}).get("fullName", "Unknown")
+            ip = stats.get("inningsPitched", "0.0")
+            pitches = stats.get("numberOfPitches", 0)
+
+            rows.append([name, game_date, ip, pitches])
+            appearance_count[name] = appearance_count.get(name, 0) + 1
+
+    tired = {name for name, count in appearance_count.items() if count >= 3}
+    tired |= {r[0] for r in rows if r[1] == yesterday}
+
+    rows.sort(key=lambda r: (r[0], r[1]))
+    return rows, tired
+
+def bullpen_context(team_id, team_name, days_back=4):
+    headers = ["Reliever", "Date", "IP", "Pitches"]
+    rows, tired = bullpen_usage(team_id, days_back)
+
+    flag = ", ".join(sorted(tired)) if tired else "No relievers flagged for heavy recent use"
+
+    return f"""### {team_name} Bullpen — Last {days_back} Days
+
+{md_table(headers, rows)}
+
+**Caution arms (pitched yesterday, or 3+ appearances in window):** {flag}
+"""
+
+def pitcher_rows(sc, name, pitcher_id=None):
+    if sc.empty or name == "TBD":
+        return pd.DataFrame()
+
+    if pitcher_id and "pitcher" in sc.columns:
+        by_id = sc[sc["pitcher"] == pitcher_id]
+        if not by_id.empty:
+            return by_id
+
+    if "player_name" not in sc.columns:
         return pd.DataFrame()
 
     parts = name.split()
@@ -131,10 +230,10 @@ def pitcher_rows(sc, name):
     return sc[sc["player_name"].astype(str).str.lower() == reverse.lower()]
 
 def event_stats(df):
-    if df.empty:
+    if df.empty or "events" not in df.columns:
         return 0, 0, 0, None, None, 0, 0, 0, 0
 
-    events = df.dropna(subset=["events"]) if "events" in df.columns else pd.DataFrame()
+    events = df.dropna(subset=["events"])
     ab_events = events[~events["events"].isin(["walk", "intent_walk", "hit_by_pitch", "sac_bunt", "sac_fly"])]
     ab = len(ab_events)
 
@@ -158,16 +257,17 @@ def event_stats(df):
 
     barrel = 0
     if "launch_speed_angle" in df.columns:
-        barrel = (df["launch_speed_angle"] == 6).mean()
+        lsa = df["launch_speed_angle"].dropna()
+        barrel = (lsa == 6).mean() if len(lsa) else 0
 
-    swings = df[df["description"].isin(["swinging_strike", "swinging_strike_blocked", "foul", "hit_into_play"])]
+    swings = df[df["description"].isin(["swinging_strike", "swinging_strike_blocked", "foul", "foul_tip", "hit_into_play"])]
     whiffs = df[df["description"].isin(["swinging_strike", "swinging_strike_blocked"])]
     whiff = len(whiffs) / len(swings) if len(swings) else 0
 
     return avg, slg, iso, woba, xwoba, barrel, hard, whiff, len(events)
 
-def pitcher_profile(sc, name):
-    p = pitcher_rows(sc, name)
+def pitcher_profile(sc, name, pitcher_id=None):
+    p = pitcher_rows(sc, name, pitcher_id)
 
     if p.empty:
         return md_table(["Stat", "Value"], [])
@@ -194,8 +294,8 @@ def pitcher_profile(sc, name):
 
     return md_table(["Stat", "Value"], rows)
 
-def arsenal(sc, name):
-    p = pitcher_rows(sc, name)
+def arsenal(sc, name, pitcher_id=None):
+    p = pitcher_rows(sc, name, pitcher_id)
     headers = ["Pitch", "Side", "Usage", "Pitches", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
 
     if p.empty or "pitch_type" not in p.columns or "stand" not in p.columns:
@@ -223,16 +323,16 @@ def arsenal(sc, name):
 
     return md_table(headers, sorted(rows, key=lambda x: (x[0], x[1])))
 
-def major_pitches(sc, name):
-    p = pitcher_rows(sc, name)
+def major_pitches(sc, name, pitcher_id=None):
+    p = pitcher_rows(sc, name, pitcher_id)
     if p.empty or "pitch_type" not in p.columns:
         return []
 
     mix = p["pitch_type"].value_counts(normalize=True)
     return list(mix[mix >= 0.08].index)
 
-def last_5_starts(sc, name):
-    p = pitcher_rows(sc, name)
+def last_5_starts(sc, name, pitcher_id=None):
+    p = pitcher_rows(sc, name, pitcher_id)
     headers = ["Date", "Pitches", "Hits", "BB", "K", "HR"]
 
     if p.empty or "game_date" not in p.columns:
@@ -268,7 +368,7 @@ def team_hitter_pool(sc, team_code):
             continue
 
         rows.append({
-            "Hitter": name,
+            "Hitter": str(name).title(),
             "PA": pa,
             "AVG": avg,
             "SLG": slg,
@@ -354,8 +454,8 @@ def hitter_vs_pitch(sc, hitters, pitches):
     return md_table(headers, rows)
 
 def game_dissection(sc, g, away_hitters, home_hitters):
-    away_mix = major_pitches(sc, g["away_sp"])
-    home_mix = major_pitches(sc, g["home_sp"])
+    away_mix = major_pitches(sc, g["away_sp"], g.get("away_sp_id"))
+    home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
 
     return f"""
 ## Final Game Dissection
@@ -366,16 +466,16 @@ def game_dissection(sc, g, away_hitters, home_hitters):
 - Away hitters should be checked against home SP pitch mix above.
 - Lineup advantage: compare wOBA, xwOBA, ISO, Barrel%, HardHit%, Whiff%.
 - Handedness advantage: use pitcher arsenal vs L/R tables.
-- Bullpen context: not included yet.
-- Final MLB-LAB read: decide from pitch mix, hitter pool, L/R damage, and current form.
+- Bullpen fatigue: see Bullpen Fatigue Report above.
+- Final MLB-LAB read: decide from pitch mix, hitter pool, L/R damage, current form, and bullpen fatigue.
 """
 
 def game_card(i, g, sc):
     away_hitters = team_hitter_pool(sc, g["away_code"])
     home_hitters = team_hitter_pool(sc, g["home_code"])
 
-    away_mix = major_pitches(sc, g["away_sp"])
-    home_mix = major_pitches(sc, g["home_sp"])
+    away_mix = major_pitches(sc, g["away_sp"], g.get("away_sp_id"))
+    home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
 
     return f"""
 ---
@@ -397,15 +497,15 @@ def game_card(i, g, sc):
 
 ### Pitcher Profile
 
-{pitcher_profile(sc, g["away_sp"])}
+{pitcher_profile(sc, g["away_sp"], g.get("away_sp_id"))}
 
 ### Full Pitch Arsenal vs L/R
 
-{arsenal(sc, g["away_sp"])}
+{arsenal(sc, g["away_sp"], g.get("away_sp_id"))}
 
 ### Last 5 Starts / Appearances
 
-{last_5_starts(sc, g["away_sp"])}
+{last_5_starts(sc, g["away_sp"], g.get("away_sp_id"))}
 
 ## Home Hitters vs Away SP Pitch Mix
 
@@ -415,15 +515,15 @@ def game_card(i, g, sc):
 
 ### Pitcher Profile
 
-{pitcher_profile(sc, g["home_sp"])}
+{pitcher_profile(sc, g["home_sp"], g.get("home_sp_id"))}
 
 ### Full Pitch Arsenal vs L/R
 
-{arsenal(sc, g["home_sp"])}
+{arsenal(sc, g["home_sp"], g.get("home_sp_id"))}
 
 ### Last 5 Starts / Appearances
 
-{last_5_starts(sc, g["home_sp"])}
+{last_5_starts(sc, g["home_sp"], g.get("home_sp_id"))}
 
 ## Away Hitters vs Home SP Pitch Mix
 
@@ -436,6 +536,12 @@ def game_card(i, g, sc):
 ## {g['home_team']} Team Hitter Pool
 
 {hitter_pool_md(home_hitters)}
+
+## Bullpen Fatigue Report
+
+{bullpen_context(g.get("away_team_id"), g["away_team"])}
+
+{bullpen_context(g.get("home_team_id"), g["home_team"])}
 
 {game_dissection(sc, g, away_hitters, home_hitters)}
 """
@@ -451,6 +557,7 @@ Date: {TODAY}
 This runner uses:
 - MLB Stats API for slate, teams, parks, probable pitchers
 - Baseball Savant / Statcast for pitcher arsenal, L/R splits, hitter pools, hitter-vs-pitch matchups
+- MLB Stats API boxscores for bullpen usage/fatigue over the last 4 days
 
 Removed:
 - FanGraphs hard dependency
