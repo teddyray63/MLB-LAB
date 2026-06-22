@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/teddyervin/Documents/MLBLab/MLB-LAB/scripts/mlb_lab_runner.py", line 6, in <module>
+    from openpyxl import Workbook
+ModuleNotFoundError: No module named 'openpyxl'
+/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/pybaseball/statcast.py:50: UserWarning: 
+That's a nice request you got there. It'd be a shame if something were to happen to it.
+We strongly recommend that you enable caching before running this. It's as simple as `pybaseball.cache.enable()`.
+Since the Statcast requests can take a *really* long time to run, if something were to happen, like: a disconnect;
+gremlins; computer repair by associates of Rudy Giuliani; electromagnetic interference from metal trash cans; etc.;
+you could lose a lot of progress. Enabling caching will allow you to immediately recover all the successful
+subqueries if that happens.
+  warnings.warn(_OVERSIZE_WARNING)
+  0%|          | 0/99 [00:00<?, ?it/s]  1%|          | 1/99 [00:00<00:40,  2.44it/s]  2%|▏         | 2/99 [00:01<01:45,  1.08s/it]  3%|▎         | 3/99 [00:02<01:02,  1.53it/s]  7%|▋         | 7/99 [00:02<00:19,  4.77it/s]  9%|▉         | 9/99 [00:02<00:17,  5.25it/s]  9%|▉         | 9/99 [00:20<00:17,  5.25it/s]  9%|▉         | 9/99 [00:38<06:28,  4.32s/it]

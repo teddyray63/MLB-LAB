@@ -28,14 +28,14 @@ Removed:
 | 5 | San Francisco Giants @ Miami Marlins | loanDepot park | Logan Webb | Ryan Gusto |
 | 6 | Cleveland Guardians @ Houston Astros | Daikin Park | Slade Cecconi | Kai-Wei Teng |
 | 7 | St. Louis Cardinals @ Kansas City Royals | Kauffman Stadium | Dustin May | Stephen Kolek |
-| 8 | Toronto Blue Jays @ Chicago Cubs | Wrigley Field | Dylan Cease | Shota Imanaga |
-| 9 | San Diego Padres @ Texas Rangers | Globe Life Field | Wandy Peralta | Nathan Eovaldi |
-| 10 | Pittsburgh Pirates @ Colorado Rockies | Coors Field | Jared Jones | Michael Lorenzen |
-| 11 | Minnesota Twins @ Arizona Diamondbacks | Chase Field | Mike Paredes | Jose Cabrera |
-| 12 | Los Angeles Angels @ Athletics | Sutter Health Park | Reid Detmers | Jack Perkins |
-| 13 | Baltimore Orioles @ Los Angeles Dodgers | UNIQLO Field at Dodger Stadium | Brandon Young | Emmet Sheehan |
-| 14 | Boston Red Sox @ Seattle Mariners | T-Mobile Park | Payton Tolle | Logan Gilbert |
-| 15 | New York Mets @ Philadelphia Phillies | Citizens Bank Park | David Peterson | Zack Wheeler |
+| 8 | San Diego Padres @ Texas Rangers | Globe Life Field | Wandy Peralta | Nathan Eovaldi |
+| 9 | Pittsburgh Pirates @ Colorado Rockies | Coors Field | Jared Jones | Michael Lorenzen |
+| 10 | Minnesota Twins @ Arizona Diamondbacks | Chase Field | Mike Paredes | Jose Cabrera |
+| 11 | Los Angeles Angels @ Athletics | Sutter Health Park | Reid Detmers | Jack Perkins |
+| 12 | Baltimore Orioles @ Los Angeles Dodgers | UNIQLO Field at Dodger Stadium | Brandon Young | Emmet Sheehan |
+| 13 | Boston Red Sox @ Seattle Mariners | T-Mobile Park | Payton Tolle | Logan Gilbert |
+| 14 | New York Mets @ Philadelphia Phillies | Citizens Bank Park | David Peterson | Zack Wheeler |
+| 15 | Toronto Blue Jays @ Chicago Cubs | Wrigley Field | Dylan Cease | Shota Imanaga |
 
 ---
 
@@ -110,8 +110,8 @@ Removed:
 | FF | Aaron Judge | 54 | 0.233 | 0.558 | 0.326 | 0.404 | 0.467 | 26.9% | 24.7% | 22.9% |
 | SL | Trent Grisham | 23 | 0.158 | 0.474 | 0.316 | 0.374 | 0.283 | 18.2% | 30.0% | 34.4% |
 | SL | José Caballero | 37 | 0.314 | 0.629 | 0.314 | 0.412 | 0.360 | 3.4% | 20.0% | 32.9% |
-| SL | Jazz Chisholm | 45 | 0.225 | 0.500 | 0.275 | 0.347 | 0.294 | 11.1% | 33.3% | 37.7% |
 | SL | Ben Rice | 49 | 0.350 | 0.625 | 0.275 | 0.467 | 0.400 | 13.3% | 41.5% | 33.3% |
+| SL | Jazz Chisholm | 45 | 0.225 | 0.500 | 0.275 | 0.347 | 0.294 | 11.1% | 33.3% | 37.7% |
 | SL | Amed Rosario | 13 | 0.308 | 0.538 | 0.231 | 0.362 | 0.381 | 12.5% | 22.7% | 33.3% |
 | FF | Austin Wells | 58 | 0.213 | 0.426 | 0.213 | 0.339 | 0.327 | 7.9% | 25.9% | 17.9% |
 | FF | Ryan Mcmahon | 66 | 0.295 | 0.475 | 0.180 | 0.351 | 0.374 | 14.0% | 19.6% | 18.3% |
@@ -123,9 +123,9 @@ Removed:
 | FF | José Caballero | 72 | 0.227 | 0.333 | 0.106 | 0.281 | 0.249 | 4.9% | 19.6% | 26.5% |
 | FF | Amed Rosario | 34 | 0.138 | 0.207 | 0.069 | 0.209 | 0.228 | 9.1% | 13.3% | 17.7% |
 | FF | Giancarlo Stanton | 30 | 0.148 | 0.148 | 0.000 | 0.167 | 0.213 | 23.5% | 15.8% | 28.8% |
-| SL | J. C. Escarra | 12 | 0.000 | 0.000 | 0.000 | 0.000 | 0.168 | 12.5% | 30.8% | 37.5% |
-| SL | Paul Goldschmidt | 33 | 0.367 | 0.367 | 0.000 | 0.364 | 0.290 | 0.0% | 21.7% | 27.9% |
 | SL | Ryan Mcmahon | 29 | 0.185 | 0.185 | 0.000 | 0.203 | 0.245 | 6.7% | 42.3% | 40.8% |
+| SL | Paul Goldschmidt | 33 | 0.367 | 0.367 | 0.000 | 0.364 | 0.290 | 0.0% | 21.7% | 27.9% |
+| SL | J. C. Escarra | 12 | 0.000 | 0.000 | 0.000 | 0.000 | 0.168 | 12.5% | 30.8% | 37.5% |
 | SL | Austin Wells | 28 | 0.074 | 0.074 | 0.000 | 0.089 | 0.221 | 0.0% | 38.7% | 43.9% |
 
 
@@ -457,8 +457,8 @@ Removed:
 | SI | Jackson Chourio | 42 | 0.378 | 0.595 | 0.216 | 0.474 | 0.452 | 10.3% | 44.2% | 10.1% |
 | FF | Jackson Chourio | 55 | 0.255 | 0.471 | 0.216 | 0.352 | 0.336 | 21.2% | 27.0% | 25.5% |
 | CH | Gary Sánchez | 17 | 0.267 | 0.467 | 0.200 | 0.318 | 0.268 | 7.7% | 43.8% | 38.2% |
-| FF | Brice Turang | 97 | 0.211 | 0.408 | 0.197 | 0.358 | 0.358 | 12.8% | 17.0% | 18.9% |
 | FF | David Hamilton | 79 | 0.258 | 0.455 | 0.197 | 0.365 | 0.315 | 5.3% | 18.6% | 9.2% |
+| FF | Brice Turang | 97 | 0.211 | 0.408 | 0.197 | 0.358 | 0.358 | 12.8% | 17.0% | 18.9% |
 | SL | Jake Bauers | 43 | 0.167 | 0.361 | 0.194 | 0.299 | 0.318 | 10.0% | 30.4% | 26.9% |
 | SI | Jake Bauers | 53 | 0.250 | 0.432 | 0.182 | 0.360 | 0.389 | 10.0% | 30.9% | 11.6% |
 | CH | Brice Turang | 34 | 0.214 | 0.393 | 0.179 | 0.341 | 0.322 | 0.0% | 19.0% | 21.0% |
@@ -720,8 +720,8 @@ Removed:
 | FF | Brady House | 53 | 0.224 | 0.490 | 0.265 | 0.345 | 0.343 | 23.1% | 28.8% | 35.8% |
 | FF | Keibert Ruiz | 54 | 0.260 | 0.520 | 0.260 | 0.356 | 0.297 | 6.2% | 28.9% | 5.5% |
 | CH | Keibert Ruiz | 32 | 0.250 | 0.500 | 0.250 | 0.316 | 0.208 | 4.0% | 32.4% | 28.3% |
-| FF | Cj Abrams | 81 | 0.354 | 0.600 | 0.246 | 0.467 | 0.433 | 13.5% | 19.8% | 21.7% |
 | FF | Jacob Young | 74 | 0.231 | 0.477 | 0.246 | 0.358 | 0.349 | 7.7% | 25.5% | 12.0% |
+| FF | Cj Abrams | 81 | 0.354 | 0.600 | 0.246 | 0.467 | 0.433 | 13.5% | 19.8% | 21.7% |
 | SI | Luis García | 38 | 0.286 | 0.514 | 0.229 | 0.368 | 0.356 | 9.4% | 36.2% | 1.6% |
 | SI | Daylen Lile | 48 | 0.341 | 0.561 | 0.220 | 0.436 | 0.460 | 5.0% | 26.6% | 10.8% |
 | SI | James Wood | 59 | 0.326 | 0.543 | 0.217 | 0.444 | 0.511 | 21.6% | 42.4% | 15.5% |
@@ -1466,8 +1466,8 @@ Removed:
 | CU | Isaac Paredes | 20 | 0.167 | 0.333 | 0.167 | 0.260 | 0.336 | 15.4% | 18.5% | 22.0% |
 | SI | Christian Walker | 69 | 0.295 | 0.459 | 0.164 | 0.407 | 0.377 | 10.7% | 33.7% | 8.3% |
 | FC | José Altuve | 19 | 0.211 | 0.368 | 0.158 | 0.247 | 0.352 | 11.8% | 28.0% | 12.9% |
-| FF | Christian Vázquez | 73 | 0.219 | 0.375 | 0.156 | 0.295 | 0.265 | 3.7% | 12.7% | 15.2% |
 | FF | Jeremy Peña | 37 | 0.344 | 0.500 | 0.156 | 0.411 | 0.446 | 7.4% | 20.6% | 10.0% |
+| FF | Christian Vázquez | 73 | 0.219 | 0.375 | 0.156 | 0.295 | 0.265 | 3.7% | 12.7% | 15.2% |
 | SI | Yordan Álvarez | 58 | 0.326 | 0.478 | 0.152 | 0.422 | 0.452 | 11.1% | 34.8% | 11.8% |
 | FC | Cam Smith | 21 | 0.200 | 0.350 | 0.150 | 0.257 | 0.445 | 10.5% | 20.6% | 20.8% |
 | FF | Jake Meyers | 45 | 0.286 | 0.429 | 0.143 | 0.354 | 0.294 | 11.1% | 21.0% | 10.4% |
@@ -1541,8 +1541,8 @@ Removed:
 | SI | Travis Bazzana | 46 | 0.324 | 0.568 | 0.243 | 0.442 | 0.410 | 8.8% | 36.8% | 16.2% |
 | ST | Chase Delauter | 19 | 0.235 | 0.471 | 0.235 | 0.339 | 0.355 | 0.0% | 42.1% | 9.1% |
 | FF | Angel Martínez | 64 | 0.179 | 0.411 | 0.232 | 0.305 | 0.318 | 11.1% | 19.2% | 11.1% |
-| CU | Chase Delauter | 14 | 0.077 | 0.308 | 0.231 | 0.257 | 0.262 | 8.3% | 25.0% | 15.8% |
 | CU | Daniel Schneemann | 13 | 0.308 | 0.538 | 0.231 | 0.431 | 0.325 | 9.1% | 11.1% | 10.0% |
+| CU | Chase Delauter | 14 | 0.077 | 0.308 | 0.231 | 0.257 | 0.262 | 8.3% | 25.0% | 15.8% |
 | CH | Travis Bazzana | 16 | 0.143 | 0.357 | 0.214 | 0.269 | 0.187 | 0.0% | 16.7% | 51.5% |
 | FF | David Fry | 50 | 0.205 | 0.410 | 0.205 | 0.356 | 0.285 | 7.1% | 28.6% | 22.2% |
 | FF | Rhys Hoskins | 69 | 0.185 | 0.389 | 0.204 | 0.343 | 0.307 | 7.9% | 24.0% | 22.9% |
@@ -1819,8 +1819,8 @@ Removed:
 | SL | Pedro Pagés | 27 | 0.259 | 0.444 | 0.185 | 0.300 | 0.280 | 5.0% | 35.5% | 27.9% |
 | SI | Jordan Walker | 69 | 0.267 | 0.450 | 0.183 | 0.371 | 0.406 | 12.2% | 39.5% | 15.4% |
 | FF | José Fermín | 43 | 0.175 | 0.350 | 0.175 | 0.271 | 0.207 | 2.9% | 18.2% | 11.4% |
-| SI | Nolan Gorman | 25 | 0.217 | 0.391 | 0.174 | 0.266 | 0.292 | 10.5% | 34.4% | 22.2% |
 | SI | Pedro Pagés | 28 | 0.391 | 0.565 | 0.174 | 0.423 | 0.397 | 9.1% | 20.0% | 16.0% |
+| SI | Nolan Gorman | 25 | 0.217 | 0.391 | 0.174 | 0.266 | 0.292 | 10.5% | 34.4% | 22.2% |
 | SI | Nathan Church | 20 | 0.278 | 0.444 | 0.167 | 0.350 | 0.383 | 16.7% | 16.0% | 10.0% |
 | FF | Iván Herrera | 94 | 0.257 | 0.419 | 0.162 | 0.387 | 0.391 | 8.2% | 30.1% | 13.0% |
 | SL | Victor Scott | 31 | 0.120 | 0.280 | 0.160 | 0.266 | 0.274 | 0.0% | 12.1% | 26.5% |
@@ -1918,286 +1918,7 @@ Removed:
 
 ---
 
-# 8. Toronto Blue Jays @ Chicago Cubs
-
-## Game Context
-
-| Field | Value |
-| --- | --- |
-| Park | Wrigley Field |
-| Time | 2026-06-21T18:20:00Z |
-| Away Team | Toronto Blue Jays |
-| Home Team | Chicago Cubs |
-| Away Probable Pitcher | Dylan Cease |
-| Home Probable Pitcher | Shota Imanaga |
-
-
-## Away Starting Pitcher: Dylan Cease
-
-### Pitcher Profile
-
-| Stat | Value |
-| --- | --- |
-| Sample Pitches | 1365 |
-| Batted/Result Events | 324 |
-| Hits Allowed | 59 |
-| Walks | 33 |
-| Strikeouts | 116 |
-| Home Runs | 5 |
-| K Event Rate | 35.8% |
-| BB Event Rate | 10.2% |
-| HR Event Rate | 1.5% |
-
-
-### Full Pitch Arsenal vs L/R
-
-| Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| CH | vs L | 10.9% | 149 | 0.190 | 0.238 | 0.048 | 0.188 | 0.225 | 9.1% | 11.8% | 62.5% |
-| CH | vs R | 0.6% | 8 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 0.0% |
-| FF | vs L | 21.0% | 286 | 0.284 | 0.448 | 0.164 | 0.365 | 0.337 | 4.2% | 22.2% | 16.7% |
-| FF | vs R | 13.3% | 181 | 0.233 | 0.349 | 0.116 | 0.336 | 0.251 | 14.3% | 26.8% | 39.1% |
-| KC | vs L | 7.4% | 101 | 0.273 | 0.273 | 0.000 | 0.245 | 0.269 | 14.3% | 14.3% | 38.5% |
-| KC | vs R | 1.9% | 26 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 0.0% |
-| SI | vs L | 3.9% | 53 | 0.000 | 0.000 | 0.000 | 0.184 | 0.257 | 0.0% | 9.1% | 16.7% |
-| SI | vs R | 6.3% | 86 | 0.158 | 0.158 | 0.000 | 0.170 | 0.342 | 5.6% | 25.7% | 16.3% |
-| SL | vs L | 13.4% | 183 | 0.125 | 0.225 | 0.100 | 0.236 | 0.284 | 5.6% | 25.5% | 45.3% |
-| SL | vs R | 16.0% | 219 | 0.172 | 0.207 | 0.034 | 0.215 | 0.220 | 0.0% | 16.7% | 42.7% |
-| ST | vs L | 0.9% | 12 | 0.333 | 0.667 | 0.333 | 0.417 | 0.205 | 0.0% | 20.0% | 16.7% |
-| ST | vs R | 4.4% | 60 | 0.364 | 0.364 | 0.000 | 0.327 | 0.213 | 0.0% | 23.1% | 26.3% |
-
-
-### Last 5 Starts / Appearances
-
-| Date | Pitches | Hits | BB | K | HR |
-| --- | --- | --- | --- | --- | --- |
-| 2026-06-16 | 108 | 4 | 4 | 7 | 0 |
-| 2026-06-09 | 93 | 3 | 1 | 11 | 0 |
-| 2026-05-24 | 77 | 4 | 1 | 8 | 2 |
-| 2026-05-19 | 100 | 4 | 4 | 9 | 2 |
-| 2026-05-13 | 99 | 3 | 3 | 9 | 0 |
-
-
-## Home Hitters vs Away SP Pitch Mix
-
-| Pitch | Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| SL | Michael Conforto | 9 | 0.375 | 1.000 | 0.625 | 0.578 | 0.385 | 33.3% | 31.2% | 23.8% |
-| SI | Michael Conforto | 21 | 0.647 | 1.176 | 0.529 | 0.726 | 0.618 | 20.0% | 61.9% | 12.5% |
-| SL | Pete Crow-Armstrong | 44 | 0.378 | 0.811 | 0.432 | 0.515 | 0.475 | 24.1% | 30.0% | 32.1% |
-| FF | Matt Shaw | 47 | 0.310 | 0.667 | 0.357 | 0.472 | 0.335 | 13.8% | 24.6% | 19.1% |
-| SL | Ian Happ | 37 | 0.273 | 0.576 | 0.303 | 0.393 | 0.352 | 22.7% | 25.0% | 34.5% |
-| FF | Moisés Ballesteros | 53 | 0.156 | 0.444 | 0.289 | 0.301 | 0.295 | 23.1% | 32.1% | 35.2% |
-| FF | Miguel Amaya | 45 | 0.333 | 0.619 | 0.286 | 0.459 | 0.318 | 18.2% | 26.6% | 12.7% |
-| FF | Ian Happ | 112 | 0.221 | 0.505 | 0.284 | 0.378 | 0.325 | 15.8% | 25.6% | 24.9% |
-| CH | Carson Kelly | 13 | 0.250 | 0.500 | 0.250 | 0.346 | 0.291 | 11.1% | 38.9% | 36.4% |
-| SI | Miguel Amaya | 23 | 0.375 | 0.625 | 0.250 | 0.511 | 0.485 | 6.7% | 33.3% | 13.2% |
-| FF | Seiya Suzuki | 69 | 0.276 | 0.517 | 0.241 | 0.396 | 0.337 | 14.3% | 28.4% | 17.9% |
-| SL | Michael Busch | 44 | 0.342 | 0.579 | 0.237 | 0.419 | 0.265 | 9.1% | 18.2% | 41.0% |
-| FF | Dansby Swanson | 93 | 0.253 | 0.480 | 0.227 | 0.390 | 0.354 | 5.6% | 30.6% | 23.7% |
-| SL | Matt Shaw | 24 | 0.318 | 0.545 | 0.227 | 0.433 | 0.390 | 5.9% | 23.1% | 22.6% |
-| FF | Michael Conforto | 41 | 0.222 | 0.444 | 0.222 | 0.330 | 0.313 | 8.7% | 28.6% | 14.8% |
-| SL | Miguel Amaya | 35 | 0.222 | 0.444 | 0.222 | 0.389 | 0.349 | 9.5% | 14.7% | 31.5% |
-| SI | Seiya Suzuki | 56 | 0.380 | 0.600 | 0.220 | 0.468 | 0.456 | 10.0% | 32.9% | 13.3% |
-| SI | Dansby Swanson | 56 | 0.271 | 0.479 | 0.208 | 0.405 | 0.382 | 10.5% | 31.9% | 21.0% |
-| SI | Michael Busch | 69 | 0.260 | 0.460 | 0.200 | 0.428 | 0.486 | 19.0% | 32.3% | 16.7% |
-| SI | Pete Crow-Armstrong | 48 | 0.463 | 0.659 | 0.195 | 0.518 | 0.457 | 8.3% | 37.3% | 13.9% |
-| CH | Pete Crow-Armstrong | 42 | 0.216 | 0.405 | 0.189 | 0.298 | 0.335 | 3.7% | 37.3% | 30.6% |
-| SL | Seiya Suzuki | 50 | 0.182 | 0.364 | 0.182 | 0.304 | 0.328 | 6.5% | 24.2% | 29.3% |
-| SL | Carson Kelly | 46 | 0.250 | 0.425 | 0.175 | 0.362 | 0.298 | 3.2% | 22.0% | 32.9% |
-| FF | Pete Crow-Armstrong | 108 | 0.200 | 0.368 | 0.168 | 0.296 | 0.306 | 9.2% | 32.1% | 18.6% |
-| FF | Michael Busch | 119 | 0.219 | 0.381 | 0.162 | 0.331 | 0.339 | 12.9% | 25.2% | 11.9% |
-| SI | Moisés Ballesteros | 28 | 0.346 | 0.500 | 0.154 | 0.389 | 0.311 | 13.6% | 27.9% | 11.3% |
-| SL | Moisés Ballesteros | 24 | 0.150 | 0.300 | 0.150 | 0.275 | 0.261 | 0.0% | 21.9% | 24.5% |
-| FF | Alex Bregman | 91 | 0.296 | 0.444 | 0.148 | 0.362 | 0.336 | 5.6% | 30.8% | 7.9% |
-| SL | Nico Hoerner | 47 | 0.295 | 0.432 | 0.136 | 0.339 | 0.311 | 2.4% | 17.2% | 19.3% |
-| SI | Ian Happ | 36 | 0.267 | 0.400 | 0.133 | 0.357 | 0.356 | 8.7% | 31.9% | 7.5% |
-
-
-## Home Starting Pitcher: Shota Imanaga
-
-### Pitcher Profile
-
-| Stat | Value |
-| --- | --- |
-| Sample Pitches | 1505 |
-| Batted/Result Events | 389 |
-| Hits Allowed | 78 |
-| Walks | 25 |
-| Strikeouts | 97 |
-| Home Runs | 18 |
-| K Event Rate | 24.9% |
-| BB Event Rate | 6.4% |
-| HR Event Rate | 4.6% |
-
-
-### Full Pitch Arsenal vs L/R
-
-| Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| CU | vs L | 0.1% | 1 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 0.0% |
-| CU | vs R | 3.1% | 46 | 0.000 | 0.000 | 0.000 | 0.140 | 0.420 | 25.0% | 22.2% | 10.0% |
-| FF | vs L | 10.2% | 153 | 0.200 | 0.350 | 0.150 | 0.260 | 0.369 | 11.8% | 38.5% | 7.9% |
-| FF | vs R | 32.8% | 494 | 0.270 | 0.470 | 0.200 | 0.363 | 0.344 | 13.9% | 24.4% | 21.3% |
-| FS | vs L | 4.3% | 65 | 0.167 | 0.222 | 0.056 | 0.197 | 0.138 | 0.0% | 6.7% | 57.9% |
-| FS | vs R | 29.0% | 437 | 0.185 | 0.403 | 0.218 | 0.275 | 0.249 | 9.3% | 21.2% | 39.5% |
-| SI | vs L | 2.3% | 35 | 0.214 | 0.429 | 0.214 | 0.347 | 0.363 | 8.3% | 33.3% | 22.7% |
-| SI | vs R | 4.7% | 71 | 0.250 | 0.450 | 0.200 | 0.320 | 0.313 | 5.0% | 40.7% | 15.6% |
-| SL | vs L | 0.1% | 1 | 0.000 | 0.000 | 0.000 | 0.000 | — | 0.0% | 0.0% | 0.0% |
-| SL | vs R | 0.1% | 1 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 100.0% |
-| ST | vs L | 9.5% | 143 | 0.226 | 0.548 | 0.323 | 0.333 | 0.247 | 15.0% | 16.2% | 43.2% |
-| ST | vs R | 3.8% | 57 | 0.273 | 0.364 | 0.091 | 0.342 | 0.375 | 0.0% | 31.2% | 26.1% |
-
-
-### Last 5 Starts / Appearances
-
-| Date | Pitches | Hits | BB | K | HR |
-| --- | --- | --- | --- | --- | --- |
-| 2026-06-15 | 85 | 5 | 1 | 3 | 0 |
-| 2026-06-10 | 90 | 2 | 2 | 7 | 0 |
-| 2026-06-04 | 84 | 6 | 1 | 5 | 4 |
-| 2026-05-29 | 75 | 5 | 1 | 2 | 3 |
-| 2026-05-24 | 94 | 7 | 1 | 6 | 3 |
-
-
-## Away Hitters vs Home SP Pitch Mix
-
-| Pitch | Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| FS | Kazuma Okamoto | 4 | 0.333 | 1.333 | 1.000 | 0.675 | 0.622 | 100.0% | 14.3% | 36.4% |
-| FS | Brandon Valenzuela | 9 | 0.111 | 0.444 | 0.333 | 0.222 | 0.309 | 16.7% | 25.0% | 50.0% |
-| FS | Yohendrick Pinango | 10 | 0.556 | 0.889 | 0.333 | 0.720 | 0.271 | 0.0% | 38.5% | 13.3% |
-| FF | Kazuma Okamoto | 105 | 0.315 | 0.620 | 0.304 | 0.432 | 0.420 | 21.9% | 39.6% | 26.5% |
-| FF | Daulton Varsho | 86 | 0.224 | 0.513 | 0.289 | 0.352 | 0.330 | 20.4% | 25.6% | 18.5% |
-| FF | George Springer | 74 | 0.279 | 0.557 | 0.279 | 0.413 | 0.359 | 11.8% | 22.9% | 18.8% |
-| ST | Andrés Giménez | 20 | 0.263 | 0.526 | 0.263 | 0.350 | 0.271 | 7.1% | 7.1% | 28.6% |
-| FF | Ernie Clement | 76 | 0.301 | 0.521 | 0.219 | 0.375 | 0.258 | 0.0% | 14.8% | 9.2% |
-| FF | Andrés Giménez | 77 | 0.239 | 0.437 | 0.197 | 0.319 | 0.233 | 3.7% | 9.4% | 20.1% |
-| FS | Daulton Varsho | 13 | 0.333 | 0.500 | 0.167 | 0.385 | 0.387 | 11.1% | 46.2% | 34.8% |
-| ST | Myles Straw | 6 | 0.167 | 0.333 | 0.167 | 0.208 | 0.091 | 0.0% | 11.1% | 10.0% |
-| FF | Jesús Sánchez | 74 | 0.313 | 0.463 | 0.149 | 0.342 | 0.329 | 8.0% | 23.6% | 21.4% |
-| FF | Vladimir Guerrero | 57 | 0.327 | 0.469 | 0.143 | 0.382 | 0.395 | 9.5% | 28.1% | 16.1% |
-| ST | Nathan Lukes | 7 | 0.143 | 0.286 | 0.143 | 0.179 | 0.190 | 0.0% | 16.7% | 20.0% |
-| ST | George Springer | 33 | 0.143 | 0.286 | 0.143 | 0.286 | 0.243 | 10.0% | 15.4% | 25.9% |
-| FS | Jesús Sánchez | 15 | 0.267 | 0.400 | 0.133 | 0.347 | 0.258 | 0.0% | 24.0% | 18.4% |
-| ST | Kazuma Okamoto | 35 | 0.156 | 0.281 | 0.125 | 0.230 | 0.213 | 6.7% | 13.8% | 37.9% |
-| FF | Myles Straw | 49 | 0.317 | 0.439 | 0.122 | 0.365 | 0.405 | 7.9% | 21.9% | 9.5% |
-| FF | Brandon Valenzuela | 58 | 0.220 | 0.320 | 0.100 | 0.278 | 0.336 | 5.1% | 19.8% | 17.4% |
-| FS | Nathan Lukes | 11 | 0.455 | 0.545 | 0.091 | 0.441 | 0.198 | 0.0% | 6.7% | 10.5% |
-| FS | Vladimir Guerrero | 12 | 0.091 | 0.182 | 0.091 | 0.163 | 0.285 | 0.0% | 46.7% | 17.4% |
-| FF | Davis Schneider | 49 | 0.103 | 0.179 | 0.077 | 0.238 | 0.265 | 9.5% | 23.4% | 32.1% |
-| ST | Ernie Clement | 28 | 0.222 | 0.296 | 0.074 | 0.243 | 0.225 | 0.0% | 11.1% | 31.5% |
-| ST | Vladimir Guerrero | 31 | 0.250 | 0.321 | 0.071 | 0.271 | 0.358 | 21.7% | 42.4% | 18.2% |
-| FF | Yohendrick Pinango | 43 | 0.324 | 0.351 | 0.027 | 0.357 | 0.388 | 6.1% | 19.8% | 13.3% |
-| FF | Nathan Lukes | 52 | 0.333 | 0.356 | 0.022 | 0.368 | 0.309 | 0.0% | 13.6% | 15.5% |
-| FS | Andrés Giménez | 11 | 0.273 | 0.273 | 0.000 | 0.245 | 0.266 | 0.0% | 18.2% | 42.9% |
-| FS | Ernie Clement | 7 | 0.429 | 0.429 | 0.000 | 0.386 | 0.347 | 0.0% | 8.3% | 7.1% |
-| FS | George Springer | 9 | 0.250 | 0.250 | 0.000 | 0.356 | 0.355 | 0.0% | 26.7% | 22.7% |
-| ST | Jesús Sánchez | 18 | 0.118 | 0.118 | 0.000 | 0.139 | 0.350 | 8.3% | 29.4% | 25.0% |
-
-
-## Toronto Blue Jays Team Hitter Pool
-
-| Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Kazuma Okamoto | 319 | 0.231 | 0.441 | 0.210 | 0.332 | 0.329 | 14.8% | 29.8% | 32.7% |
-| Vladimir Guerrero | 318 | 0.287 | 0.389 | 0.102 | 0.339 | 0.349 | 7.3% | 30.7% | 16.7% |
-| Ernie Clement | 312 | 0.286 | 0.429 | 0.143 | 0.323 | 0.267 | 2.6% | 17.4% | 14.9% |
-| Andrés Giménez | 271 | 0.240 | 0.392 | 0.152 | 0.294 | 0.261 | 4.5% | 13.2% | 22.6% |
-| George Springer | 262 | 0.243 | 0.443 | 0.200 | 0.354 | 0.317 | 9.8% | 22.5% | 21.0% |
-| Daulton Varsho | 260 | 0.253 | 0.421 | 0.167 | 0.343 | 0.307 | 7.7% | 23.8% | 17.2% |
-| Jesús Sánchez | 240 | 0.290 | 0.466 | 0.176 | 0.345 | 0.338 | 11.0% | 27.3% | 23.1% |
-| Nathan Lukes | 162 | 0.318 | 0.412 | 0.095 | 0.355 | 0.301 | 0.8% | 15.7% | 15.6% |
-| Brandon Valenzuela | 160 | 0.262 | 0.454 | 0.191 | 0.345 | 0.345 | 8.7% | 23.2% | 24.0% |
-| Myles Straw | 146 | 0.238 | 0.323 | 0.085 | 0.288 | 0.309 | 3.6% | 17.2% | 12.4% |
-| Yohendrick Pinango | 138 | 0.289 | 0.445 | 0.156 | 0.351 | 0.319 | 8.2% | 27.0% | 21.1% |
-| Davis Schneider | 123 | 0.167 | 0.304 | 0.137 | 0.275 | 0.287 | 11.1% | 27.8% | 26.4% |
-
-
-## Chicago Cubs Team Hitter Pool
-
-| Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Nico Hoerner | 359 | 0.249 | 0.350 | 0.101 | 0.314 | 0.327 | 1.7% | 19.0% | 10.2% |
-| Alex Bregman | 358 | 0.260 | 0.392 | 0.132 | 0.342 | 0.319 | 5.9% | 27.6% | 16.4% |
-| Michael Busch | 355 | 0.243 | 0.397 | 0.154 | 0.353 | 0.353 | 11.5% | 26.4% | 24.0% |
-| Ian Happ | 340 | 0.229 | 0.472 | 0.243 | 0.365 | 0.327 | 14.1% | 25.8% | 29.1% |
-| Pete Crow-Armstrong | 337 | 0.279 | 0.508 | 0.229 | 0.373 | 0.367 | 11.1% | 31.9% | 25.1% |
-| Dansby Swanson | 301 | 0.181 | 0.317 | 0.135 | 0.290 | 0.286 | 5.9% | 24.1% | 28.9% |
-| Seiya Suzuki | 260 | 0.269 | 0.445 | 0.176 | 0.367 | 0.340 | 8.7% | 26.2% | 24.3% |
-| Carson Kelly | 215 | 0.296 | 0.423 | 0.127 | 0.363 | 0.327 | 7.8% | 25.3% | 20.4% |
-| Moisés Ballesteros | 193 | 0.246 | 0.439 | 0.193 | 0.335 | 0.310 | 11.3% | 28.2% | 23.3% |
-| Matt Shaw | 153 | 0.261 | 0.457 | 0.196 | 0.358 | 0.294 | 5.5% | 23.0% | 18.7% |
-| Miguel Amaya | 143 | 0.240 | 0.430 | 0.190 | 0.369 | 0.313 | 9.7% | 21.4% | 22.6% |
-| Michael Conforto | 134 | 0.248 | 0.479 | 0.231 | 0.350 | 0.345 | 12.5% | 32.3% | 26.7% |
-
-
-## Bullpen Fatigue Report
-
-### Toronto Blue Jays Bullpen — Last 4 Days
-
-| Reliever | Date | IP | Pitches |
-| --- | --- | --- | --- |
-| Braydon Fisher | 2026-06-19 | 1.0 | 20 |
-| Brendon Little | 2026-06-19 | 1.0 | 34 |
-| Jeff Hoffman | 2026-06-17 | 1.0 | 25 |
-| Jeff Hoffman | 2026-06-20 | 1.0 | 22 |
-| Lazaro Estrada | 2026-06-20 | 2.1 | 32 |
-| Louis Varland | 2026-06-17 | 1.0 | 10 |
-| Louis Varland | 2026-06-20 | 2.0 | 28 |
-| Mason Fluharty | 2026-06-17 | 0.1 | 11 |
-| Mason Fluharty | 2026-06-18 | 1.0 | 5 |
-| Mason Fluharty | 2026-06-20 | 0.0 | 11 |
-| Myles Straw | 2026-06-19 | 1.1 | 20 |
-| Simeon Woods Richardson | 2026-06-17 | 3.0 | 55 |
-| Spencer Miles | 2026-06-17 | 1.1 | 22 |
-| Spencer Miles | 2026-06-19 | 0.2 | 20 |
-| Tommy Nance | 2026-06-18 | 0.2 | 14 |
-| Tommy Nance | 2026-06-19 | 1.1 | 19 |
-| Tyler Rogers | 2026-06-17 | 1.0 | 11 |
-| Tyler Rogers | 2026-06-19 | 0.2 | 28 |
-
-
-**Caution arms (pitched yesterday, or 3+ appearances in window):** Jeff Hoffman, Lazaro Estrada, Louis Varland, Mason Fluharty
-
-
-### Chicago Cubs Bullpen — Last 4 Days
-
-| Reliever | Date | IP | Pitches |
-| --- | --- | --- | --- |
-| Caleb Thielbar | 2026-06-17 | 0.2 | 16 |
-| Caleb Thielbar | 2026-06-20 | 0.1 | 13 |
-| Ethan Roberts | 2026-06-17 | 0.1 | 15 |
-| Ethan Roberts | 2026-06-19 | 1.0 | 10 |
-| Ethan Roberts | 2026-06-20 | 1.1 | 14 |
-| Gavin Hollowell | 2026-06-19 | 1.0 | 13 |
-| Hoby Milner | 2026-06-17 | 1.1 | 25 |
-| Hoby Milner | 2026-06-19 | 1.0 | 16 |
-| Jacob Webb | 2026-06-17 | 1.0 | 16 |
-| Jacob Webb | 2026-06-20 | 0.2 | 27 |
-| Ryan Rolison | 2026-06-20 | 0.2 | 1 |
-| Trent Thornton | 2026-06-20 | 0.2 | 13 |
-
-
-**Caution arms (pitched yesterday, or 3+ appearances in window):** Caleb Thielbar, Ethan Roberts, Jacob Webb, Ryan Rolison, Trent Thornton
-
-
-
-## Final Game Dissection
-
-- Away pitcher pitch mix to inspect: FF, SL, CH, SI, KC
-- Home pitcher pitch mix to inspect: FF, FS, ST
-- Home hitters should be checked against away SP pitch mix above.
-- Away hitters should be checked against home SP pitch mix above.
-- Lineup advantage: compare wOBA, xwOBA, ISO, Barrel%, HardHit%, Whiff%.
-- Handedness advantage: use pitcher arsenal vs L/R tables.
-- Bullpen fatigue: see Bullpen Fatigue Report above.
-- Final MLB-LAB read: decide from pitch mix, hitter pool, L/R damage, current form, and bullpen fatigue.
-
-
----
-
-# 9. San Diego Padres @ Texas Rangers
+# 8. San Diego Padres @ Texas Rangers
 
 ## Game Context
 
@@ -2359,8 +2080,8 @@ Removed:
 | CU | Ty France | 11 | 0.182 | 0.364 | 0.182 | 0.227 | 0.147 | 0.0% | 38.5% | 23.8% |
 | SI | Jackson Merrill | 50 | 0.409 | 0.591 | 0.182 | 0.483 | 0.454 | 8.3% | 27.7% | 9.7% |
 | SI | Manny Machado | 66 | 0.153 | 0.322 | 0.169 | 0.248 | 0.344 | 9.4% | 28.3% | 15.3% |
-| SI | Nick Castellanos | 27 | 0.250 | 0.417 | 0.167 | 0.306 | 0.375 | 4.8% | 23.7% | 21.0% |
 | SI | Luis Campusano | 15 | 0.417 | 0.583 | 0.167 | 0.487 | 0.392 | 9.1% | 35.0% | 13.3% |
+| SI | Nick Castellanos | 27 | 0.250 | 0.417 | 0.167 | 0.306 | 0.375 | 4.8% | 23.7% | 21.0% |
 | FF | Miguel Andújar | 54 | 0.184 | 0.347 | 0.163 | 0.268 | 0.310 | 5.0% | 17.7% | 8.9% |
 | SI | Gavin Sheets | 42 | 0.231 | 0.385 | 0.154 | 0.294 | 0.359 | 6.5% | 37.5% | 10.3% |
 | FF | Freddy Fermin | 43 | 0.135 | 0.270 | 0.135 | 0.253 | 0.281 | 3.3% | 12.5% | 15.5% |
@@ -2465,7 +2186,7 @@ Removed:
 
 ---
 
-# 10. Pittsburgh Pirates @ Colorado Rockies
+# 9. Pittsburgh Pirates @ Colorado Rockies
 
 ## Game Context
 
@@ -2530,15 +2251,15 @@ Removed:
 | SL | Tj Rumfield | 37 | 0.314 | 0.657 | 0.343 | 0.423 | 0.295 | 8.7% | 32.5% | 36.1% |
 | CU | Hunter Goodman | 31 | 0.200 | 0.533 | 0.333 | 0.315 | 0.280 | 17.6% | 44.4% | 36.7% |
 | FF | Brett Sullivan | 38 | 0.286 | 0.600 | 0.314 | 0.379 | 0.317 | 7.1% | 25.0% | 11.5% |
-| SL | Mickey Moniak | 20 | 0.167 | 0.444 | 0.278 | 0.295 | 0.311 | 23.1% | 17.2% | 31.2% |
 | SL | Troy Johnston | 38 | 0.306 | 0.583 | 0.278 | 0.372 | 0.298 | 3.2% | 34.0% | 16.9% |
+| SL | Mickey Moniak | 20 | 0.167 | 0.444 | 0.278 | 0.295 | 0.311 | 23.1% | 17.2% | 31.2% |
 | CH | Hunter Goodman | 28 | 0.231 | 0.500 | 0.269 | 0.366 | 0.245 | 11.8% | 22.2% | 43.3% |
 | FF | Mickey Moniak | 51 | 0.306 | 0.571 | 0.265 | 0.384 | 0.307 | 8.3% | 20.5% | 18.8% |
 | CU | Brenton Doyle | 4 | 0.250 | 0.500 | 0.250 | 0.312 | 0.000 | 100.0% | 66.7% | 25.0% |
 | CU | Ezequiel Tovar | 13 | 0.250 | 0.500 | 0.250 | 0.342 | 0.346 | 25.0% | 15.4% | 23.8% |
 | FF | Hunter Goodman | 92 | 0.173 | 0.407 | 0.235 | 0.298 | 0.316 | 19.6% | 25.7% | 22.5% |
-| FF | Tj Rumfield | 108 | 0.301 | 0.516 | 0.215 | 0.391 | 0.364 | 9.2% | 21.9% | 10.3% |
 | FF | Kyle Karros | 95 | 0.354 | 0.570 | 0.215 | 0.447 | 0.401 | 7.7% | 28.6% | 5.2% |
+| FF | Tj Rumfield | 108 | 0.301 | 0.516 | 0.215 | 0.391 | 0.364 | 9.2% | 21.9% | 10.3% |
 | CH | Brett Sullivan | 15 | 0.143 | 0.357 | 0.214 | 0.190 | 0.155 | 0.0% | 5.9% | 18.2% |
 | SL | Tyler Freeman | 26 | 0.280 | 0.480 | 0.200 | 0.373 | 0.285 | 0.0% | 29.6% | 18.9% |
 | CU | Tj Rumfield | 22 | 0.250 | 0.450 | 0.200 | 0.375 | 0.274 | 0.0% | 15.4% | 30.2% |
@@ -2724,7 +2445,7 @@ Removed:
 
 ---
 
-# 11. Minnesota Twins @ Arizona Diamondbacks
+# 10. Minnesota Twins @ Arizona Diamondbacks
 
 ## Game Context
 
@@ -2803,8 +2524,8 @@ Removed:
 | FF | Alek Thomas | 33 | 0.226 | 0.419 | 0.194 | 0.326 | 0.311 | 8.7% | 25.0% | 22.4% |
 | CH | Gabriel Moreno | 23 | 0.227 | 0.409 | 0.182 | 0.289 | 0.333 | 16.7% | 31.4% | 14.6% |
 | CH | Ildemaro Vargas | 44 | 0.268 | 0.439 | 0.171 | 0.355 | 0.325 | 2.6% | 34.0% | 15.1% |
-| FF | Jorge Barrosa | 59 | 0.130 | 0.296 | 0.167 | 0.211 | 0.166 | 2.4% | 13.9% | 20.2% |
 | FF | Adrian Del Castillo | 44 | 0.214 | 0.381 | 0.167 | 0.294 | 0.277 | 10.3% | 21.2% | 26.3% |
+| FF | Jorge Barrosa | 59 | 0.130 | 0.296 | 0.167 | 0.211 | 0.166 | 2.4% | 13.9% | 20.2% |
 | ST | Ildemaro Vargas | 19 | 0.111 | 0.278 | 0.167 | 0.237 | 0.267 | 0.0% | 34.6% | 26.3% |
 | FF | Ryan Waldschmidt | 29 | 0.231 | 0.385 | 0.154 | 0.362 | 0.358 | 17.6% | 17.9% | 20.8% |
 | FC | Alek Thomas | 8 | 0.143 | 0.286 | 0.143 | 0.244 | 0.501 | 28.6% | 30.8% | 0.0% |
@@ -2939,7 +2660,7 @@ Removed:
 
 ---
 
-# 12. Los Angeles Angels @ Athletics
+# 11. Los Angeles Angels @ Athletics
 
 ## Game Context
 
@@ -3097,8 +2818,8 @@ Removed:
 | FF | Adam Frazier | 39 | 0.233 | 0.500 | 0.267 | 0.371 | 0.282 | 8.3% | 10.3% | 16.2% |
 | CH | Oswald Peraza | 28 | 0.296 | 0.556 | 0.259 | 0.373 | 0.292 | 9.5% | 22.9% | 32.7% |
 | FF | Mike Trout | 141 | 0.292 | 0.547 | 0.255 | 0.467 | 0.470 | 22.2% | 25.0% | 14.0% |
-| FF | Jo Adell | 91 | 0.286 | 0.536 | 0.250 | 0.360 | 0.388 | 15.4% | 20.7% | 19.0% |
 | FF | Josh Lowe | 44 | 0.350 | 0.600 | 0.250 | 0.433 | 0.298 | 17.4% | 19.7% | 24.5% |
+| FF | Jo Adell | 91 | 0.286 | 0.536 | 0.250 | 0.360 | 0.388 | 15.4% | 20.7% | 19.0% |
 | ST | Nolan Schanuel | 22 | 0.250 | 0.500 | 0.250 | 0.350 | 0.204 | 6.2% | 22.7% | 33.3% |
 | FC | Adam Frazier | 4 | 0.500 | 0.750 | 0.250 | 0.537 | 0.202 | 0.0% | 9.1% | 16.7% |
 | ST | Zach Neto | 32 | 0.167 | 0.400 | 0.233 | 0.264 | 0.211 | 11.8% | 23.3% | 44.3% |
@@ -3210,7 +2931,7 @@ Removed:
 
 ---
 
-# 13. Baltimore Orioles @ Los Angeles Dodgers
+# 12. Baltimore Orioles @ Los Angeles Dodgers
 
 ## Game Context
 
@@ -3279,8 +3000,8 @@ Removed:
 | FS | Freddie Freeman | 10 | 0.500 | 0.900 | 0.400 | 0.595 | 0.395 | 20.0% | 38.5% | 12.5% |
 | CU | Freddie Freeman | 23 | 0.316 | 0.684 | 0.368 | 0.467 | 0.403 | 17.6% | 30.0% | 11.1% |
 | FF | Max Muncy | 123 | 0.347 | 0.713 | 0.366 | 0.491 | 0.462 | 23.0% | 32.3% | 18.6% |
-| FS | Alex Freeland | 11 | 0.333 | 0.667 | 0.333 | 0.491 | 0.310 | 0.0% | 50.0% | 38.5% |
 | FS | Mookie Betts | 4 | 0.333 | 0.667 | 0.333 | 0.487 | 0.327 | 50.0% | 25.0% | 33.3% |
+| FS | Alex Freeland | 11 | 0.333 | 0.667 | 0.333 | 0.491 | 0.310 | 0.0% | 50.0% | 38.5% |
 | FF | Mookie Betts | 52 | 0.217 | 0.543 | 0.326 | 0.376 | 0.354 | 16.7% | 27.1% | 4.1% |
 | FF | Freddie Freeman | 103 | 0.330 | 0.648 | 0.318 | 0.448 | 0.403 | 13.4% | 20.5% | 18.6% |
 | SL | Dalton Rushing | 23 | 0.273 | 0.591 | 0.318 | 0.376 | 0.381 | 11.8% | 56.0% | 32.4% |
@@ -3474,7 +3195,7 @@ Removed:
 
 ---
 
-# 14. Boston Red Sox @ Seattle Mariners
+# 13. Boston Red Sox @ Seattle Mariners
 
 ## Game Context
 
@@ -3543,17 +3264,17 @@ Removed:
 | CU | Dominic Canzone | 18 | 0.312 | 0.750 | 0.438 | 0.469 | 0.401 | 27.3% | 50.0% | 28.0% |
 | FF | Luke Raley | 73 | 0.290 | 0.710 | 0.419 | 0.462 | 0.456 | 25.6% | 35.1% | 34.3% |
 | FF | Dominic Canzone | 60 | 0.291 | 0.636 | 0.345 | 0.413 | 0.450 | 20.0% | 40.0% | 15.9% |
-| CU | Randy Arozarena | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.296 | 16.7% | 22.2% | 26.9% |
-| CU | Luke Raley | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.417 | 42.9% | 33.3% | 32.1% |
 | CU | Cole Young | 12 | 0.556 | 0.889 | 0.333 | 0.583 | 0.395 | 14.3% | 50.0% | 10.5% |
+| CU | Luke Raley | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.417 | 42.9% | 33.3% | 32.1% |
+| CU | Randy Arozarena | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.296 | 16.7% | 22.2% | 26.9% |
 | FC | Leo Rivas | 11 | 0.300 | 0.600 | 0.300 | 0.405 | 0.189 | 0.0% | 0.0% | 21.4% |
 | CU | Brendan Donovan | 10 | 0.429 | 0.714 | 0.286 | 0.550 | 0.494 | 20.0% | 33.3% | 25.0% |
 | FC | Randy Arozarena | 22 | 0.350 | 0.600 | 0.250 | 0.432 | 0.397 | 5.3% | 30.0% | 17.3% |
 | SI | Luke Raley | 24 | 0.227 | 0.455 | 0.227 | 0.300 | 0.340 | 17.6% | 24.2% | 26.1% |
 | FC | Brendan Donovan | 14 | 0.667 | 0.889 | 0.222 | 0.636 | 0.564 | 10.0% | 33.3% | 0.0% |
 | FF | Julio Rodríguez | 85 | 0.230 | 0.446 | 0.216 | 0.339 | 0.327 | 11.8% | 24.1% | 26.8% |
-| FF | J. P. Crawford | 90 | 0.231 | 0.431 | 0.200 | 0.397 | 0.424 | 9.6% | 15.9% | 14.0% |
 | FF | Josh Naylor | 94 | 0.318 | 0.518 | 0.200 | 0.394 | 0.349 | 5.1% | 20.7% | 7.7% |
+| FF | J. P. Crawford | 90 | 0.231 | 0.431 | 0.200 | 0.397 | 0.424 | 9.6% | 15.9% | 14.0% |
 | CU | Julio Rodríguez | 17 | 0.200 | 0.400 | 0.200 | 0.306 | 0.325 | 11.1% | 25.0% | 45.5% |
 | SI | Mitch Garver | 28 | 0.227 | 0.409 | 0.182 | 0.395 | 0.384 | 5.9% | 40.0% | 11.1% |
 | FC | Cal Raleigh | 21 | 0.118 | 0.294 | 0.176 | 0.271 | 0.330 | 9.1% | 25.0% | 32.4% |
@@ -3632,8 +3353,8 @@ Removed:
 | CH | Willson Contreras | 41 | 0.325 | 0.575 | 0.250 | 0.390 | 0.325 | 20.8% | 35.0% | 40.7% |
 | CH | Masataka Yoshida | 24 | 0.333 | 0.571 | 0.238 | 0.425 | 0.410 | 5.9% | 29.6% | 12.5% |
 | SL | Roman Anthony | 20 | 0.294 | 0.529 | 0.235 | 0.403 | 0.419 | 15.4% | 35.0% | 25.0% |
-| FF | Caleb Durbin | 79 | 0.275 | 0.493 | 0.217 | 0.376 | 0.318 | 5.4% | 26.9% | 7.5% |
 | FF | Wilyer Abreu | 96 | 0.229 | 0.446 | 0.217 | 0.341 | 0.302 | 12.1% | 20.1% | 20.4% |
+| FF | Caleb Durbin | 79 | 0.275 | 0.493 | 0.217 | 0.376 | 0.318 | 5.4% | 26.9% | 7.5% |
 | FF | Andruw Monasterio | 41 | 0.243 | 0.459 | 0.216 | 0.335 | 0.298 | 8.3% | 15.4% | 18.9% |
 | SL | Wilyer Abreu | 46 | 0.273 | 0.477 | 0.205 | 0.336 | 0.326 | 15.6% | 27.3% | 32.9% |
 | SL | Masataka Yoshida | 11 | 0.300 | 0.500 | 0.200 | 0.373 | 0.317 | 0.0% | 31.2% | 21.7% |
@@ -3641,8 +3362,8 @@ Removed:
 | FC | Wilyer Abreu | 32 | 0.333 | 0.533 | 0.200 | 0.392 | 0.430 | 15.4% | 28.6% | 5.8% |
 | FC | Willson Contreras | 19 | 0.267 | 0.467 | 0.200 | 0.355 | 0.339 | 20.0% | 64.7% | 46.9% |
 | CH | Jarren Duran | 41 | 0.184 | 0.368 | 0.184 | 0.250 | 0.277 | 13.8% | 27.9% | 37.0% |
-| CU | Ceddanne Rafaela | 17 | 0.235 | 0.412 | 0.176 | 0.326 | 0.178 | 0.0% | 11.1% | 32.5% |
 | CU | Wilyer Abreu | 21 | 0.235 | 0.412 | 0.176 | 0.357 | 0.339 | 6.7% | 12.5% | 10.3% |
+| CU | Ceddanne Rafaela | 17 | 0.235 | 0.412 | 0.176 | 0.326 | 0.178 | 0.0% | 11.1% | 32.5% |
 | CU | Trevor Story | 18 | 0.118 | 0.294 | 0.176 | 0.250 | 0.255 | 25.0% | 18.8% | 41.4% |
 | CU | Andruw Monasterio | 7 | 0.333 | 0.500 | 0.167 | 0.407 | 0.257 | 20.0% | 10.0% | 16.7% |
 | SL | Isiah Kiner-Falefa | 23 | 0.476 | 0.619 | 0.143 | 0.500 | 0.454 | 5.6% | 20.7% | 23.4% |
@@ -3743,7 +3464,7 @@ Removed:
 
 ---
 
-# 15. New York Mets @ Philadelphia Phillies
+# 14. New York Mets @ Philadelphia Phillies
 
 ## Game Context
 
@@ -3812,8 +3533,8 @@ Removed:
 | FF | Bryce Harper | 82 | 0.292 | 0.708 | 0.415 | 0.465 | 0.467 | 13.0% | 27.9% | 18.3% |
 | FF | Kyle Schwarber | 97 | 0.247 | 0.617 | 0.370 | 0.413 | 0.354 | 18.8% | 35.1% | 21.2% |
 | SI | Brandon Marsh | 47 | 0.357 | 0.643 | 0.286 | 0.473 | 0.460 | 10.3% | 32.2% | 6.0% |
-| SL | J. T. Realmuto | 23 | 0.238 | 0.524 | 0.286 | 0.430 | 0.360 | 12.5% | 44.0% | 34.1% |
 | SL | Bryson Stott | 31 | 0.357 | 0.643 | 0.286 | 0.452 | 0.319 | 4.8% | 34.2% | 21.4% |
+| SL | J. T. Realmuto | 23 | 0.238 | 0.524 | 0.286 | 0.430 | 0.360 | 12.5% | 44.0% | 34.1% |
 | SL | Bryce Harper | 49 | 0.222 | 0.500 | 0.278 | 0.378 | 0.518 | 32.1% | 37.3% | 46.2% |
 | FF | Edmundo Sosa | 38 | 0.394 | 0.667 | 0.273 | 0.449 | 0.428 | 12.9% | 26.0% | 14.9% |
 | CH | Edmundo Sosa | 20 | 0.263 | 0.526 | 0.263 | 0.395 | 0.291 | 8.3% | 27.6% | 32.1% |
@@ -4000,6 +3721,285 @@ Removed:
 
 - Away pitcher pitch mix to inspect: SI, SL, FF, CU, CH
 - Home pitcher pitch mix to inspect: FF, SI, FS, ST, FC
+- Home hitters should be checked against away SP pitch mix above.
+- Away hitters should be checked against home SP pitch mix above.
+- Lineup advantage: compare wOBA, xwOBA, ISO, Barrel%, HardHit%, Whiff%.
+- Handedness advantage: use pitcher arsenal vs L/R tables.
+- Bullpen fatigue: see Bullpen Fatigue Report above.
+- Final MLB-LAB read: decide from pitch mix, hitter pool, L/R damage, current form, and bullpen fatigue.
+
+
+---
+
+# 15. Toronto Blue Jays @ Chicago Cubs
+
+## Game Context
+
+| Field | Value |
+| --- | --- |
+| Park | Wrigley Field |
+| Time | 2026-06-21T18:20:00Z |
+| Away Team | Toronto Blue Jays |
+| Home Team | Chicago Cubs |
+| Away Probable Pitcher | Dylan Cease |
+| Home Probable Pitcher | Shota Imanaga |
+
+
+## Away Starting Pitcher: Dylan Cease
+
+### Pitcher Profile
+
+| Stat | Value |
+| --- | --- |
+| Sample Pitches | 1365 |
+| Batted/Result Events | 324 |
+| Hits Allowed | 59 |
+| Walks | 33 |
+| Strikeouts | 116 |
+| Home Runs | 5 |
+| K Event Rate | 35.8% |
+| BB Event Rate | 10.2% |
+| HR Event Rate | 1.5% |
+
+
+### Full Pitch Arsenal vs L/R
+
+| Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| CH | vs L | 10.9% | 149 | 0.190 | 0.238 | 0.048 | 0.188 | 0.225 | 9.1% | 11.8% | 62.5% |
+| CH | vs R | 0.6% | 8 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 0.0% |
+| FF | vs L | 21.0% | 286 | 0.284 | 0.448 | 0.164 | 0.365 | 0.337 | 4.2% | 22.2% | 16.7% |
+| FF | vs R | 13.3% | 181 | 0.233 | 0.349 | 0.116 | 0.336 | 0.251 | 14.3% | 26.8% | 39.1% |
+| KC | vs L | 7.4% | 101 | 0.273 | 0.273 | 0.000 | 0.245 | 0.269 | 14.3% | 14.3% | 38.5% |
+| KC | vs R | 1.9% | 26 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 0.0% |
+| SI | vs L | 3.9% | 53 | 0.000 | 0.000 | 0.000 | 0.184 | 0.257 | 0.0% | 9.1% | 16.7% |
+| SI | vs R | 6.3% | 86 | 0.158 | 0.158 | 0.000 | 0.170 | 0.342 | 5.6% | 25.7% | 16.3% |
+| SL | vs L | 13.4% | 183 | 0.125 | 0.225 | 0.100 | 0.236 | 0.284 | 5.6% | 25.5% | 45.3% |
+| SL | vs R | 16.0% | 219 | 0.172 | 0.207 | 0.034 | 0.215 | 0.220 | 0.0% | 16.7% | 42.7% |
+| ST | vs L | 0.9% | 12 | 0.333 | 0.667 | 0.333 | 0.417 | 0.205 | 0.0% | 20.0% | 16.7% |
+| ST | vs R | 4.4% | 60 | 0.364 | 0.364 | 0.000 | 0.327 | 0.213 | 0.0% | 23.1% | 26.3% |
+
+
+### Last 5 Starts / Appearances
+
+| Date | Pitches | Hits | BB | K | HR |
+| --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | 108 | 4 | 4 | 7 | 0 |
+| 2026-06-09 | 93 | 3 | 1 | 11 | 0 |
+| 2026-05-24 | 77 | 4 | 1 | 8 | 2 |
+| 2026-05-19 | 100 | 4 | 4 | 9 | 2 |
+| 2026-05-13 | 99 | 3 | 3 | 9 | 0 |
+
+
+## Home Hitters vs Away SP Pitch Mix
+
+| Pitch | Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| SL | Michael Conforto | 9 | 0.375 | 1.000 | 0.625 | 0.578 | 0.385 | 33.3% | 31.2% | 23.8% |
+| SI | Michael Conforto | 21 | 0.647 | 1.176 | 0.529 | 0.726 | 0.618 | 20.0% | 61.9% | 12.5% |
+| SL | Pete Crow-Armstrong | 44 | 0.378 | 0.811 | 0.432 | 0.515 | 0.475 | 24.1% | 30.0% | 32.1% |
+| FF | Matt Shaw | 47 | 0.310 | 0.667 | 0.357 | 0.472 | 0.335 | 13.8% | 24.6% | 19.1% |
+| SL | Ian Happ | 37 | 0.273 | 0.576 | 0.303 | 0.393 | 0.352 | 22.7% | 25.0% | 34.5% |
+| FF | Moisés Ballesteros | 53 | 0.156 | 0.444 | 0.289 | 0.301 | 0.295 | 23.1% | 32.1% | 35.2% |
+| FF | Miguel Amaya | 45 | 0.333 | 0.619 | 0.286 | 0.459 | 0.318 | 18.2% | 26.6% | 12.7% |
+| FF | Ian Happ | 112 | 0.221 | 0.505 | 0.284 | 0.378 | 0.325 | 15.8% | 25.6% | 24.9% |
+| CH | Carson Kelly | 13 | 0.250 | 0.500 | 0.250 | 0.346 | 0.291 | 11.1% | 38.9% | 36.4% |
+| SI | Miguel Amaya | 23 | 0.375 | 0.625 | 0.250 | 0.511 | 0.485 | 6.7% | 33.3% | 13.2% |
+| FF | Seiya Suzuki | 69 | 0.276 | 0.517 | 0.241 | 0.396 | 0.337 | 14.3% | 28.4% | 17.9% |
+| SL | Michael Busch | 44 | 0.342 | 0.579 | 0.237 | 0.419 | 0.265 | 9.1% | 18.2% | 41.0% |
+| FF | Dansby Swanson | 93 | 0.253 | 0.480 | 0.227 | 0.390 | 0.354 | 5.6% | 30.6% | 23.7% |
+| SL | Matt Shaw | 24 | 0.318 | 0.545 | 0.227 | 0.433 | 0.390 | 5.9% | 23.1% | 22.6% |
+| FF | Michael Conforto | 41 | 0.222 | 0.444 | 0.222 | 0.330 | 0.313 | 8.7% | 28.6% | 14.8% |
+| SL | Miguel Amaya | 35 | 0.222 | 0.444 | 0.222 | 0.389 | 0.349 | 9.5% | 14.7% | 31.5% |
+| SI | Seiya Suzuki | 56 | 0.380 | 0.600 | 0.220 | 0.468 | 0.456 | 10.0% | 32.9% | 13.3% |
+| SI | Dansby Swanson | 56 | 0.271 | 0.479 | 0.208 | 0.405 | 0.382 | 10.5% | 31.9% | 21.0% |
+| SI | Michael Busch | 69 | 0.260 | 0.460 | 0.200 | 0.428 | 0.486 | 19.0% | 32.3% | 16.7% |
+| SI | Pete Crow-Armstrong | 48 | 0.463 | 0.659 | 0.195 | 0.518 | 0.457 | 8.3% | 37.3% | 13.9% |
+| CH | Pete Crow-Armstrong | 42 | 0.216 | 0.405 | 0.189 | 0.298 | 0.335 | 3.7% | 37.3% | 30.6% |
+| SL | Seiya Suzuki | 50 | 0.182 | 0.364 | 0.182 | 0.304 | 0.328 | 6.5% | 24.2% | 29.3% |
+| SL | Carson Kelly | 46 | 0.250 | 0.425 | 0.175 | 0.362 | 0.298 | 3.2% | 22.0% | 32.9% |
+| FF | Pete Crow-Armstrong | 108 | 0.200 | 0.368 | 0.168 | 0.296 | 0.306 | 9.2% | 32.1% | 18.6% |
+| FF | Michael Busch | 119 | 0.219 | 0.381 | 0.162 | 0.331 | 0.339 | 12.9% | 25.2% | 11.9% |
+| SI | Moisés Ballesteros | 28 | 0.346 | 0.500 | 0.154 | 0.389 | 0.311 | 13.6% | 27.9% | 11.3% |
+| SL | Moisés Ballesteros | 24 | 0.150 | 0.300 | 0.150 | 0.275 | 0.261 | 0.0% | 21.9% | 24.5% |
+| FF | Alex Bregman | 91 | 0.296 | 0.444 | 0.148 | 0.362 | 0.336 | 5.6% | 30.8% | 7.9% |
+| SL | Nico Hoerner | 47 | 0.295 | 0.432 | 0.136 | 0.339 | 0.311 | 2.4% | 17.2% | 19.3% |
+| SI | Ian Happ | 36 | 0.267 | 0.400 | 0.133 | 0.357 | 0.356 | 8.7% | 31.9% | 7.5% |
+
+
+## Home Starting Pitcher: Shota Imanaga
+
+### Pitcher Profile
+
+| Stat | Value |
+| --- | --- |
+| Sample Pitches | 1505 |
+| Batted/Result Events | 389 |
+| Hits Allowed | 78 |
+| Walks | 25 |
+| Strikeouts | 97 |
+| Home Runs | 18 |
+| K Event Rate | 24.9% |
+| BB Event Rate | 6.4% |
+| HR Event Rate | 4.6% |
+
+
+### Full Pitch Arsenal vs L/R
+
+| Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| CU | vs L | 0.1% | 1 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 0.0% |
+| CU | vs R | 3.1% | 46 | 0.000 | 0.000 | 0.000 | 0.140 | 0.420 | 25.0% | 22.2% | 10.0% |
+| FF | vs L | 10.2% | 153 | 0.200 | 0.350 | 0.150 | 0.260 | 0.369 | 11.8% | 38.5% | 7.9% |
+| FF | vs R | 32.8% | 494 | 0.270 | 0.470 | 0.200 | 0.363 | 0.344 | 13.9% | 24.4% | 21.3% |
+| FS | vs L | 4.3% | 65 | 0.167 | 0.222 | 0.056 | 0.197 | 0.138 | 0.0% | 6.7% | 57.9% |
+| FS | vs R | 29.0% | 437 | 0.185 | 0.403 | 0.218 | 0.275 | 0.249 | 9.3% | 21.2% | 39.5% |
+| SI | vs L | 2.3% | 35 | 0.214 | 0.429 | 0.214 | 0.347 | 0.363 | 8.3% | 33.3% | 22.7% |
+| SI | vs R | 4.7% | 71 | 0.250 | 0.450 | 0.200 | 0.320 | 0.313 | 5.0% | 40.7% | 15.6% |
+| SL | vs L | 0.1% | 1 | 0.000 | 0.000 | 0.000 | 0.000 | — | 0.0% | 0.0% | 0.0% |
+| SL | vs R | 0.1% | 1 | 0.000 | 0.000 | 0.000 | — | — | 0.0% | 0.0% | 100.0% |
+| ST | vs L | 9.5% | 143 | 0.226 | 0.548 | 0.323 | 0.333 | 0.247 | 15.0% | 16.2% | 43.2% |
+| ST | vs R | 3.8% | 57 | 0.273 | 0.364 | 0.091 | 0.342 | 0.375 | 0.0% | 31.2% | 26.1% |
+
+
+### Last 5 Starts / Appearances
+
+| Date | Pitches | Hits | BB | K | HR |
+| --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | 85 | 5 | 1 | 3 | 0 |
+| 2026-06-10 | 90 | 2 | 2 | 7 | 0 |
+| 2026-06-04 | 84 | 6 | 1 | 5 | 4 |
+| 2026-05-29 | 75 | 5 | 1 | 2 | 3 |
+| 2026-05-24 | 94 | 7 | 1 | 6 | 3 |
+
+
+## Away Hitters vs Home SP Pitch Mix
+
+| Pitch | Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| FS | Kazuma Okamoto | 4 | 0.333 | 1.333 | 1.000 | 0.675 | 0.622 | 100.0% | 14.3% | 36.4% |
+| FS | Brandon Valenzuela | 9 | 0.111 | 0.444 | 0.333 | 0.222 | 0.309 | 16.7% | 25.0% | 50.0% |
+| FS | Yohendrick Pinango | 10 | 0.556 | 0.889 | 0.333 | 0.720 | 0.271 | 0.0% | 38.5% | 13.3% |
+| FF | Kazuma Okamoto | 105 | 0.315 | 0.620 | 0.304 | 0.432 | 0.420 | 21.9% | 39.6% | 26.5% |
+| FF | Daulton Varsho | 86 | 0.224 | 0.513 | 0.289 | 0.352 | 0.330 | 20.4% | 25.6% | 18.5% |
+| FF | George Springer | 74 | 0.279 | 0.557 | 0.279 | 0.413 | 0.359 | 11.8% | 22.9% | 18.8% |
+| ST | Andrés Giménez | 20 | 0.263 | 0.526 | 0.263 | 0.350 | 0.271 | 7.1% | 7.1% | 28.6% |
+| FF | Ernie Clement | 76 | 0.301 | 0.521 | 0.219 | 0.375 | 0.258 | 0.0% | 14.8% | 9.2% |
+| FF | Andrés Giménez | 77 | 0.239 | 0.437 | 0.197 | 0.319 | 0.233 | 3.7% | 9.4% | 20.1% |
+| FS | Daulton Varsho | 13 | 0.333 | 0.500 | 0.167 | 0.385 | 0.387 | 11.1% | 46.2% | 34.8% |
+| ST | Myles Straw | 6 | 0.167 | 0.333 | 0.167 | 0.208 | 0.091 | 0.0% | 11.1% | 10.0% |
+| FF | Jesús Sánchez | 74 | 0.313 | 0.463 | 0.149 | 0.342 | 0.329 | 8.0% | 23.6% | 21.4% |
+| FF | Vladimir Guerrero | 57 | 0.327 | 0.469 | 0.143 | 0.382 | 0.395 | 9.5% | 28.1% | 16.1% |
+| ST | George Springer | 33 | 0.143 | 0.286 | 0.143 | 0.286 | 0.243 | 10.0% | 15.4% | 25.9% |
+| ST | Nathan Lukes | 7 | 0.143 | 0.286 | 0.143 | 0.179 | 0.190 | 0.0% | 16.7% | 20.0% |
+| FS | Jesús Sánchez | 15 | 0.267 | 0.400 | 0.133 | 0.347 | 0.258 | 0.0% | 24.0% | 18.4% |
+| ST | Kazuma Okamoto | 35 | 0.156 | 0.281 | 0.125 | 0.230 | 0.213 | 6.7% | 13.8% | 37.9% |
+| FF | Myles Straw | 49 | 0.317 | 0.439 | 0.122 | 0.365 | 0.405 | 7.9% | 21.9% | 9.5% |
+| FF | Brandon Valenzuela | 58 | 0.220 | 0.320 | 0.100 | 0.278 | 0.336 | 5.1% | 19.8% | 17.4% |
+| FS | Vladimir Guerrero | 12 | 0.091 | 0.182 | 0.091 | 0.163 | 0.285 | 0.0% | 46.7% | 17.4% |
+| FS | Nathan Lukes | 11 | 0.455 | 0.545 | 0.091 | 0.441 | 0.198 | 0.0% | 6.7% | 10.5% |
+| FF | Davis Schneider | 49 | 0.103 | 0.179 | 0.077 | 0.238 | 0.265 | 9.5% | 23.4% | 32.1% |
+| ST | Ernie Clement | 28 | 0.222 | 0.296 | 0.074 | 0.243 | 0.225 | 0.0% | 11.1% | 31.5% |
+| ST | Vladimir Guerrero | 31 | 0.250 | 0.321 | 0.071 | 0.271 | 0.358 | 21.7% | 42.4% | 18.2% |
+| FF | Yohendrick Pinango | 43 | 0.324 | 0.351 | 0.027 | 0.357 | 0.388 | 6.1% | 19.8% | 13.3% |
+| FF | Nathan Lukes | 52 | 0.333 | 0.356 | 0.022 | 0.368 | 0.309 | 0.0% | 13.6% | 15.5% |
+| FS | George Springer | 9 | 0.250 | 0.250 | 0.000 | 0.356 | 0.355 | 0.0% | 26.7% | 22.7% |
+| FS | Andrés Giménez | 11 | 0.273 | 0.273 | 0.000 | 0.245 | 0.266 | 0.0% | 18.2% | 42.9% |
+| FS | Ernie Clement | 7 | 0.429 | 0.429 | 0.000 | 0.386 | 0.347 | 0.0% | 8.3% | 7.1% |
+| ST | Davis Schneider | 11 | 0.100 | 0.100 | 0.000 | 0.145 | 0.185 | 0.0% | 10.0% | 26.7% |
+
+
+## Toronto Blue Jays Team Hitter Pool
+
+| Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Kazuma Okamoto | 319 | 0.231 | 0.441 | 0.210 | 0.332 | 0.329 | 14.8% | 29.8% | 32.7% |
+| Vladimir Guerrero | 318 | 0.287 | 0.389 | 0.102 | 0.339 | 0.349 | 7.3% | 30.7% | 16.7% |
+| Ernie Clement | 312 | 0.286 | 0.429 | 0.143 | 0.323 | 0.267 | 2.6% | 17.4% | 14.9% |
+| Andrés Giménez | 271 | 0.240 | 0.392 | 0.152 | 0.294 | 0.261 | 4.5% | 13.2% | 22.6% |
+| George Springer | 262 | 0.243 | 0.443 | 0.200 | 0.354 | 0.317 | 9.8% | 22.5% | 21.0% |
+| Daulton Varsho | 260 | 0.253 | 0.421 | 0.167 | 0.343 | 0.307 | 7.7% | 23.8% | 17.2% |
+| Jesús Sánchez | 240 | 0.290 | 0.466 | 0.176 | 0.345 | 0.338 | 11.0% | 27.3% | 23.1% |
+| Nathan Lukes | 162 | 0.318 | 0.412 | 0.095 | 0.355 | 0.301 | 0.8% | 15.7% | 15.6% |
+| Brandon Valenzuela | 160 | 0.262 | 0.454 | 0.191 | 0.345 | 0.345 | 8.7% | 23.2% | 24.0% |
+| Myles Straw | 146 | 0.238 | 0.323 | 0.085 | 0.288 | 0.309 | 3.6% | 17.2% | 12.4% |
+| Yohendrick Pinango | 138 | 0.289 | 0.445 | 0.156 | 0.351 | 0.319 | 8.2% | 27.0% | 21.1% |
+| Davis Schneider | 123 | 0.167 | 0.304 | 0.137 | 0.275 | 0.287 | 11.1% | 27.8% | 26.4% |
+
+
+## Chicago Cubs Team Hitter Pool
+
+| Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Nico Hoerner | 359 | 0.249 | 0.350 | 0.101 | 0.314 | 0.327 | 1.7% | 19.0% | 10.2% |
+| Alex Bregman | 358 | 0.260 | 0.392 | 0.132 | 0.342 | 0.319 | 5.9% | 27.6% | 16.4% |
+| Michael Busch | 355 | 0.243 | 0.397 | 0.154 | 0.353 | 0.353 | 11.5% | 26.4% | 24.0% |
+| Ian Happ | 340 | 0.229 | 0.472 | 0.243 | 0.365 | 0.327 | 14.1% | 25.8% | 29.1% |
+| Pete Crow-Armstrong | 337 | 0.279 | 0.508 | 0.229 | 0.373 | 0.367 | 11.1% | 31.9% | 25.1% |
+| Dansby Swanson | 301 | 0.181 | 0.317 | 0.135 | 0.290 | 0.286 | 5.9% | 24.1% | 28.9% |
+| Seiya Suzuki | 260 | 0.269 | 0.445 | 0.176 | 0.367 | 0.340 | 8.7% | 26.2% | 24.3% |
+| Carson Kelly | 215 | 0.296 | 0.423 | 0.127 | 0.363 | 0.327 | 7.8% | 25.3% | 20.4% |
+| Moisés Ballesteros | 193 | 0.246 | 0.439 | 0.193 | 0.335 | 0.310 | 11.3% | 28.2% | 23.3% |
+| Matt Shaw | 153 | 0.261 | 0.457 | 0.196 | 0.358 | 0.294 | 5.5% | 23.0% | 18.7% |
+| Miguel Amaya | 143 | 0.240 | 0.430 | 0.190 | 0.369 | 0.313 | 9.7% | 21.4% | 22.6% |
+| Michael Conforto | 134 | 0.248 | 0.479 | 0.231 | 0.350 | 0.345 | 12.5% | 32.3% | 26.7% |
+
+
+## Bullpen Fatigue Report
+
+### Toronto Blue Jays Bullpen — Last 4 Days
+
+| Reliever | Date | IP | Pitches |
+| --- | --- | --- | --- |
+| Braydon Fisher | 2026-06-19 | 1.0 | 20 |
+| Brendon Little | 2026-06-19 | 1.0 | 34 |
+| Jeff Hoffman | 2026-06-17 | 1.0 | 25 |
+| Jeff Hoffman | 2026-06-20 | 1.0 | 22 |
+| Lazaro Estrada | 2026-06-20 | 2.1 | 32 |
+| Louis Varland | 2026-06-17 | 1.0 | 10 |
+| Louis Varland | 2026-06-20 | 2.0 | 28 |
+| Mason Fluharty | 2026-06-17 | 0.1 | 11 |
+| Mason Fluharty | 2026-06-18 | 1.0 | 5 |
+| Mason Fluharty | 2026-06-20 | 0.0 | 11 |
+| Myles Straw | 2026-06-19 | 1.1 | 20 |
+| Simeon Woods Richardson | 2026-06-17 | 3.0 | 55 |
+| Spencer Miles | 2026-06-17 | 1.1 | 22 |
+| Spencer Miles | 2026-06-19 | 0.2 | 20 |
+| Tommy Nance | 2026-06-18 | 0.2 | 14 |
+| Tommy Nance | 2026-06-19 | 1.1 | 19 |
+| Tyler Rogers | 2026-06-17 | 1.0 | 11 |
+| Tyler Rogers | 2026-06-19 | 0.2 | 28 |
+
+
+**Caution arms (pitched yesterday, or 3+ appearances in window):** Jeff Hoffman, Lazaro Estrada, Louis Varland, Mason Fluharty
+
+
+### Chicago Cubs Bullpen — Last 4 Days
+
+| Reliever | Date | IP | Pitches |
+| --- | --- | --- | --- |
+| Caleb Thielbar | 2026-06-17 | 0.2 | 16 |
+| Caleb Thielbar | 2026-06-20 | 0.1 | 13 |
+| Ethan Roberts | 2026-06-17 | 0.1 | 15 |
+| Ethan Roberts | 2026-06-19 | 1.0 | 10 |
+| Ethan Roberts | 2026-06-20 | 1.1 | 14 |
+| Gavin Hollowell | 2026-06-19 | 1.0 | 13 |
+| Hoby Milner | 2026-06-17 | 1.1 | 25 |
+| Hoby Milner | 2026-06-19 | 1.0 | 16 |
+| Jacob Webb | 2026-06-17 | 1.0 | 16 |
+| Jacob Webb | 2026-06-20 | 0.2 | 27 |
+| Ryan Rolison | 2026-06-20 | 0.2 | 1 |
+| Trent Thornton | 2026-06-20 | 0.2 | 13 |
+
+
+**Caution arms (pitched yesterday, or 3+ appearances in window):** Caleb Thielbar, Ethan Roberts, Jacob Webb, Ryan Rolison, Trent Thornton
+
+
+
+## Final Game Dissection
+
+- Away pitcher pitch mix to inspect: FF, SL, CH, SI, KC
+- Home pitcher pitch mix to inspect: FF, FS, ST
 - Home hitters should be checked against away SP pitch mix above.
 - Away hitters should be checked against home SP pitch mix above.
 - Lineup advantage: compare wOBA, xwOBA, ISO, Barrel%, HardHit%, Whiff%.

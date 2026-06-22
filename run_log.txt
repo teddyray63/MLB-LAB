@@ -1,0 +1,9 @@
+Pulling Statcast 2026-02-21 to 2026-06-21
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Statcast pull failed: Error tokenizing data. C error: Expected 1 fields in line 12, saw 2
+
+Using cached Statcast.
+Gathering player lookup table. This may take a moment.
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
