@@ -74,6 +74,17 @@ Removed:
 | HR Event Rate | 2.9% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | CIN | 7.3 | 4 | 0 | 3 | 7 | 0 |
+| 2026-06-09 | SD | 8.0 | 6 | 0 | 2 | 7 | 0 |
+| 2026-06-03 | CIN | 8.0 | 4 | 1 | 1 | 9 | 1 |
+| 2026-05-26 | NYM | 7.3 | 4 | 1 | 2 | 8 | 1 |
+| 2026-05-19 | PHI | 6.7 | 3 | 1 | 0 | 9 | 1 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -123,10 +134,10 @@ Removed:
 | FF | José Caballero | 72 | 0.227 | 0.333 | 0.106 | 0.281 | 0.249 | 4.9% | 19.6% | 26.5% |
 | FF | Amed Rosario | 34 | 0.138 | 0.207 | 0.069 | 0.209 | 0.228 | 9.1% | 13.3% | 17.7% |
 | FF | Giancarlo Stanton | 30 | 0.148 | 0.148 | 0.000 | 0.167 | 0.213 | 23.5% | 15.8% | 28.8% |
+| SL | Austin Wells | 28 | 0.074 | 0.074 | 0.000 | 0.089 | 0.221 | 0.0% | 38.7% | 43.9% |
+| SL | Ryan Mcmahon | 29 | 0.185 | 0.185 | 0.000 | 0.203 | 0.245 | 6.7% | 42.3% | 40.8% |
 | SL | J. C. Escarra | 12 | 0.000 | 0.000 | 0.000 | 0.000 | 0.168 | 12.5% | 30.8% | 37.5% |
 | SL | Paul Goldschmidt | 33 | 0.367 | 0.367 | 0.000 | 0.364 | 0.290 | 0.0% | 21.7% | 27.9% |
-| SL | Ryan Mcmahon | 29 | 0.185 | 0.185 | 0.000 | 0.203 | 0.245 | 6.7% | 42.3% | 40.8% |
-| SL | Austin Wells | 28 | 0.074 | 0.074 | 0.000 | 0.089 | 0.221 | 0.0% | 38.7% | 43.9% |
 
 
 ## Home Starting Pitcher: Elmer Rodríguez
@@ -144,6 +155,15 @@ Removed:
 | K Event Rate | 9.4% |
 | BB Event Rate | 14.1% |
 | HR Event Rate | 0.0% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-17 | NYM | 6.7 | 5 | 0 | 2 | 1 | 0 |
+| 2026-05-05 | NYY | 8.0 | 6 | 0 | 5 | 2 | 0 |
+| 2026-04-29 | TEX | 6.7 | 4 | 0 | 5 | 3 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -284,6 +304,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Sal Stewart | 352 | 0.254 | 0.465 | 0.211 | 0.359 | 14.7% | 25.1% |
+| 2 | Spencer Steer | 308 | 0.242 | 0.440 | 0.198 | 0.340 | 14.1% | 27.4% |
+| 3 | Matt Mclain | 303 | 0.220 | 0.386 | 0.167 | 0.318 | 10.7% | 23.2% |
+| 4 | Elly De La Cruz | 280 | 0.277 | 0.514 | 0.237 | 0.377 | 16.3% | 35.1% |
+| 5 | Tyler Stephenson | 228 | 0.210 | 0.340 | 0.130 | 0.295 | 11.4% | 25.4% |
+| 6 | Jj Bleday | 212 | 0.265 | 0.591 | 0.326 | 0.412 | 12.1% | 32.1% |
+| 7 | Nathaniel Lowe | 203 | 0.263 | 0.503 | 0.240 | 0.380 | 12.7% | 22.5% |
+| 8 | Eugenio Suárez | 202 | 0.213 | 0.366 | 0.153 | 0.304 | 8.0% | 19.0% |
+| 9 | Tj Friedl | 193 | 0.201 | 0.284 | 0.083 | 0.261 | 3.3% | 22.3% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Cody Bellinger | 336 | 0.266 | 0.455 | 0.189 | 0.358 | 7.3% | 24.4% |
+| 2 | Ben Rice | 324 | 0.279 | 0.586 | 0.307 | 0.412 | 15.2% | 32.1% |
+| 3 | Jazz Chisholm | 311 | 0.223 | 0.399 | 0.176 | 0.318 | 8.6% | 28.4% |
+| 4 | Trent Grisham | 281 | 0.232 | 0.397 | 0.165 | 0.337 | 11.4% | 32.6% |
+| 5 | Aaron Judge | 270 | 0.250 | 0.536 | 0.286 | 0.399 | 21.9% | 31.3% |
+| 6 | José Caballero | 244 | 0.252 | 0.392 | 0.140 | 0.317 | 4.1% | 16.8% |
+| 7 | Ryan Mcmahon | 218 | 0.219 | 0.368 | 0.149 | 0.285 | 12.7% | 26.8% |
+| 8 | Paul Goldschmidt | 212 | 0.283 | 0.529 | 0.246 | 0.376 | 12.0% | 26.2% |
+| 9 | Austin Wells | 180 | 0.162 | 0.253 | 0.091 | 0.244 | 7.5% | 29.2% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6624 |
+| Hits Allowed | 1407 |
+| Walks/HBP | 748 |
+| Strikeouts | 1473 |
+| Home Runs Allowed | 229 |
+| K Event Rate | 22.2% |
+| BB/HBP Event Rate | 11.3% |
+| HR Event Rate | 3.5% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6367 |
+| Hits Allowed | 1343 |
+| Walks/HBP | 644 |
+| Strikeouts | 1485 |
+| Home Runs Allowed | 205 |
+| K Event Rate | 23.3% |
+| BB/HBP Event Rate | 10.1% |
+| HR Event Rate | 3.2% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, SL
@@ -327,6 +409,17 @@ Removed:
 | K Event Rate | 23.7% |
 | BB Event Rate | 9.2% |
 | HR Event Rate | 4.6% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | MIL | 6.7 | 2 | 0 | 2 | 5 | 0 |
+| 2026-06-09 | ATH | 8.3 | 8 | 4 | 2 | 7 | 4 |
+| 2026-06-03 | MIL | 7.0 | 5 | 1 | 1 | 5 | 1 |
+| 2026-05-23 | MIL | 7.0 | 4 | 1 | 4 | 4 | 1 |
+| 2026-05-17 | MIN | 6.7 | 3 | 0 | 5 | 3 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -407,6 +500,17 @@ Removed:
 | K Event Rate | 19.9% |
 | BB Event Rate | 7.4% |
 | HR Event Rate | 2.5% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-14 | NYM | 8.0 | 10 | 2 | 2 | 2 | 2 |
+| 2026-06-07 | ATL | 7.3 | 2 | 1 | 2 | 4 | 1 |
+| 2026-06-02 | ATL | 9.0 | 6 | 1 | 1 | 6 | 1 |
+| 2026-05-27 | BOS | 6.7 | 9 | 0 | 1 | 1 | 0 |
+| 2026-05-22 | ATL | 8.0 | 5 | 1 | 1 | 4 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -552,6 +656,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Brice Turang | 330 | 0.253 | 0.451 | 0.199 | 0.364 | 9.3% | 22.9% |
+| 2 | William Contreras | 318 | 0.297 | 0.434 | 0.136 | 0.359 | 8.4% | 32.1% |
+| 3 | Jake Bauers | 277 | 0.277 | 0.555 | 0.277 | 0.399 | 15.2% | 34.6% |
+| 4 | Sal Frelick | 268 | 0.229 | 0.312 | 0.083 | 0.305 | 1.9% | 20.3% |
+| 5 | Garrett Mitchell | 255 | 0.234 | 0.387 | 0.153 | 0.322 | 13.8% | 28.6% |
+| 6 | Luis Rengifo | 229 | 0.211 | 0.289 | 0.078 | 0.274 | 5.5% | 23.1% |
+| 7 | David Hamilton | 222 | 0.250 | 0.349 | 0.099 | 0.309 | 4.6% | 17.9% |
+| 8 | Christian Yelich | 213 | 0.257 | 0.408 | 0.152 | 0.326 | 6.9% | 18.8% |
+| 9 | Jackson Chourio | 200 | 0.304 | 0.554 | 0.250 | 0.395 | 14.0% | 29.6% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Matt Olson | 348 | 0.279 | 0.554 | 0.276 | 0.382 | 14.9% | 32.2% |
+| 2 | Ozzie Albies | 340 | 0.275 | 0.439 | 0.164 | 0.341 | 4.2% | 21.6% |
+| 3 | Austin Riley | 322 | 0.216 | 0.376 | 0.160 | 0.302 | 11.5% | 29.6% |
+| 4 | Mauricio Dubón | 303 | 0.259 | 0.397 | 0.138 | 0.329 | 5.5% | 17.9% |
+| 5 | Michael Harris | 281 | 0.293 | 0.489 | 0.195 | 0.355 | 15.2% | 35.6% |
+| 6 | Drake Baldwin | 254 | 0.296 | 0.543 | 0.247 | 0.400 | 18.7% | 28.9% |
+| 7 | Ronald Acuña | 244 | 0.254 | 0.428 | 0.174 | 0.359 | 12.8% | 25.3% |
+| 8 | Mike Yastrzemski | 222 | 0.239 | 0.396 | 0.157 | 0.328 | 4.2% | 24.7% |
+| 9 | Dominic Smith | 196 | 0.277 | 0.418 | 0.141 | 0.337 | 7.7% | 22.9% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6410 |
+| Hits Allowed | 1357 |
+| Walks/HBP | 669 |
+| Strikeouts | 1508 |
+| Home Runs Allowed | 169 |
+| K Event Rate | 23.5% |
+| BB/HBP Event Rate | 10.4% |
+| HR Event Rate | 2.6% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6258 |
+| Hits Allowed | 1336 |
+| Walks/HBP | 573 |
+| Strikeouts | 1380 |
+| Home Runs Allowed | 193 |
+| K Event Rate | 22.1% |
+| BB/HBP Event Rate | 9.2% |
+| HR Event Rate | 3.1% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: SI, ST, FC, FF, CH
@@ -597,6 +763,17 @@ Removed:
 | HR Event Rate | 1.7% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | WSH | 6.0 | 5 | 0 | 1 | 5 | 0 |
+| 2026-06-09 | SF | 7.0 | 5 | 0 | 5 | 4 | 0 |
+| 2026-06-03 | WSH | 6.0 | 4 | 1 | 1 | 5 | 1 |
+| 2026-05-29 | WSH | 5.0 | 5 | 0 | 2 | 1 | 0 |
+| 2026-05-24 | ATL | 2.0 | 1 | 0 | 1 | 1 | 0 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -638,8 +815,8 @@ Removed:
 | SI | Junior Caminero | 74 | 0.393 | 0.623 | 0.230 | 0.484 | 0.403 | 13.0% | 38.8% | 13.0% |
 | SL | Chandler Simpson | 27 | 0.360 | 0.560 | 0.200 | 0.419 | 0.264 | 0.0% | 25.9% | 16.2% |
 | CU | Junior Caminero | 20 | 0.111 | 0.278 | 0.167 | 0.215 | 0.267 | 11.1% | 31.2% | 32.1% |
-| FF | Yandy Díaz | 85 | 0.228 | 0.392 | 0.165 | 0.296 | 0.289 | 6.8% | 23.6% | 14.5% |
 | FF | Jonathan Aranda | 126 | 0.243 | 0.408 | 0.165 | 0.339 | 0.367 | 12.0% | 21.8% | 20.3% |
+| FF | Yandy Díaz | 85 | 0.228 | 0.392 | 0.165 | 0.296 | 0.289 | 6.8% | 23.6% | 14.5% |
 | FF | Hunter Feduccia | 40 | 0.152 | 0.303 | 0.152 | 0.280 | 0.319 | 20.0% | 20.0% | 17.7% |
 | FF | Nick Fortes | 59 | 0.278 | 0.426 | 0.148 | 0.336 | 0.275 | 4.3% | 32.6% | 7.4% |
 | SI | Ryan Vilade | 34 | 0.185 | 0.333 | 0.148 | 0.299 | 0.270 | 0.0% | 23.1% | 8.6% |
@@ -674,6 +851,17 @@ Removed:
 | K Event Rate | 13.2% |
 | BB Event Rate | 4.4% |
 | HR Event Rate | 2.8% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | LAD | 7.3 | 5 | 1 | 1 | 6 | 1 |
+| 2026-06-09 | TB | 9.0 | 6 | 0 | 0 | 2 | 0 |
+| 2026-06-03 | TB | 7.3 | 9 | 2 | 1 | 1 | 2 |
+| 2026-05-29 | TB | 9.0 | 8 | 0 | 0 | 5 | 0 |
+| 2026-05-22 | NYY | 8.7 | 9 | 1 | 1 | 1 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -720,8 +908,8 @@ Removed:
 | FF | Brady House | 53 | 0.224 | 0.490 | 0.265 | 0.345 | 0.343 | 23.1% | 28.8% | 35.8% |
 | FF | Keibert Ruiz | 54 | 0.260 | 0.520 | 0.260 | 0.356 | 0.297 | 6.2% | 28.9% | 5.5% |
 | CH | Keibert Ruiz | 32 | 0.250 | 0.500 | 0.250 | 0.316 | 0.208 | 4.0% | 32.4% | 28.3% |
-| FF | Jacob Young | 74 | 0.231 | 0.477 | 0.246 | 0.358 | 0.349 | 7.7% | 25.5% | 12.0% |
 | FF | Cj Abrams | 81 | 0.354 | 0.600 | 0.246 | 0.467 | 0.433 | 13.5% | 19.8% | 21.7% |
+| FF | Jacob Young | 74 | 0.231 | 0.477 | 0.246 | 0.358 | 0.349 | 7.7% | 25.5% | 12.0% |
 | SI | Luis García | 38 | 0.286 | 0.514 | 0.229 | 0.368 | 0.356 | 9.4% | 36.2% | 1.6% |
 | SI | Daylen Lile | 48 | 0.341 | 0.561 | 0.220 | 0.436 | 0.460 | 5.0% | 26.6% | 10.8% |
 | SI | James Wood | 59 | 0.326 | 0.543 | 0.217 | 0.444 | 0.511 | 21.6% | 42.4% | 15.5% |
@@ -817,6 +1005,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | James Wood | 385 | 0.263 | 0.519 | 0.256 | 0.389 | 23.5% | 36.2% |
+| 2 | Daylen Lile | 353 | 0.250 | 0.406 | 0.156 | 0.319 | 7.2% | 23.4% |
+| 3 | Cj Abrams | 340 | 0.285 | 0.517 | 0.232 | 0.385 | 10.0% | 27.6% |
+| 4 | Nasim Nuñez | 269 | 0.227 | 0.271 | 0.044 | 0.287 | 0.0% | 11.4% |
+| 5 | Luis García | 266 | 0.253 | 0.440 | 0.187 | 0.316 | 9.0% | 29.7% |
+| 6 | Jacob Young | 264 | 0.221 | 0.369 | 0.148 | 0.301 | 6.2% | 24.9% |
+| 7 | Curtis Mead | 218 | 0.230 | 0.460 | 0.230 | 0.353 | 11.0% | 26.2% |
+| 8 | Brady House | 193 | 0.242 | 0.404 | 0.163 | 0.315 | 9.5% | 28.9% |
+| 9 | Keibert Ruiz | 181 | 0.267 | 0.453 | 0.186 | 0.319 | 5.3% | 28.5% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Junior Caminero | 337 | 0.278 | 0.478 | 0.199 | 0.369 | 12.5% | 36.2% |
+| 2 | Jonathan Aranda | 334 | 0.270 | 0.448 | 0.178 | 0.358 | 11.2% | 25.3% |
+| 3 | Yandy Díaz | 333 | 0.329 | 0.503 | 0.175 | 0.399 | 8.5% | 30.1% |
+| 4 | Chandler Simpson | 300 | 0.267 | 0.320 | 0.053 | 0.292 | 0.0% | 9.2% |
+| 5 | Cedric Mullins | 273 | 0.199 | 0.314 | 0.114 | 0.289 | 3.8% | 20.2% |
+| 6 | Taylor Walls | 205 | 0.218 | 0.282 | 0.065 | 0.295 | 3.2% | 12.1% |
+| 7 | Ben Williamson | 198 | 0.247 | 0.337 | 0.090 | 0.301 | 1.5% | 26.0% |
+| 8 | Nick Fortes | 195 | 0.250 | 0.339 | 0.089 | 0.287 | 3.2% | 30.7% |
+| 9 | Richie Palacios | 185 | 0.222 | 0.304 | 0.082 | 0.298 | 4.2% | 16.8% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6581 |
+| Hits Allowed | 1443 |
+| Walks/HBP | 649 |
+| Strikeouts | 1349 |
+| Home Runs Allowed | 222 |
+| K Event Rate | 20.5% |
+| BB/HBP Event Rate | 9.9% |
+| HR Event Rate | 3.4% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6190 |
+| Hits Allowed | 1360 |
+| Walks/HBP | 568 |
+| Strikeouts | 1247 |
+| Home Runs Allowed | 171 |
+| K Event Rate | 20.1% |
+| BB/HBP Event Rate | 9.2% |
+| HR Event Rate | 2.8% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: CU, SL, FF, SI
@@ -860,6 +1110,17 @@ Removed:
 | K Event Rate | 24.3% |
 | BB Event Rate | 6.8% |
 | HR Event Rate | 1.7% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | NYY | 7.0 | 8 | 3 | 3 | 4 | 3 |
+| 2026-06-10 | CWS | 8.3 | 6 | 0 | 1 | 6 | 0 |
+| 2026-06-02 | MIN | 8.3 | 10 | 0 | 3 | 2 | 0 |
+| 2026-05-28 | CWS | 7.3 | 2 | 0 | 2 | 5 | 0 |
+| 2026-05-22 | SF | 8.7 | 6 | 0 | 2 | 7 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -945,6 +1206,17 @@ Removed:
 | K Event Rate | 16.9% |
 | BB Event Rate | 5.8% |
 | HR Event Rate | 2.7% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | HOU | 2.3 | 2 | 0 | 0 | 2 | 0 |
+| 2026-06-11 | DET | 8.0 | 4 | 0 | 1 | 4 | 0 |
+| 2026-06-06 | DET | 7.3 | 6 | 1 | 2 | 1 | 1 |
+| 2026-05-31 | CWS | 6.7 | 2 | 0 | 0 | 4 | 0 |
+| 2026-05-26 | DET | 8.7 | 8 | 1 | 2 | 7 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1088,6 +1360,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Miguel Vargas | 345 | 0.231 | 0.455 | 0.224 | 0.359 | 13.9% | 28.1% |
+| 2 | Chase Meidroth | 332 | 0.281 | 0.414 | 0.132 | 0.342 | 5.0% | 23.7% |
+| 3 | Colson Montgomery | 324 | 0.214 | 0.470 | 0.256 | 0.336 | 13.3% | 31.3% |
+| 4 | Munetaka Murakami | 264 | 0.236 | 0.546 | 0.310 | 0.394 | 20.5% | 37.1% |
+| 5 | Andrew Benintendi | 253 | 0.236 | 0.437 | 0.201 | 0.321 | 12.4% | 28.7% |
+| 6 | Sam Antonacci | 237 | 0.295 | 0.430 | 0.135 | 0.386 | 8.0% | 22.9% |
+| 7 | Tristan Peters | 225 | 0.285 | 0.440 | 0.155 | 0.350 | 5.0% | 19.3% |
+| 8 | Edgar Quero | 187 | 0.179 | 0.222 | 0.043 | 0.237 | 2.4% | 21.3% |
+| 9 | Luisangel Acuña | 154 | 0.218 | 0.239 | 0.021 | 0.230 | 3.4% | 25.9% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Kevin Mcgonigle | 343 | 0.277 | 0.425 | 0.147 | 0.364 | 9.0% | 23.7% |
+| 2 | Riley Greene | 341 | 0.292 | 0.446 | 0.154 | 0.365 | 12.7% | 29.1% |
+| 3 | Spencer Torkelson | 312 | 0.202 | 0.415 | 0.213 | 0.311 | 14.8% | 27.7% |
+| 4 | Dillon Dingler | 307 | 0.275 | 0.562 | 0.286 | 0.393 | 12.5% | 28.8% |
+| 5 | Colt Keith | 235 | 0.264 | 0.380 | 0.116 | 0.314 | 9.4% | 28.6% |
+| 6 | Matt Vierling | 227 | 0.195 | 0.346 | 0.151 | 0.271 | 6.5% | 21.3% |
+| 7 | Gleyber Torres | 200 | 0.289 | 0.410 | 0.120 | 0.367 | 8.4% | 18.5% |
+| 8 | Kerry Carpenter | 191 | 0.217 | 0.446 | 0.229 | 0.327 | 10.2% | 27.7% |
+| 9 | Wenceel Pérez | 190 | 0.183 | 0.371 | 0.189 | 0.270 | 8.5% | 23.6% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6410 |
+| Hits Allowed | 1340 |
+| Walks/HBP | 724 |
+| Strikeouts | 1449 |
+| Home Runs Allowed | 214 |
+| K Event Rate | 22.6% |
+| BB/HBP Event Rate | 11.3% |
+| HR Event Rate | 3.3% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6273 |
+| Hits Allowed | 1340 |
+| Walks/HBP | 621 |
+| Strikeouts | 1396 |
+| Home Runs Allowed | 179 |
+| K Event Rate | 22.3% |
+| BB/HBP Event Rate | 9.9% |
+| HR Event Rate | 2.9% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, SI, CH, SL, FC, CU
@@ -1131,6 +1465,17 @@ Removed:
 | K Event Rate | 20.7% |
 | BB Event Rate | 6.1% |
 | HR Event Rate | 1.5% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-14 | SF | 10.0 | 7 | 0 | 0 | 7 | 0 |
+| 2026-06-08 | SF | 9.0 | 5 | 0 | 0 | 7 | 0 |
+| 2026-06-03 | MIL | 7.7 | 1 | 0 | 1 | 4 | 0 |
+| 2026-05-29 | COL | 6.7 | 3 | 0 | 4 | 5 | 0 |
+| 2026-05-05 | SF | 6.7 | 7 | 1 | 1 | 4 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1211,6 +1556,17 @@ Removed:
 | K Event Rate | 15.2% |
 | BB Event Rate | 7.6% |
 | HR Event Rate | 3.0% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | PHI | 8.7 | 8 | 2 | 3 | 1 | 2 |
+| 2026-06-10 | MIA | 5.3 | 3 | 0 | 1 | 4 | 0 |
+| 2026-06-05 | MIA | 3.3 | 3 | 0 | 1 | 1 | 0 |
+| 2026-06-02 | WSH | 3.7 | 5 | 0 | 0 | 3 | 0 |
+| 2026-04-08 | MIA | 1.0 | 0 | 0 | 0 | 1 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1366,6 +1722,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Luis Arráez | 332 | 0.321 | 0.441 | 0.120 | 0.351 | 0.3% | 13.6% |
+| 2 | Rafael Devers | 332 | 0.244 | 0.439 | 0.195 | 0.320 | 10.2% | 28.2% |
+| 3 | Matt Chapman | 330 | 0.253 | 0.412 | 0.159 | 0.340 | 7.3% | 24.2% |
+| 4 | Willy Adames | 327 | 0.225 | 0.425 | 0.199 | 0.309 | 9.6% | 25.6% |
+| 5 | Casey Schmitt | 303 | 0.292 | 0.521 | 0.229 | 0.361 | 12.3% | 27.7% |
+| 6 | Jung Hoo Lee | 289 | 0.337 | 0.478 | 0.141 | 0.372 | 2.8% | 20.7% |
+| 7 | Drew Gilbert | 190 | 0.243 | 0.379 | 0.136 | 0.317 | 2.2% | 21.6% |
+| 8 | Heliot Ramos | 188 | 0.261 | 0.420 | 0.159 | 0.319 | 12.8% | 24.5% |
+| 9 | Bryce Eldridge | 148 | 0.299 | 0.512 | 0.213 | 0.390 | 12.8% | 28.2% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Otto Lopez | 337 | 0.328 | 0.465 | 0.137 | 0.379 | 7.1% | 29.5% |
+| 2 | Xavier Edwards | 335 | 0.284 | 0.418 | 0.134 | 0.352 | 5.2% | 19.3% |
+| 3 | Jakob Marsee | 319 | 0.201 | 0.306 | 0.104 | 0.299 | 3.6% | 23.3% |
+| 4 | Liam Hicks | 305 | 0.269 | 0.451 | 0.182 | 0.353 | 4.2% | 23.9% |
+| 5 | Connor Norby | 236 | 0.218 | 0.356 | 0.139 | 0.312 | 9.8% | 21.2% |
+| 6 | Kyle Stowers | 229 | 0.225 | 0.405 | 0.180 | 0.322 | 9.7% | 29.5% |
+| 7 | Owen Caissie | 215 | 0.223 | 0.410 | 0.186 | 0.311 | 13.5% | 23.4% |
+| 8 | Javier Sanoja | 188 | 0.244 | 0.347 | 0.102 | 0.306 | 1.3% | 20.6% |
+| 9 | Heriberto Hernandez | 171 | 0.243 | 0.408 | 0.164 | 0.337 | 9.1% | 32.2% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6307 |
+| Hits Allowed | 1440 |
+| Walks/HBP | 564 |
+| Strikeouts | 1295 |
+| Home Runs Allowed | 178 |
+| K Event Rate | 20.5% |
+| BB/HBP Event Rate | 8.9% |
+| HR Event Rate | 2.8% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6256 |
+| Hits Allowed | 1304 |
+| Walks/HBP | 647 |
+| Strikeouts | 1421 |
+| Home Runs Allowed | 151 |
+| K Event Rate | 22.7% |
+| BB/HBP Event Rate | 10.3% |
+| HR Event Rate | 2.4% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: SI, CH, ST, FF, FC
@@ -1409,6 +1827,17 @@ Removed:
 | K Event Rate | 18.9% |
 | BB Event Rate | 7.6% |
 | HR Event Rate | 3.1% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | MIL | 7.3 | 3 | 1 | 2 | 4 | 1 |
+| 2026-06-09 | CLE | 7.7 | 6 | 1 | 2 | 7 | 1 |
+| 2026-06-04 | NYY | 7.0 | 4 | 0 | 1 | 4 | 0 |
+| 2026-05-29 | CLE | 6.3 | 7 | 0 | 0 | 3 | 0 |
+| 2026-05-23 | PHI | 7.3 | 6 | 0 | 1 | 5 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1493,6 +1922,17 @@ Removed:
 | K Event Rate | 24.3% |
 | BB Event Rate | 10.7% |
 | HR Event Rate | 3.7% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | HOU | 6.7 | 6 | 3 | 4 | 9 | 3 |
+| 2026-06-09 | LAA | 8.3 | 7 | 0 | 5 | 5 | 0 |
+| 2026-06-04 | HOU | 7.7 | 7 | 1 | 2 | 1 | 1 |
+| 2026-05-29 | HOU | 7.3 | 3 | 2 | 4 | 7 | 2 |
+| 2026-05-23 | CHC | 7.0 | 2 | 0 | 3 | 6 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1636,6 +2076,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | José Ramírez | 329 | 0.247 | 0.452 | 0.205 | 0.352 | 7.9% | 30.6% |
+| 2 | Steven Kwan | 309 | 0.202 | 0.257 | 0.054 | 0.280 | 0.4% | 8.0% |
+| 3 | Brayan Rocchio | 291 | 0.268 | 0.398 | 0.130 | 0.339 | 3.2% | 21.9% |
+| 4 | Chase Delauter | 290 | 0.281 | 0.453 | 0.172 | 0.358 | 6.9% | 25.7% |
+| 5 | Angel Martínez | 260 | 0.247 | 0.469 | 0.222 | 0.322 | 8.9% | 23.8% |
+| 6 | Kyle Manzardo | 257 | 0.238 | 0.423 | 0.185 | 0.334 | 12.7% | 24.7% |
+| 7 | Rhys Hoskins | 236 | 0.193 | 0.406 | 0.214 | 0.326 | 11.8% | 28.0% |
+| 8 | Daniel Schneemann | 227 | 0.218 | 0.364 | 0.146 | 0.295 | 7.4% | 22.7% |
+| 9 | Travis Bazzana | 207 | 0.291 | 0.520 | 0.229 | 0.392 | 6.4% | 26.5% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Yordan Álvarez | 348 | 0.313 | 0.609 | 0.296 | 0.431 | 18.1% | 31.1% |
+| 2 | Christian Walker | 332 | 0.237 | 0.480 | 0.243 | 0.352 | 10.9% | 28.2% |
+| 3 | Isaac Paredes | 304 | 0.235 | 0.408 | 0.173 | 0.340 | 6.7% | 23.4% |
+| 4 | Cam Smith | 303 | 0.219 | 0.353 | 0.134 | 0.300 | 13.1% | 29.0% |
+| 5 | José Altuve | 249 | 0.232 | 0.388 | 0.156 | 0.310 | 7.4% | 25.2% |
+| 6 | Brice Matthews | 204 | 0.210 | 0.366 | 0.156 | 0.300 | 9.8% | 24.2% |
+| 7 | Christian Vázquez | 175 | 0.222 | 0.335 | 0.114 | 0.278 | 2.3% | 14.2% |
+| 8 | Jeremy Peña | 171 | 0.284 | 0.452 | 0.168 | 0.364 | 4.7% | 24.5% |
+| 9 | Carlos Correa | 149 | 0.281 | 0.414 | 0.133 | 0.356 | 9.8% | 22.4% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6485 |
+| Hits Allowed | 1372 |
+| Walks/HBP | 658 |
+| Strikeouts | 1493 |
+| Home Runs Allowed | 204 |
+| K Event Rate | 23.0% |
+| BB/HBP Event Rate | 10.1% |
+| HR Event Rate | 3.1% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6469 |
+| Hits Allowed | 1357 |
+| Walks/HBP | 732 |
+| Strikeouts | 1447 |
+| Home Runs Allowed | 211 |
+| K Event Rate | 22.4% |
+| BB/HBP Event Rate | 11.3% |
+| HR Event Rate | 3.3% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, FC, SI, CU
@@ -1679,6 +2181,17 @@ Removed:
 | K Event Rate | 22.2% |
 | BB Event Rate | 6.2% |
 | HR Event Rate | 1.4% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | STL | 9.3 | 1 | 0 | 1 | 9 | 0 |
+| 2026-06-09 | NYM | 7.3 | 4 | 0 | 1 | 6 | 0 |
+| 2026-06-02 | STL | 8.0 | 5 | 0 | 2 | 9 | 0 |
+| 2026-05-27 | MIL | 8.3 | 2 | 0 | 1 | 9 | 0 |
+| 2026-05-21 | STL | 8.3 | 6 | 1 | 3 | 7 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1762,6 +2275,17 @@ Removed:
 | K Event Rate | 17.1% |
 | BB Event Rate | 5.0% |
 | HR Event Rate | 2.5% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-14 | KC | 8.7 | 5 | 0 | 1 | 4 | 0 |
+| 2026-06-09 | KC | 7.7 | 8 | 0 | 1 | 3 | 0 |
+| 2026-06-03 | CIN | 9.3 | 6 | 1 | 2 | 8 | 1 |
+| 2026-05-29 | TEX | 7.7 | 6 | 1 | 1 | 5 | 1 |
+| 2026-05-23 | KC | 10.0 | 4 | 0 | 1 | 2 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -1904,6 +2428,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Iván Herrera | 345 | 0.255 | 0.417 | 0.162 | 0.374 | 7.6% | 30.4% |
+| 2 | Alec Burleson | 337 | 0.287 | 0.482 | 0.195 | 0.361 | 11.1% | 30.7% |
+| 3 | Jj Wetherholt | 332 | 0.254 | 0.389 | 0.134 | 0.335 | 8.7% | 28.6% |
+| 4 | Jordan Walker | 329 | 0.291 | 0.533 | 0.242 | 0.388 | 14.0% | 33.2% |
+| 5 | Masyn Winn | 301 | 0.238 | 0.318 | 0.080 | 0.300 | 2.9% | 20.1% |
+| 6 | Nolan Gorman | 242 | 0.194 | 0.313 | 0.118 | 0.269 | 8.8% | 28.0% |
+| 7 | Nathan Church | 205 | 0.259 | 0.402 | 0.143 | 0.319 | 8.2% | 17.9% |
+| 8 | Victor Scott | 200 | 0.196 | 0.262 | 0.065 | 0.264 | 0.8% | 15.6% |
+| 9 | Pedro Pagés | 152 | 0.216 | 0.345 | 0.129 | 0.258 | 5.6% | 23.6% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Bobby Witt | 347 | 0.288 | 0.456 | 0.168 | 0.367 | 12.2% | 32.7% |
+| 2 | Salvador Pérez | 309 | 0.215 | 0.372 | 0.156 | 0.277 | 10.3% | 24.7% |
+| 3 | Vinnie Pasquantino | 302 | 0.219 | 0.340 | 0.121 | 0.300 | 7.4% | 27.5% |
+| 4 | Maikel García | 295 | 0.262 | 0.375 | 0.112 | 0.314 | 4.9% | 28.5% |
+| 5 | Carter Jensen | 282 | 0.228 | 0.400 | 0.172 | 0.309 | 7.9% | 25.0% |
+| 6 | Jac Caglianone | 276 | 0.265 | 0.442 | 0.177 | 0.345 | 14.5% | 33.0% |
+| 7 | Isaac Collins | 265 | 0.221 | 0.311 | 0.090 | 0.302 | 6.1% | 25.8% |
+| 8 | Lane Thomas | 207 | 0.225 | 0.367 | 0.142 | 0.333 | 6.2% | 20.5% |
+| 9 | Kyle Isbel | 196 | 0.263 | 0.383 | 0.120 | 0.317 | 2.9% | 24.5% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6168 |
+| Hits Allowed | 1350 |
+| Walks/HBP | 614 |
+| Strikeouts | 1256 |
+| Home Runs Allowed | 177 |
+| K Event Rate | 20.4% |
+| BB/HBP Event Rate | 10.0% |
+| HR Event Rate | 2.9% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6533 |
+| Hits Allowed | 1436 |
+| Walks/HBP | 675 |
+| Strikeouts | 1378 |
+| Home Runs Allowed | 189 |
+| K Event Rate | 21.1% |
+| BB/HBP Event Rate | 10.3% |
+| HR Event Rate | 2.9% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, FC, ST, SI
@@ -1947,6 +2533,17 @@ Removed:
 | K Event Rate | 16.8% |
 | BB Event Rate | 12.4% |
 | HR Event Rate | 1.9% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-19 | TEX | 2.0 | 0 | 0 | 1 | 0 | 0 |
+| 2026-06-16 | STL | 1.3 | 1 | 0 | 0 | 0 | 0 |
+| 2026-06-15 | STL | 1.0 | 0 | 0 | 0 | 1 | 0 |
+| 2026-06-12 | BAL | 2.7 | 1 | 0 | 1 | 3 | 0 |
+| 2026-06-10 | SD | 1.3 | 1 | 0 | 1 | 0 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -2027,6 +2624,17 @@ Removed:
 | HR Event Rate | 4.5% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-14 | BOS | 8.7 | 6 | 2 | 1 | 6 | 2 |
+| 2026-06-09 | KC | 7.7 | 4 | 1 | 3 | 3 | 1 |
+| 2026-06-02 | STL | 10.3 | 11 | 1 | 2 | 7 | 1 |
+| 2026-05-28 | TEX | 9.0 | 4 | 2 | 2 | 6 | 2 |
+| 2026-05-23 | LAA | 10.0 | 5 | 1 | 3 | 6 | 1 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -2080,8 +2688,8 @@ Removed:
 | CU | Ty France | 11 | 0.182 | 0.364 | 0.182 | 0.227 | 0.147 | 0.0% | 38.5% | 23.8% |
 | SI | Jackson Merrill | 50 | 0.409 | 0.591 | 0.182 | 0.483 | 0.454 | 8.3% | 27.7% | 9.7% |
 | SI | Manny Machado | 66 | 0.153 | 0.322 | 0.169 | 0.248 | 0.344 | 9.4% | 28.3% | 15.3% |
-| SI | Nick Castellanos | 27 | 0.250 | 0.417 | 0.167 | 0.306 | 0.375 | 4.8% | 23.7% | 21.0% |
 | SI | Luis Campusano | 15 | 0.417 | 0.583 | 0.167 | 0.487 | 0.392 | 9.1% | 35.0% | 13.3% |
+| SI | Nick Castellanos | 27 | 0.250 | 0.417 | 0.167 | 0.306 | 0.375 | 4.8% | 23.7% | 21.0% |
 | FF | Miguel Andújar | 54 | 0.184 | 0.347 | 0.163 | 0.268 | 0.310 | 5.0% | 17.7% | 8.9% |
 | SI | Gavin Sheets | 42 | 0.231 | 0.385 | 0.154 | 0.294 | 0.359 | 6.5% | 37.5% | 10.3% |
 | FF | Freddy Fermin | 43 | 0.135 | 0.270 | 0.135 | 0.253 | 0.281 | 3.3% | 12.5% | 15.5% |
@@ -2172,6 +2780,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Fernando Tatís | 334 | 0.280 | 0.355 | 0.075 | 0.328 | 10.5% | 35.6% |
+| 2 | Jackson Merrill | 322 | 0.210 | 0.349 | 0.139 | 0.278 | 9.6% | 25.1% |
+| 3 | Manny Machado | 316 | 0.172 | 0.355 | 0.183 | 0.277 | 8.9% | 24.8% |
+| 4 | Xander Bogaerts | 298 | 0.227 | 0.348 | 0.121 | 0.320 | 7.2% | 25.8% |
+| 5 | Gavin Sheets | 265 | 0.236 | 0.481 | 0.245 | 0.347 | 9.6% | 31.1% |
+| 6 | Ramón Laureano | 224 | 0.209 | 0.383 | 0.173 | 0.301 | 13.4% | 23.3% |
+| 7 | Miguel Andújar | 216 | 0.239 | 0.390 | 0.151 | 0.290 | 4.1% | 21.7% |
+| 8 | Ty France | 183 | 0.247 | 0.482 | 0.235 | 0.343 | 12.1% | 26.1% |
+| 9 | Freddy Fermin | 157 | 0.162 | 0.265 | 0.103 | 0.253 | 2.8% | 16.4% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Brandon Nimmo | 338 | 0.258 | 0.411 | 0.152 | 0.329 | 11.6% | 31.0% |
+| 2 | Jake Burger | 317 | 0.253 | 0.450 | 0.197 | 0.338 | 9.7% | 32.1% |
+| 3 | Josh Jung | 316 | 0.307 | 0.467 | 0.160 | 0.366 | 5.8% | 29.5% |
+| 4 | Ezequiel Duran | 260 | 0.271 | 0.436 | 0.165 | 0.343 | 7.0% | 22.2% |
+| 5 | Joc Pederson | 247 | 0.227 | 0.422 | 0.194 | 0.334 | 10.3% | 30.8% |
+| 6 | Evan Carter | 241 | 0.168 | 0.307 | 0.139 | 0.276 | 6.8% | 23.0% |
+| 7 | Corey Seager | 221 | 0.188 | 0.375 | 0.188 | 0.293 | 16.3% | 27.2% |
+| 8 | Wyatt Langford | 162 | 0.267 | 0.467 | 0.200 | 0.341 | 6.8% | 25.4% |
+| 9 | Danny Jansen | 152 | 0.176 | 0.321 | 0.145 | 0.274 | 6.8% | 25.1% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6243 |
+| Hits Allowed | 1290 |
+| Walks/HBP | 618 |
+| Strikeouts | 1415 |
+| Home Runs Allowed | 181 |
+| K Event Rate | 22.7% |
+| BB/HBP Event Rate | 9.9% |
+| HR Event Rate | 2.9% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6264 |
+| Hits Allowed | 1327 |
+| Walks/HBP | 607 |
+| Strikeouts | 1424 |
+| Home Runs Allowed | 188 |
+| K Event Rate | 22.7% |
+| BB/HBP Event Rate | 9.7% |
+| HR Event Rate | 3.0% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: SI, CH, SL, FF
@@ -2217,6 +2887,16 @@ Removed:
 | HR Event Rate | 5.1% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | ATH | 7.0 | 8 | 2 | 1 | 4 | 2 |
+| 2026-06-10 | PIT | 5.3 | 3 | 0 | 1 | 4 | 0 |
+| 2026-06-04 | HOU | 7.0 | 4 | 0 | 2 | 4 | 0 |
+| 2026-05-29 | PIT | 7.0 | 7 | 2 | 2 | 6 | 2 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -2255,11 +2935,11 @@ Removed:
 | SL | Mickey Moniak | 20 | 0.167 | 0.444 | 0.278 | 0.295 | 0.311 | 23.1% | 17.2% | 31.2% |
 | CH | Hunter Goodman | 28 | 0.231 | 0.500 | 0.269 | 0.366 | 0.245 | 11.8% | 22.2% | 43.3% |
 | FF | Mickey Moniak | 51 | 0.306 | 0.571 | 0.265 | 0.384 | 0.307 | 8.3% | 20.5% | 18.8% |
-| CU | Ezequiel Tovar | 13 | 0.250 | 0.500 | 0.250 | 0.342 | 0.346 | 25.0% | 15.4% | 23.8% |
 | CU | Brenton Doyle | 4 | 0.250 | 0.500 | 0.250 | 0.312 | 0.000 | 100.0% | 66.7% | 25.0% |
+| CU | Ezequiel Tovar | 13 | 0.250 | 0.500 | 0.250 | 0.342 | 0.346 | 25.0% | 15.4% | 23.8% |
 | FF | Hunter Goodman | 92 | 0.173 | 0.407 | 0.235 | 0.298 | 0.316 | 19.6% | 25.7% | 22.5% |
-| FF | Tj Rumfield | 108 | 0.301 | 0.516 | 0.215 | 0.391 | 0.364 | 9.2% | 21.9% | 10.3% |
 | FF | Kyle Karros | 95 | 0.354 | 0.570 | 0.215 | 0.447 | 0.401 | 7.7% | 28.6% | 5.2% |
+| FF | Tj Rumfield | 108 | 0.301 | 0.516 | 0.215 | 0.391 | 0.364 | 9.2% | 21.9% | 10.3% |
 | CH | Brett Sullivan | 15 | 0.143 | 0.357 | 0.214 | 0.190 | 0.155 | 0.0% | 5.9% | 18.2% |
 | SL | Tyler Freeman | 26 | 0.280 | 0.480 | 0.200 | 0.373 | 0.285 | 0.0% | 29.6% | 18.9% |
 | CU | Tj Rumfield | 22 | 0.250 | 0.450 | 0.200 | 0.375 | 0.274 | 0.0% | 15.4% | 30.2% |
@@ -2292,6 +2972,17 @@ Removed:
 | K Event Rate | 17.4% |
 | BB Event Rate | 7.7% |
 | HR Event Rate | 3.9% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | CHC | 7.3 | 5 | 1 | 2 | 5 | 1 |
+| 2026-06-10 | COL | 6.3 | 2 | 0 | 2 | 7 | 0 |
+| 2026-06-03 | LAA | 7.3 | 10 | 1 | 2 | 5 | 1 |
+| 2026-05-29 | COL | 6.0 | 5 | 0 | 2 | 2 | 0 |
+| 2026-05-23 | AZ | 8.0 | 8 | 1 | 1 | 5 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -2431,6 +3122,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Bryan Reynolds | 348 | 0.285 | 0.462 | 0.177 | 0.385 | 9.7% | 29.6% |
+| 2 | Brandon Lowe | 327 | 0.244 | 0.502 | 0.258 | 0.362 | 12.7% | 28.8% |
+| 3 | Nick Gonzales | 305 | 0.286 | 0.357 | 0.071 | 0.316 | 2.6% | 22.0% |
+| 4 | Spencer Horwitz | 301 | 0.271 | 0.454 | 0.183 | 0.372 | 8.8% | 21.1% |
+| 5 | Oneil Cruz | 300 | 0.261 | 0.470 | 0.208 | 0.368 | 16.9% | 36.9% |
+| 6 | Ryan O'Hearn | 272 | 0.264 | 0.431 | 0.167 | 0.337 | 7.4% | 26.1% |
+| 7 | Marcell Ozuna | 236 | 0.200 | 0.307 | 0.107 | 0.268 | 7.6% | 26.7% |
+| 8 | Konnor Griffin | 222 | 0.259 | 0.398 | 0.139 | 0.332 | 8.6% | 24.2% |
+| 9 | Jake Mangum | 188 | 0.285 | 0.337 | 0.052 | 0.321 | 0.7% | 13.7% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Hunter Goodman | 324 | 0.256 | 0.539 | 0.283 | 0.373 | 16.2% | 28.7% |
+| 2 | Tj Rumfield | 321 | 0.270 | 0.460 | 0.189 | 0.359 | 6.2% | 22.1% |
+| 3 | Ezequiel Tovar | 293 | 0.214 | 0.343 | 0.129 | 0.276 | 9.0% | 18.6% |
+| 4 | Troy Johnston | 282 | 0.321 | 0.472 | 0.151 | 0.374 | 3.0% | 24.1% |
+| 5 | Willi Castro | 272 | 0.281 | 0.413 | 0.132 | 0.345 | 6.5% | 22.8% |
+| 6 | Kyle Karros | 263 | 0.249 | 0.371 | 0.122 | 0.329 | 6.8% | 26.5% |
+| 7 | Jake Mccarthy | 239 | 0.307 | 0.472 | 0.165 | 0.356 | 4.4% | 16.9% |
+| 8 | Edouard Julien | 225 | 0.236 | 0.338 | 0.103 | 0.313 | 8.2% | 26.9% |
+| 9 | Tyler Freeman | 187 | 0.265 | 0.364 | 0.099 | 0.325 | 1.4% | 20.4% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6659 |
+| Hits Allowed | 1426 |
+| Walks/HBP | 717 |
+| Strikeouts | 1588 |
+| Home Runs Allowed | 185 |
+| K Event Rate | 23.8% |
+| BB/HBP Event Rate | 10.8% |
+| HR Event Rate | 2.8% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6677 |
+| Hits Allowed | 1620 |
+| Walks/HBP | 629 |
+| Strikeouts | 1369 |
+| Home Runs Allowed | 214 |
+| K Event Rate | 20.5% |
+| BB/HBP Event Rate | 9.4% |
+| HR Event Rate | 3.2% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, SL, CH, CU
@@ -2474,6 +3227,16 @@ Removed:
 | K Event Rate | 15.9% |
 | BB Event Rate | 9.5% |
 | HR Event Rate | 3.2% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | TEX | 6.0 | 4 | 1 | 1 | 2 | 1 |
+| 2026-06-10 | DET | 4.3 | 1 | 0 | 3 | 4 | 0 |
+| 2026-06-04 | MIN | 5.0 | 2 | 1 | 1 | 1 | 1 |
+| 2026-05-31 | PIT | 5.7 | 2 | 0 | 3 | 3 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -2543,6 +3306,13 @@ Removed:
 | Stat | Value |
 | --- | --- |
 | No data | — |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| — | — | — | — | — | — | — | — |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -2646,6 +3416,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Josh Bell | 318 | 0.234 | 0.379 | 0.145 | 0.306 | 9.6% | 22.2% |
+| 2 | Brooks Lee | 315 | 0.256 | 0.443 | 0.187 | 0.347 | 4.9% | 20.6% |
+| 3 | Luke Keaschall | 311 | 0.266 | 0.365 | 0.099 | 0.329 | 3.5% | 22.4% |
+| 4 | Byron Buxton | 306 | 0.273 | 0.608 | 0.335 | 0.398 | 20.0% | 30.6% |
+| 5 | Kody Clemens | 270 | 0.251 | 0.486 | 0.235 | 0.351 | 12.6% | 28.7% |
+| 6 | Austin Martin | 251 | 0.256 | 0.336 | 0.081 | 0.334 | 2.4% | 18.5% |
+| 7 | Trevor Larnach | 240 | 0.274 | 0.418 | 0.144 | 0.365 | 8.0% | 25.5% |
+| 8 | Víctor Caratini | 226 | 0.238 | 0.381 | 0.143 | 0.323 | 8.0% | 23.9% |
+| 9 | Royce Lewis | 199 | 0.193 | 0.352 | 0.159 | 0.289 | 12.7% | 25.4% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Corbin Carroll | 327 | 0.271 | 0.539 | 0.268 | 0.391 | 13.3% | 32.4% |
+| 2 | Ketel Marte | 326 | 0.257 | 0.446 | 0.189 | 0.335 | 10.4% | 33.6% |
+| 3 | Geraldo Perdomo | 320 | 0.242 | 0.354 | 0.112 | 0.332 | 2.7% | 21.9% |
+| 4 | Nolan Arenado | 285 | 0.242 | 0.405 | 0.163 | 0.324 | 6.0% | 23.3% |
+| 5 | Ildemaro Vargas | 272 | 0.263 | 0.420 | 0.157 | 0.331 | 3.5% | 26.9% |
+| 6 | Gabriel Moreno | 207 | 0.281 | 0.489 | 0.208 | 0.383 | 10.5% | 26.9% |
+| 7 | Jose Fernandez | 178 | 0.253 | 0.349 | 0.096 | 0.301 | 3.9% | 24.7% |
+| 8 | Adrian Del Castillo | 145 | 0.189 | 0.311 | 0.121 | 0.266 | 5.7% | 20.2% |
+| 9 | Jorge Barrosa | 137 | 0.215 | 0.438 | 0.223 | 0.319 | 8.2% | 16.4% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6663 |
+| Hits Allowed | 1481 |
+| Walks/HBP | 686 |
+| Strikeouts | 1407 |
+| Home Runs Allowed | 205 |
+| K Event Rate | 21.1% |
+| BB/HBP Event Rate | 10.3% |
+| HR Event Rate | 3.1% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6392 |
+| Hits Allowed | 1409 |
+| Walks/HBP | 589 |
+| Strikeouts | 1253 |
+| Home Runs Allowed | 189 |
+| K Event Rate | 19.6% |
+| BB/HBP Event Rate | 9.2% |
+| HR Event Rate | 3.0% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, CH, ST, FC
@@ -2689,6 +3521,17 @@ Removed:
 | K Event Rate | 27.9% |
 | BB Event Rate | 7.3% |
 | HR Event Rate | 1.9% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | AZ | 8.0 | 3 | 0 | 0 | 3 | 0 |
+| 2026-06-10 | LAA | 7.3 | 1 | 1 | 0 | 9 | 1 |
+| 2026-06-05 | LAD | 7.0 | 2 | 0 | 2 | 6 | 0 |
+| 2026-05-30 | TB | 7.7 | 5 | 1 | 3 | 7 | 1 |
+| 2026-05-24 | LAA | 8.3 | 1 | 1 | 0 | 14 | 1 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -2772,6 +3615,17 @@ Removed:
 | HR Event Rate | 2.5% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | ATH | 7.3 | 6 | 1 | 2 | 6 | 1 |
+| 2026-06-10 | ATH | 6.7 | 5 | 2 | 3 | 4 | 2 |
+| 2026-06-05 | HOU | 6.3 | 5 | 1 | 2 | 6 | 1 |
+| 2026-05-31 | ATH | 2.3 | 0 | 0 | 0 | 0 | 0 |
+| 2026-05-30 | ATH | 1.7 | 1 | 0 | 2 | 2 | 0 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -2818,8 +3672,8 @@ Removed:
 | FF | Adam Frazier | 39 | 0.233 | 0.500 | 0.267 | 0.371 | 0.282 | 8.3% | 10.3% | 16.2% |
 | CH | Oswald Peraza | 28 | 0.296 | 0.556 | 0.259 | 0.373 | 0.292 | 9.5% | 22.9% | 32.7% |
 | FF | Mike Trout | 141 | 0.292 | 0.547 | 0.255 | 0.467 | 0.470 | 22.2% | 25.0% | 14.0% |
-| FF | Josh Lowe | 44 | 0.350 | 0.600 | 0.250 | 0.433 | 0.298 | 17.4% | 19.7% | 24.5% |
 | FF | Jo Adell | 91 | 0.286 | 0.536 | 0.250 | 0.360 | 0.388 | 15.4% | 20.7% | 19.0% |
+| FF | Josh Lowe | 44 | 0.350 | 0.600 | 0.250 | 0.433 | 0.298 | 17.4% | 19.7% | 24.5% |
 | ST | Nolan Schanuel | 22 | 0.250 | 0.500 | 0.250 | 0.350 | 0.204 | 6.2% | 22.7% | 33.3% |
 | FC | Adam Frazier | 4 | 0.500 | 0.750 | 0.250 | 0.537 | 0.202 | 0.0% | 9.1% | 16.7% |
 | ST | Zach Neto | 32 | 0.167 | 0.400 | 0.233 | 0.264 | 0.211 | 11.8% | 23.3% | 44.3% |
@@ -2917,6 +3771,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Zach Neto | 361 | 0.223 | 0.445 | 0.223 | 0.340 | 13.5% | 22.7% |
+| 2 | Mike Trout | 353 | 0.240 | 0.473 | 0.233 | 0.390 | 20.2% | 26.5% |
+| 3 | Jo Adell | 347 | 0.255 | 0.403 | 0.148 | 0.306 | 8.8% | 26.3% |
+| 4 | Nolan Schanuel | 264 | 0.247 | 0.368 | 0.121 | 0.319 | 2.6% | 18.7% |
+| 5 | Jorge Soler | 262 | 0.224 | 0.422 | 0.198 | 0.324 | 12.1% | 26.6% |
+| 6 | Oswald Peraza | 254 | 0.265 | 0.416 | 0.151 | 0.334 | 8.1% | 22.5% |
+| 7 | Logan O'Hoppe | 194 | 0.233 | 0.355 | 0.122 | 0.298 | 10.9% | 26.1% |
+| 8 | Vaughn Grissom | 168 | 0.231 | 0.381 | 0.150 | 0.314 | 6.9% | 26.8% |
+| 9 | Josh Lowe | 152 | 0.204 | 0.359 | 0.155 | 0.268 | 8.2% | 16.3% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Nick Kurtz | 366 | 0.285 | 0.536 | 0.251 | 0.415 | 18.2% | 32.7% |
+| 2 | Shea Langeliers | 334 | 0.272 | 0.526 | 0.255 | 0.371 | 14.6% | 28.3% |
+| 3 | Tyler Soderstrom | 326 | 0.238 | 0.477 | 0.238 | 0.363 | 10.9% | 29.0% |
+| 4 | Jeff Mcneil | 261 | 0.227 | 0.309 | 0.082 | 0.282 | 1.0% | 18.1% |
+| 5 | Zack Gelof | 232 | 0.280 | 0.488 | 0.209 | 0.364 | 7.1% | 27.0% |
+| 6 | Lawrence Butler | 224 | 0.198 | 0.317 | 0.119 | 0.279 | 7.3% | 26.4% |
+| 7 | Carlos Cortes | 216 | 0.262 | 0.414 | 0.152 | 0.334 | 8.0% | 24.1% |
+| 8 | Jacob Wilson | 215 | 0.283 | 0.390 | 0.107 | 0.319 | 1.6% | 20.4% |
+| 9 | Brent Rooker | 215 | 0.214 | 0.411 | 0.198 | 0.316 | 16.5% | 26.9% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6800 |
+| Hits Allowed | 1404 |
+| Walks/HBP | 808 |
+| Strikeouts | 1606 |
+| Home Runs Allowed | 201 |
+| K Event Rate | 23.6% |
+| BB/HBP Event Rate | 11.9% |
+| HR Event Rate | 3.0% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6655 |
+| Hits Allowed | 1504 |
+| Walks/HBP | 698 |
+| Strikeouts | 1442 |
+| Home Runs Allowed | 241 |
+| K Event Rate | 21.7% |
+| BB/HBP Event Rate | 10.5% |
+| HR Event Rate | 3.6% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, SL, CH, CU
@@ -2960,6 +3876,17 @@ Removed:
 | K Event Rate | 16.5% |
 | BB Event Rate | 8.6% |
 | HR Event Rate | 2.3% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | SEA | 8.7 | 4 | 0 | 4 | 2 | 0 |
+| 2026-06-10 | BAL | 8.3 | 2 | 0 | 2 | 5 | 0 |
+| 2026-06-05 | TOR | 8.7 | 7 | 1 | 0 | 4 | 1 |
+| 2026-05-30 | BAL | 9.0 | 7 | 0 | 2 | 7 | 0 |
+| 2026-05-24 | BAL | 9.3 | 5 | 0 | 2 | 4 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -3016,8 +3943,8 @@ Removed:
 | SI | Will Smith | 48 | 0.300 | 0.500 | 0.200 | 0.358 | 0.474 | 22.2% | 33.3% | 4.1% |
 | FF | Teoscar Hernández | 54 | 0.283 | 0.478 | 0.196 | 0.368 | 0.367 | 14.3% | 23.8% | 17.1% |
 | SI | Hyeseong Kim | 23 | 0.381 | 0.571 | 0.190 | 0.407 | 0.355 | 5.6% | 20.0% | 16.4% |
-| FF | Will Smith | 66 | 0.226 | 0.415 | 0.189 | 0.357 | 0.458 | 20.0% | 27.8% | 14.5% |
 | FF | Kyle Tucker | 105 | 0.244 | 0.433 | 0.189 | 0.364 | 0.365 | 11.4% | 23.2% | 18.6% |
+| FF | Will Smith | 66 | 0.226 | 0.415 | 0.189 | 0.357 | 0.458 | 20.0% | 27.8% | 14.5% |
 | SI | Freddie Freeman | 66 | 0.236 | 0.418 | 0.182 | 0.348 | 0.366 | 8.2% | 22.6% | 17.4% |
 | FF | Miguel Rojas | 46 | 0.310 | 0.476 | 0.167 | 0.354 | 0.373 | 10.8% | 37.7% | 11.1% |
 | FF | Alex Freeland | 58 | 0.306 | 0.469 | 0.163 | 0.383 | 0.369 | 7.3% | 30.0% | 16.7% |
@@ -3040,6 +3967,17 @@ Removed:
 | K Event Rate | 26.6% |
 | BB Event Rate | 6.6% |
 | HR Event Rate | 4.3% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-14 | CWS | 7.0 | 4 | 1 | 2 | 8 | 1 |
+| 2026-06-07 | LAD | 3.0 | 3 | 0 | 2 | 2 | 0 |
+| 2026-06-01 | AZ | 7.3 | 3 | 2 | 0 | 3 | 2 |
+| 2026-05-25 | LAD | 8.0 | 5 | 0 | 2 | 8 | 0 |
+| 2026-05-19 | SD | 6.0 | 5 | 2 | 1 | 2 | 2 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -3181,6 +4119,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Gunnar Henderson | 365 | 0.221 | 0.424 | 0.203 | 0.332 | 9.1% | 26.8% |
+| 2 | Taylor Ward | 361 | 0.250 | 0.339 | 0.089 | 0.339 | 4.5% | 23.9% |
+| 3 | Pete Alonso | 359 | 0.244 | 0.454 | 0.210 | 0.338 | 12.5% | 34.5% |
+| 4 | Samuel Basallo | 251 | 0.264 | 0.480 | 0.216 | 0.353 | 12.9% | 27.9% |
+| 5 | Leody Taveras | 250 | 0.249 | 0.369 | 0.120 | 0.317 | 5.5% | 19.7% |
+| 6 | Adley Rutschman | 243 | 0.260 | 0.456 | 0.195 | 0.349 | 8.7% | 27.6% |
+| 7 | Coby Mayo | 219 | 0.187 | 0.374 | 0.187 | 0.282 | 10.2% | 29.6% |
+| 8 | Colton Cowser | 203 | 0.214 | 0.370 | 0.156 | 0.311 | 12.1% | 19.4% |
+| 9 | Jeremiah Jackson | 198 | 0.272 | 0.450 | 0.178 | 0.335 | 8.4% | 28.7% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Freddie Freeman | 345 | 0.273 | 0.471 | 0.199 | 0.363 | 11.5% | 25.2% |
+| 2 | Andy Pages | 344 | 0.264 | 0.468 | 0.204 | 0.343 | 8.3% | 26.9% |
+| 3 | Shohei Ohtani | 333 | 0.293 | 0.546 | 0.253 | 0.413 | 17.9% | 31.1% |
+| 4 | Kyle Tucker | 332 | 0.238 | 0.385 | 0.147 | 0.330 | 5.9% | 24.4% |
+| 5 | Max Muncy | 283 | 0.269 | 0.521 | 0.252 | 0.389 | 16.7% | 28.3% |
+| 6 | Teoscar Hernández | 224 | 0.286 | 0.482 | 0.196 | 0.367 | 12.9% | 25.6% |
+| 7 | Will Smith | 212 | 0.245 | 0.375 | 0.130 | 0.319 | 13.6% | 22.3% |
+| 8 | Mookie Betts | 203 | 0.222 | 0.406 | 0.183 | 0.321 | 8.9% | 25.2% |
+| 9 | Alex Freeland | 195 | 0.220 | 0.327 | 0.107 | 0.294 | 7.7% | 26.4% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6537 |
+| Hits Allowed | 1414 |
+| Walks/HBP | 670 |
+| Strikeouts | 1473 |
+| Home Runs Allowed | 195 |
+| K Event Rate | 22.5% |
+| BB/HBP Event Rate | 10.2% |
+| HR Event Rate | 3.0% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6533 |
+| Hits Allowed | 1362 |
+| Walks/HBP | 694 |
+| Strikeouts | 1507 |
+| Home Runs Allowed | 208 |
+| K Event Rate | 23.1% |
+| BB/HBP Event Rate | 10.6% |
+| HR Event Rate | 3.2% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, FS, SL, SI, CU
@@ -3226,6 +4226,17 @@ Removed:
 | HR Event Rate | 2.0% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | BOS | 7.0 | 4 | 2 | 2 | 6 | 2 |
+| 2026-06-09 | TB | 9.3 | 9 | 0 | 2 | 3 | 0 |
+| 2026-06-03 | BOS | 8.7 | 7 | 0 | 2 | 5 | 0 |
+| 2026-05-28 | BOS | 7.0 | 5 | 0 | 2 | 7 | 0 |
+| 2026-05-22 | BOS | 8.3 | 4 | 0 | 2 | 9 | 0 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -3264,8 +4275,8 @@ Removed:
 | CU | Dominic Canzone | 18 | 0.312 | 0.750 | 0.438 | 0.469 | 0.401 | 27.3% | 50.0% | 28.0% |
 | FF | Luke Raley | 73 | 0.290 | 0.710 | 0.419 | 0.462 | 0.456 | 25.6% | 35.1% | 34.3% |
 | FF | Dominic Canzone | 60 | 0.291 | 0.636 | 0.345 | 0.413 | 0.450 | 20.0% | 40.0% | 15.9% |
-| CU | Luke Raley | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.417 | 42.9% | 33.3% | 32.1% |
 | CU | Randy Arozarena | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.296 | 16.7% | 22.2% | 26.9% |
+| CU | Luke Raley | 13 | 0.250 | 0.583 | 0.333 | 0.373 | 0.417 | 42.9% | 33.3% | 32.1% |
 | CU | Cole Young | 12 | 0.556 | 0.889 | 0.333 | 0.583 | 0.395 | 14.3% | 50.0% | 10.5% |
 | FC | Leo Rivas | 11 | 0.300 | 0.600 | 0.300 | 0.405 | 0.189 | 0.0% | 0.0% | 21.4% |
 | CU | Brendan Donovan | 10 | 0.429 | 0.714 | 0.286 | 0.550 | 0.494 | 20.0% | 33.3% | 25.0% |
@@ -3273,8 +4284,8 @@ Removed:
 | SI | Luke Raley | 24 | 0.227 | 0.455 | 0.227 | 0.300 | 0.340 | 17.6% | 24.2% | 26.1% |
 | FC | Brendan Donovan | 14 | 0.667 | 0.889 | 0.222 | 0.636 | 0.564 | 10.0% | 33.3% | 0.0% |
 | FF | Julio Rodríguez | 85 | 0.230 | 0.446 | 0.216 | 0.339 | 0.327 | 11.8% | 24.1% | 26.8% |
-| FF | J. P. Crawford | 90 | 0.231 | 0.431 | 0.200 | 0.397 | 0.424 | 9.6% | 15.9% | 14.0% |
 | FF | Josh Naylor | 94 | 0.318 | 0.518 | 0.200 | 0.394 | 0.349 | 5.1% | 20.7% | 7.7% |
+| FF | J. P. Crawford | 90 | 0.231 | 0.431 | 0.200 | 0.397 | 0.424 | 9.6% | 15.9% | 14.0% |
 | CU | Julio Rodríguez | 17 | 0.200 | 0.400 | 0.200 | 0.306 | 0.325 | 11.1% | 25.0% | 45.5% |
 | SI | Mitch Garver | 28 | 0.227 | 0.409 | 0.182 | 0.395 | 0.384 | 5.9% | 40.0% | 11.1% |
 | FC | Cal Raleigh | 21 | 0.118 | 0.294 | 0.176 | 0.271 | 0.330 | 9.1% | 25.0% | 32.4% |
@@ -3303,6 +4314,17 @@ Removed:
 | K Event Rate | 26.4% |
 | BB Event Rate | 5.7% |
 | HR Event Rate | 3.7% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | SEA | 8.3 | 2 | 0 | 2 | 10 | 0 |
+| 2026-06-09 | BAL | 7.7 | 3 | 0 | 2 | 5 | 0 |
+| 2026-06-02 | SEA | 7.3 | 4 | 2 | 2 | 8 | 2 |
+| 2026-05-27 | ATH | 8.0 | 5 | 0 | 2 | 6 | 0 |
+| 2026-05-22 | KC | 7.0 | 2 | 0 | 2 | 6 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -3349,8 +4371,8 @@ Removed:
 | FS | Wilyer Abreu | 15 | 0.267 | 0.533 | 0.267 | 0.337 | 0.235 | 7.7% | 27.3% | 13.3% |
 | SL | Ceddanne Rafaela | 43 | 0.300 | 0.550 | 0.250 | 0.414 | 0.261 | 2.9% | 25.4% | 27.3% |
 | SL | Willson Contreras | 41 | 0.306 | 0.556 | 0.250 | 0.472 | 0.437 | 22.7% | 25.5% | 40.9% |
-| CH | Andruw Monasterio | 12 | 0.250 | 0.500 | 0.250 | 0.317 | 0.346 | 11.1% | 22.7% | 30.6% |
 | CH | Willson Contreras | 41 | 0.325 | 0.575 | 0.250 | 0.390 | 0.325 | 20.8% | 35.0% | 40.7% |
+| CH | Andruw Monasterio | 12 | 0.250 | 0.500 | 0.250 | 0.317 | 0.346 | 11.1% | 22.7% | 30.6% |
 | CH | Masataka Yoshida | 24 | 0.333 | 0.571 | 0.238 | 0.425 | 0.410 | 5.9% | 29.6% | 12.5% |
 | SL | Roman Anthony | 20 | 0.294 | 0.529 | 0.235 | 0.403 | 0.419 | 15.4% | 35.0% | 25.0% |
 | FF | Caleb Durbin | 79 | 0.275 | 0.493 | 0.217 | 0.376 | 0.318 | 5.4% | 26.9% | 7.5% |
@@ -3362,8 +4384,8 @@ Removed:
 | FC | Willson Contreras | 19 | 0.267 | 0.467 | 0.200 | 0.355 | 0.339 | 20.0% | 64.7% | 46.9% |
 | FC | Wilyer Abreu | 32 | 0.333 | 0.533 | 0.200 | 0.392 | 0.430 | 15.4% | 28.6% | 5.8% |
 | CH | Jarren Duran | 41 | 0.184 | 0.368 | 0.184 | 0.250 | 0.277 | 13.8% | 27.9% | 37.0% |
-| CU | Ceddanne Rafaela | 17 | 0.235 | 0.412 | 0.176 | 0.326 | 0.178 | 0.0% | 11.1% | 32.5% |
 | CU | Trevor Story | 18 | 0.118 | 0.294 | 0.176 | 0.250 | 0.255 | 25.0% | 18.8% | 41.4% |
+| CU | Ceddanne Rafaela | 17 | 0.235 | 0.412 | 0.176 | 0.326 | 0.178 | 0.0% | 11.1% | 32.5% |
 | CU | Wilyer Abreu | 21 | 0.235 | 0.412 | 0.176 | 0.357 | 0.339 | 6.7% | 12.5% | 10.3% |
 | CU | Andruw Monasterio | 7 | 0.333 | 0.500 | 0.167 | 0.407 | 0.257 | 20.0% | 10.0% | 16.7% |
 | SL | Isiah Kiner-Falefa | 23 | 0.476 | 0.619 | 0.143 | 0.500 | 0.454 | 5.6% | 20.7% | 23.4% |
@@ -3450,6 +4472,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Wilyer Abreu | 330 | 0.268 | 0.430 | 0.161 | 0.330 | 11.5% | 24.4% |
+| 2 | Jarren Duran | 327 | 0.208 | 0.372 | 0.164 | 0.288 | 12.1% | 27.1% |
+| 3 | Willson Contreras | 316 | 0.281 | 0.519 | 0.237 | 0.393 | 13.2% | 28.5% |
+| 4 | Ceddanne Rafaela | 298 | 0.296 | 0.467 | 0.172 | 0.368 | 6.2% | 22.6% |
+| 5 | Caleb Durbin | 259 | 0.219 | 0.354 | 0.135 | 0.285 | 2.5% | 21.0% |
+| 6 | Marcelo Mayer | 236 | 0.218 | 0.303 | 0.085 | 0.282 | 6.5% | 27.1% |
+| 7 | Trevor Story | 194 | 0.225 | 0.335 | 0.110 | 0.286 | 4.0% | 22.1% |
+| 8 | Masataka Yoshida | 183 | 0.245 | 0.337 | 0.092 | 0.303 | 1.4% | 27.7% |
+| 9 | Carlos Narváez | 158 | 0.190 | 0.268 | 0.077 | 0.259 | 6.4% | 19.8% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Julio Rodríguez | 351 | 0.249 | 0.436 | 0.187 | 0.332 | 9.3% | 28.5% |
+| 2 | Cole Young | 338 | 0.249 | 0.374 | 0.125 | 0.306 | 6.1% | 24.8% |
+| 3 | Randy Arozarena | 326 | 0.288 | 0.456 | 0.167 | 0.374 | 8.1% | 24.7% |
+| 4 | Josh Naylor | 323 | 0.253 | 0.367 | 0.114 | 0.307 | 4.7% | 26.3% |
+| 5 | J. P. Crawford | 250 | 0.217 | 0.386 | 0.169 | 0.331 | 8.8% | 22.1% |
+| 6 | Luke Raley | 233 | 0.252 | 0.529 | 0.276 | 0.370 | 17.4% | 29.4% |
+| 7 | Cal Raleigh | 217 | 0.174 | 0.321 | 0.147 | 0.264 | 13.0% | 23.0% |
+| 8 | Dominic Canzone | 211 | 0.287 | 0.564 | 0.277 | 0.389 | 15.3% | 31.3% |
+| 9 | Leo Rivas | 140 | 0.132 | 0.167 | 0.035 | 0.231 | 2.6% | 9.7% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6225 |
+| Hits Allowed | 1359 |
+| Walks/HBP | 577 |
+| Strikeouts | 1387 |
+| Home Runs Allowed | 158 |
+| K Event Rate | 22.3% |
+| BB/HBP Event Rate | 9.3% |
+| HR Event Rate | 2.5% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6529 |
+| Hits Allowed | 1398 |
+| Walks/HBP | 618 |
+| Strikeouts | 1509 |
+| Home Runs Allowed | 201 |
+| K Event Rate | 23.1% |
+| BB/HBP Event Rate | 9.5% |
+| HR Event Rate | 3.1% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: FF, SI, FC, CU
@@ -3493,6 +4577,17 @@ Removed:
 | K Event Rate | 18.8% |
 | BB Event Rate | 9.1% |
 | HR Event Rate | 1.5% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | CIN | 4.3 | 2 | 1 | 2 | 1 | 1 |
+| 2026-06-10 | NYM | 6.7 | 7 | 2 | 2 | 1 | 2 |
+| 2026-05-31 | NYM | 5.0 | 1 | 0 | 1 | 3 | 0 |
+| 2026-05-26 | NYM | 8.7 | 11 | 0 | 3 | 4 | 0 |
+| 2026-05-21 | WSH | 7.7 | 4 | 0 | 3 | 3 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -3573,6 +4668,17 @@ Removed:
 | K Event Rate | 26.3% |
 | BB Event Rate | 6.4% |
 | HR Event Rate | 3.0% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | PHI | 7.7 | 2 | 0 | 3 | 9 | 0 |
+| 2026-06-09 | TOR | 8.0 | 6 | 1 | 1 | 5 | 1 |
+| 2026-06-04 | PHI | 8.3 | 2 | 1 | 3 | 8 | 1 |
+| 2026-05-29 | LAD | 7.7 | 5 | 4 | 1 | 4 | 4 |
+| 2026-05-23 | PHI | 7.0 | 2 | 0 | 1 | 6 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -3717,6 +4823,68 @@ Removed:
 
 
 
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Bo Bichette | 350 | 0.265 | 0.399 | 0.134 | 0.317 | 6.7% | 27.3% |
+| 2 | Marcus Semien | 322 | 0.225 | 0.367 | 0.142 | 0.294 | 9.3% | 22.4% |
+| 3 | Carson Benge | 306 | 0.261 | 0.396 | 0.136 | 0.334 | 9.0% | 24.7% |
+| 4 | Brett Baty | 267 | 0.223 | 0.311 | 0.088 | 0.287 | 8.5% | 22.0% |
+| 5 | Juan Soto | 262 | 0.293 | 0.560 | 0.267 | 0.402 | 14.9% | 34.2% |
+| 6 | Mark Vientos | 238 | 0.213 | 0.387 | 0.173 | 0.277 | 10.4% | 28.4% |
+| 7 | Francisco Álvarez | 173 | 0.258 | 0.400 | 0.142 | 0.332 | 14.5% | 29.3% |
+| 8 | Luis Torrens | 145 | 0.224 | 0.313 | 0.090 | 0.262 | 3.9% | 23.7% |
+| 9 | A. J. Ewing | 138 | 0.256 | 0.372 | 0.116 | 0.322 | 4.8% | 19.6% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Trea Turner | 345 | 0.218 | 0.324 | 0.106 | 0.275 | 4.9% | 27.1% |
+| 2 | Kyle Schwarber | 340 | 0.252 | 0.593 | 0.341 | 0.404 | 21.4% | 34.9% |
+| 3 | Bryce Harper | 324 | 0.258 | 0.502 | 0.244 | 0.378 | 12.6% | 29.1% |
+| 4 | Alec Bohm | 310 | 0.228 | 0.361 | 0.133 | 0.301 | 4.1% | 26.1% |
+| 5 | Brandon Marsh | 293 | 0.310 | 0.474 | 0.164 | 0.360 | 7.9% | 24.6% |
+| 6 | Bryson Stott | 284 | 0.245 | 0.406 | 0.161 | 0.310 | 6.8% | 26.8% |
+| 7 | Adolis García | 278 | 0.207 | 0.358 | 0.150 | 0.290 | 9.9% | 28.4% |
+| 8 | Justin Crawford | 247 | 0.245 | 0.341 | 0.096 | 0.294 | 1.1% | 18.8% |
+| 9 | J. T. Realmuto | 207 | 0.213 | 0.333 | 0.120 | 0.299 | 4.9% | 26.9% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6320 |
+| Hits Allowed | 1317 |
+| Walks/HBP | 590 |
+| Strikeouts | 1451 |
+| Home Runs Allowed | 168 |
+| K Event Rate | 23.0% |
+| BB/HBP Event Rate | 9.3% |
+| HR Event Rate | 2.7% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6377 |
+| Hits Allowed | 1397 |
+| Walks/HBP | 546 |
+| Strikeouts | 1512 |
+| Home Runs Allowed | 199 |
+| K Event Rate | 23.7% |
+| BB/HBP Event Rate | 8.6% |
+| HR Event Rate | 3.1% |
+
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: SI, SL, FF, CU, CH
@@ -3760,6 +4928,17 @@ Removed:
 | K Event Rate | 35.8% |
 | BB Event Rate | 10.2% |
 | HR Event Rate | 1.5% |
+
+
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-16 | BOS | 7.7 | 4 | 0 | 4 | 7 | 0 |
+| 2026-06-09 | TOR | 7.3 | 3 | 0 | 1 | 11 | 0 |
+| 2026-05-24 | TOR | 6.3 | 4 | 2 | 1 | 8 | 2 |
+| 2026-05-19 | NYY | 7.7 | 4 | 2 | 4 | 9 | 2 |
+| 2026-05-13 | TOR | 8.7 | 3 | 0 | 4 | 9 | 0 |
 
 
 ### Full Pitch Arsenal vs L/R
@@ -3844,6 +5023,17 @@ Removed:
 | HR Event Rate | 4.6% |
 
 
+#### Last 5 Starts
+
+| Date | Opponent | IP | H | ER | BB | K | HR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-06-15 | CHC | 7.3 | 5 | 0 | 1 | 3 | 0 |
+| 2026-06-10 | COL | 6.3 | 2 | 0 | 2 | 7 | 0 |
+| 2026-06-04 | CHC | 8.0 | 6 | 4 | 1 | 5 | 4 |
+| 2026-05-29 | STL | 7.7 | 5 | 3 | 3 | 2 | 3 |
+| 2026-05-24 | CHC | 8.7 | 7 | 3 | 2 | 6 | 3 |
+
+
 ### Full Pitch Arsenal vs L/R
 
 | Pitch | Side | Usage | Pitches | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
@@ -3878,8 +5068,8 @@ Removed:
 | Pitch | Hitter | PA | AVG | SLG | ISO | wOBA | xwOBA | Barrel% | HardHit% | Whiff% |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | FS | Kazuma Okamoto | 4 | 0.333 | 1.333 | 1.000 | 0.675 | 0.622 | 100.0% | 14.3% | 36.4% |
-| FS | Yohendrick Pinango | 10 | 0.556 | 0.889 | 0.333 | 0.720 | 0.271 | 0.0% | 38.5% | 13.3% |
 | FS | Brandon Valenzuela | 9 | 0.111 | 0.444 | 0.333 | 0.222 | 0.309 | 16.7% | 25.0% | 50.0% |
+| FS | Yohendrick Pinango | 10 | 0.556 | 0.889 | 0.333 | 0.720 | 0.271 | 0.0% | 38.5% | 13.3% |
 | FF | Kazuma Okamoto | 105 | 0.315 | 0.620 | 0.304 | 0.432 | 0.420 | 21.9% | 39.6% | 26.5% |
 | FF | Daulton Varsho | 86 | 0.224 | 0.513 | 0.289 | 0.352 | 0.330 | 20.4% | 25.6% | 18.5% |
 | FF | George Springer | 74 | 0.279 | 0.557 | 0.279 | 0.413 | 0.359 | 11.8% | 22.9% | 18.8% |
@@ -3890,21 +5080,21 @@ Removed:
 | ST | Myles Straw | 6 | 0.167 | 0.333 | 0.167 | 0.208 | 0.091 | 0.0% | 11.1% | 10.0% |
 | FF | Jesús Sánchez | 74 | 0.313 | 0.463 | 0.149 | 0.342 | 0.329 | 8.0% | 23.6% | 21.4% |
 | FF | Vladimir Guerrero | 57 | 0.327 | 0.469 | 0.143 | 0.382 | 0.395 | 9.5% | 28.1% | 16.1% |
-| ST | George Springer | 33 | 0.143 | 0.286 | 0.143 | 0.286 | 0.243 | 10.0% | 15.4% | 25.9% |
 | ST | Nathan Lukes | 7 | 0.143 | 0.286 | 0.143 | 0.179 | 0.190 | 0.0% | 16.7% | 20.0% |
+| ST | George Springer | 33 | 0.143 | 0.286 | 0.143 | 0.286 | 0.243 | 10.0% | 15.4% | 25.9% |
 | FS | Jesús Sánchez | 15 | 0.267 | 0.400 | 0.133 | 0.347 | 0.258 | 0.0% | 24.0% | 18.4% |
 | ST | Kazuma Okamoto | 35 | 0.156 | 0.281 | 0.125 | 0.230 | 0.213 | 6.7% | 13.8% | 37.9% |
 | FF | Myles Straw | 49 | 0.317 | 0.439 | 0.122 | 0.365 | 0.405 | 7.9% | 21.9% | 9.5% |
 | FF | Brandon Valenzuela | 58 | 0.220 | 0.320 | 0.100 | 0.278 | 0.336 | 5.1% | 19.8% | 17.4% |
-| FS | Vladimir Guerrero | 12 | 0.091 | 0.182 | 0.091 | 0.163 | 0.285 | 0.0% | 46.7% | 17.4% |
 | FS | Nathan Lukes | 11 | 0.455 | 0.545 | 0.091 | 0.441 | 0.198 | 0.0% | 6.7% | 10.5% |
+| FS | Vladimir Guerrero | 12 | 0.091 | 0.182 | 0.091 | 0.163 | 0.285 | 0.0% | 46.7% | 17.4% |
 | FF | Davis Schneider | 49 | 0.103 | 0.179 | 0.077 | 0.238 | 0.265 | 9.5% | 23.4% | 32.1% |
 | ST | Ernie Clement | 28 | 0.222 | 0.296 | 0.074 | 0.243 | 0.225 | 0.0% | 11.1% | 31.5% |
 | ST | Vladimir Guerrero | 31 | 0.250 | 0.321 | 0.071 | 0.271 | 0.358 | 21.7% | 42.4% | 18.2% |
 | FF | Yohendrick Pinango | 43 | 0.324 | 0.351 | 0.027 | 0.357 | 0.388 | 6.1% | 19.8% | 13.3% |
 | FF | Nathan Lukes | 52 | 0.333 | 0.356 | 0.022 | 0.368 | 0.309 | 0.0% | 13.6% | 15.5% |
-| FS | Andrés Giménez | 11 | 0.273 | 0.273 | 0.000 | 0.245 | 0.266 | 0.0% | 18.2% | 42.9% |
 | FS | George Springer | 9 | 0.250 | 0.250 | 0.000 | 0.356 | 0.355 | 0.0% | 26.7% | 22.7% |
+| FS | Andrés Giménez | 11 | 0.273 | 0.273 | 0.000 | 0.245 | 0.266 | 0.0% | 18.2% | 42.9% |
 | FS | Ernie Clement | 7 | 0.429 | 0.429 | 0.000 | 0.386 | 0.347 | 0.0% | 8.3% | 7.1% |
 | ST | Jesús Sánchez | 18 | 0.118 | 0.118 | 0.000 | 0.139 | 0.350 | 8.3% | 29.4% | 25.0% |
 
@@ -3994,6 +5184,68 @@ Removed:
 
 **Caution arms (pitched yesterday, or 3+ appearances in window):** Caleb Thielbar, Ethan Roberts, Jacob Webb, Ryan Rolison, Trent Thornton
 
+
+
+## Projected Lineups
+
+### Away Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Kazuma Okamoto | 319 | 0.231 | 0.441 | 0.210 | 0.332 | 14.8% | 29.8% |
+| 2 | Vladimir Guerrero | 318 | 0.287 | 0.389 | 0.102 | 0.339 | 7.3% | 30.7% |
+| 3 | Ernie Clement | 312 | 0.286 | 0.429 | 0.143 | 0.323 | 2.6% | 17.4% |
+| 4 | Andrés Giménez | 271 | 0.240 | 0.392 | 0.152 | 0.294 | 4.5% | 13.2% |
+| 5 | George Springer | 262 | 0.243 | 0.443 | 0.200 | 0.354 | 9.8% | 22.5% |
+| 6 | Daulton Varsho | 260 | 0.253 | 0.421 | 0.167 | 0.343 | 7.7% | 23.8% |
+| 7 | Jesús Sánchez | 240 | 0.290 | 0.466 | 0.176 | 0.345 | 11.0% | 27.3% |
+| 8 | Nathan Lukes | 162 | 0.318 | 0.412 | 0.095 | 0.355 | 0.8% | 15.7% |
+| 9 | Brandon Valenzuela | 160 | 0.262 | 0.454 | 0.191 | 0.345 | 8.7% | 23.2% |
+
+
+### Home Projected Lineup
+
+| Order | Hitter | PA | AVG | SLG | ISO | wOBA | Barrel% | HardHit% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Nico Hoerner | 359 | 0.249 | 0.350 | 0.101 | 0.314 | 1.7% | 19.0% |
+| 2 | Alex Bregman | 358 | 0.260 | 0.392 | 0.132 | 0.342 | 5.9% | 27.6% |
+| 3 | Michael Busch | 355 | 0.243 | 0.397 | 0.154 | 0.353 | 11.5% | 26.4% |
+| 4 | Ian Happ | 340 | 0.229 | 0.472 | 0.243 | 0.365 | 14.1% | 25.8% |
+| 5 | Pete Crow-Armstrong | 337 | 0.279 | 0.508 | 0.229 | 0.373 | 11.1% | 31.9% |
+| 6 | Dansby Swanson | 301 | 0.181 | 0.317 | 0.135 | 0.290 | 5.9% | 24.1% |
+| 7 | Seiya Suzuki | 260 | 0.269 | 0.445 | 0.176 | 0.367 | 8.7% | 26.2% |
+| 8 | Carson Kelly | 215 | 0.296 | 0.423 | 0.127 | 0.363 | 7.8% | 25.3% |
+| 9 | Moisés Ballesteros | 193 | 0.246 | 0.439 | 0.193 | 0.335 | 11.3% | 28.2% |
+
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6260 |
+| Hits Allowed | 1381 |
+| Walks/HBP | 560 |
+| Strikeouts | 1334 |
+| Home Runs Allowed | 176 |
+| K Event Rate | 21.3% |
+| BB/HBP Event Rate | 8.9% |
+| HR Event Rate | 2.8% |
+
+
+### Home Staff
+
+| Metric | Value |
+| --- | --- |
+| Recent Staff BF | 6705 |
+| Hits Allowed | 1464 |
+| Walks/HBP | 715 |
+| Strikeouts | 1432 |
+| Home Runs Allowed | 245 |
+| K Event Rate | 21.4% |
+| BB/HBP Event Rate | 10.7% |
+| HR Event Rate | 3.7% |
 
 
 ## Final Game Dissection

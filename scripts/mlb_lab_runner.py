@@ -900,9 +900,6 @@ Removed:
 
     build_workbook(games, sc)
 
-if __name__ == "__main__":
-    main()
-
 # ===== MLB-LAB EMERGENCY V5 ADD-ON: lineups / last 5 / bullpen / conclusions =====
 
 def last_five_starts_table(sc, pitcher_id):
@@ -1001,3 +998,6 @@ def automated_conclusions(g, away_mix, home_mix, away_hitters, home_hitters):
 - Bullpen context: use recent staff pressure table below.
 - Final MLB-LAB read: prioritize pitch mix + hitter pool + L/R damage + current form.
 """
+
+if __name__ == "__main__":
+    main()
