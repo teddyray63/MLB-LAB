@@ -511,26 +511,6 @@ def game_dissection(sc, g, away_hitters, home_hitters):
     home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
 
     return f"""
-## Projected Lineups
-
-### Away Projected Lineup
-
-{projected_lineup_table(away_hitters)}
-
-### Home Projected Lineup
-
-{projected_lineup_table(home_hitters)}
-
-## Bullpen / Staff Context
-
-### Away Staff
-
-{bullpen_context_table(sc, g.get("away_code"))}
-
-### Home Staff
-
-{bullpen_context_table(sc, g.get("home_code"))}
-
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: {", ".join(away_mix) if away_mix else "No current Statcast sample"}
@@ -572,10 +552,6 @@ def game_card(i, g, sc):
 
 {pitcher_profile(sc, g["away_sp"], g.get("away_sp_id"))}
 
-#### Last 5 Starts
-
-{last_five_starts_table(sc, g.get("away_sp_id"))}
-
 ### Full Pitch Arsenal vs L/R
 
 {arsenal(sc, g["away_sp"], g.get("away_sp_id"))}
@@ -593,10 +569,6 @@ def game_card(i, g, sc):
 ### Pitcher Profile
 
 {pitcher_profile(sc, g["home_sp"], g.get("home_sp_id"))}
-
-#### Last 5 Starts
-
-{last_five_starts_table(sc, g.get("home_sp_id"))}
 
 ### Full Pitch Arsenal vs L/R
 
@@ -902,102 +874,3 @@ Removed:
 
 if __name__ == "__main__":
     main()
-
-# ===== MLB-LAB EMERGENCY V5 ADD-ON: lineups / last 5 / bullpen / conclusions =====
-
-def last_five_starts_table(sc, pitcher_id):
-    if pitcher_id is None or sc is None or sc.empty:
-        return md_table(["Date","Opponent","IP","H","ER","BB","K","HR"], [["—","—","—","—","—","—","—","—"]])
-    d = sc[sc["pitcher"] == pitcher_id].copy()
-    if d.empty or "game_date" not in d.columns:
-        return md_table(["Date","Opponent","IP","H","ER","BB","K","HR"], [["—","—","—","—","—","—","—","—"]])
-    games = []
-    for date_val, x in d.groupby("game_date"):
-        outs = x["outs_when_up"].max() if "outs_when_up" in x.columns else None
-        ip = round((len(x[x["events"].notna()]) / 3), 1) if "events" in x.columns else "—"
-        h = int(x["events"].isin(["single","double","triple","home_run"]).sum()) if "events" in x.columns else 0
-        er = int(x["events"].isin(["home_run"]).sum()) if "events" in x.columns else 0
-        bb = int(x["events"].isin(["walk","hit_by_pitch"]).sum()) if "events" in x.columns else 0
-        k = int(x["events"].isin(["strikeout","strikeout_double_play"]).sum()) if "events" in x.columns else 0
-        hr = int(x["events"].isin(["home_run"]).sum()) if "events" in x.columns else 0
-        opp = x["home_team"].iloc[0] if "home_team" in x.columns else "—"
-        games.append([str(date_val), opp, ip, h, er, bb, k, hr])
-    games = sorted(games, key=lambda r: r[0], reverse=True)[:5]
-    return md_table(["Date","Opponent","IP","H","ER","BB","K","HR"], games or [["—","—","—","—","—","—","—","—"]])
-
-
-def projected_lineup_table(hitter_pool):
-    if hitter_pool is None or hitter_pool.empty:
-        return md_table(["Order","Hitter","PA","AVG","SLG","ISO","wOBA","Barrel%","HardHit%"], [["—","—","—","—","—","—","—","—","—"]])
-    df = hitter_pool.copy()
-    if "PA" in df.columns:
-        df = df.sort_values("PA", ascending=False)
-    rows = []
-    for n, (_, r) in enumerate(df.head(9).iterrows(), 1):
-        rows.append([
-            n,
-            r.get("Hitter", r.get("player_name", r.get("Name", "—"))),
-            r.get("PA", "—"),
-            fmt(r.get("AVG", "—")),
-            fmt(r.get("SLG", "—")),
-            fmt(r.get("ISO", "—")),
-            fmt(r.get("wOBA", "—")),
-            pct(r.get("Barrel%", r.get("barrel", "—"))),
-            pct(r.get("HardHit%", r.get("hard_hit", "—"))),
-        ])
-    return md_table(["Order","Hitter","PA","AVG","SLG","ISO","wOBA","Barrel%","HardHit%"], rows)
-
-
-def bullpen_context_table(sc, team_code):
-    if sc is None or sc.empty or not team_code:
-        return md_table(["Metric","Value"], [["Bullpen/Staff Sample","—"]])
-    d = sc.copy()
-    team_cols = [c for c in ["pitcher_team","home_team","away_team"] if c in d.columns]
-    if team_cols:
-        d = d[(d[team_cols[0]] == team_code) | (d.get("home_team", "") == team_code) | (d.get("away_team", "") == team_code)]
-    events = d[d["events"].notna()] if "events" in d.columns else d
-    if events.empty:
-        return md_table(["Metric","Value"], [["Bullpen/Staff Sample","—"]])
-    bf = len(events)
-    h = int(events["events"].isin(["single","double","triple","home_run"]).sum())
-    bb = int(events["events"].isin(["walk","hit_by_pitch"]).sum())
-    k = int(events["events"].isin(["strikeout","strikeout_double_play"]).sum())
-    hr = int(events["events"].isin(["home_run"]).sum())
-    return md_table(["Metric","Value"], [
-        ["Recent Staff BF", bf],
-        ["Hits Allowed", h],
-        ["Walks/HBP", bb],
-        ["Strikeouts", k],
-        ["Home Runs Allowed", hr],
-        ["K Event Rate", pct(k / bf if bf else 0)],
-        ["BB/HBP Event Rate", pct(bb / bf if bf else 0)],
-        ["HR Event Rate", pct(hr / bf if bf else 0)],
-    ])
-
-
-def automated_conclusions(g, away_mix, home_mix, away_hitters, home_hitters):
-    away_pitches = ", ".join(away_mix) if away_mix else "No current sample"
-    home_pitches = ", ".join(home_mix) if home_mix else "No current sample"
-
-    def top_hitter(df):
-        if df is None or df.empty:
-            return "No hitter-pool sample"
-        sort_col = "wOBA" if "wOBA" in df.columns else ("ISO" if "ISO" in df.columns else None)
-        if sort_col:
-            row = df.sort_values(sort_col, ascending=False).iloc[0]
-        else:
-            row = df.iloc[0]
-        return f"{row.get('Hitter', row.get('player_name', row.get('Name','—')))} — {sort_col or 'sample'} {fmt(row.get(sort_col, '—')) if sort_col else '—'}"
-
-    return f"""
-## Final Game Dissection
-
-- Away pitcher pitch mix to inspect: {away_pitches}
-- Home pitcher pitch mix to inspect: {home_pitches}
-- Strongest home attack candidate: {top_hitter(home_hitters)}
-- Strongest away attack candidate: {top_hitter(away_hitters)}
-- Lineup advantage: compare projected top 9 hitter pools below.
-- Handedness advantage: use full arsenal vs L/R tables above.
-- Bullpen context: use recent staff pressure table below.
-- Final MLB-LAB read: prioritize pitch mix + hitter pool + L/R damage + current form.
-"""
