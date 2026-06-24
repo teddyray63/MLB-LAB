@@ -1,7 +1,7 @@
-pybaseball
-pandas
+fastapi
+uvicorn
+sqlalchemy
 requests
-tabulate
-markdown
-pytest
-openpyxl
+pandas
+python-dotenv
+pydantic
