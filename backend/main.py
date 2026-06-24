@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from backend.api.statcast import router as statcast_router
+
 import sqlite3
 
 DB = "database/mlb_lab.db"
 
 app = FastAPI(title="MLB-LAB API")
+
+app.include_router(statcast_router)
 
 @app.get("/")
 def root():
