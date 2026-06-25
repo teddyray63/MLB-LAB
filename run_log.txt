@@ -7,3 +7,53 @@ Using cached Statcast.
 Gathering player lookup table. This may take a moment.
 Updated reports/mlb-lab-v5-matchup-engine.md
 Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-22 to 2026-06-22
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Gathering player lookup table. This may take a moment.
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-22 to 2026-06-22
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Gathering player lookup table. This may take a moment.
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-22 to 2026-06-22
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Gathering player lookup table. This may take a moment.
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-22 to 2026-06-22
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-23 to 2026-06-23
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-24 to 2026-06-24
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-24 to 2026-06-24
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-24 to 2026-06-24
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Statcast pull failed: HTTPSConnectionPool(host='baseballsavant.mlb.com', port=443): Max retries exceeded with url: /statcast_search/csv?all=true&hfPT=&hfAB=&hfBBT=&hfPR=&hfZ=&stadium=&hfBBL=&hfNewZones=&hfGT=R%7CPO%7CS%7C=&hfSea=&hfSit=&player_type=pitcher&hfOuts=&opponent=&pitcher_throws=&batter_stands=&hfSA=&game_date_gt=2026-06-24&game_date_lt=2026-06-24&team=&position=&hfRO=&home_road=&hfFlag=&metric_1=&hfInn=&min_pitches=0&min_results=0&group_by=name&sort_col=pitches&player_event_sort=h_launch_speed&sort_order=desc&min_abs=0&type=details& (Caused by NameResolutionError("HTTPSConnection(host='baseballsavant.mlb.com', port=443): Failed to resolve 'baseballsavant.mlb.com' ([Errno 8] nodename nor servname provided, or not known)"))
+Using cached Statcast.
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-24 to 2026-06-24
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx

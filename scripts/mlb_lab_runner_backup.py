@@ -272,20 +272,26 @@ def event_stats(df):
 
     woba = df["woba_value"].mean() if "woba_value" in df.columns else None
     xwoba = df["estimated_woba_using_speedangle"].mean() if "estimated_woba_using_speedangle" in df.columns else None
+    xba = df["estimated_ba_using_speedangle"].mean() if "estimated_ba_using_speedangle" in df.columns else None
+    xslg = df["estimated_slg_using_speedangle"].mean() if "estimated_slg_using_speedangle" in df.columns else None
 
     bbe = df["launch_speed"].dropna() if "launch_speed" in df.columns else pd.Series(dtype=float)
     hard = (bbe >= 95).mean() if len(bbe) else 0
 
     barrel = 0
+    sweet = 0
     if "launch_speed_angle" in df.columns:
         lsa = df["launch_speed_angle"].dropna()
         barrel = (lsa == 6).mean() if len(lsa) else 0
+    if "launch_angle" in df.columns:
+        la = df["launch_angle"].dropna()
+        sweet = ((la >= 8) & (la <= 32)).mean() if len(la) else 0
 
     swings = df[df["description"].isin(["swinging_strike", "swinging_strike_blocked", "foul", "foul_tip", "hit_into_play"])]
     whiffs = df[df["description"].isin(["swinging_strike", "swinging_strike_blocked"])]
     whiff = len(whiffs) / len(swings) if len(swings) else 0
 
-    return avg, slg, iso, woba, xwoba, barrel, hard, whiff, len(events)
+    return avg, slg, iso, woba, xwoba, xba, xslg, barrel, hard, sweet, whiff, len(events), singles, hits, tb
 
 def pitcher_profile(sc, name, pitcher_id=None):
     p = pitcher_rows(sc, name, pitcher_id)
@@ -317,7 +323,7 @@ def pitcher_profile(sc, name, pitcher_id=None):
 
 def arsenal(sc, name, pitcher_id=None):
     p = pitcher_rows(sc, name, pitcher_id)
-    headers = ["Pitch", "Side", "Usage", "Pitches", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    headers = ["Pitch", "Side", "Usage", "Pitches", "Hits", "1B", "TB", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
 
     if p.empty or "pitch_type" not in p.columns or "stand" not in p.columns:
         return md_table(headers, [])
@@ -326,7 +332,7 @@ def arsenal(sc, name, pitcher_id=None):
     total = max(1, len(p))
 
     for (pitch, side), g in p.groupby(["pitch_type", "stand"]):
-        avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(g)
+        avg, slg, iso, woba, xwoba, xba, xslg, barrel, hard, sweet, whiff, pa, singles, hits, tb = event_stats(g)
         rows.append([
             pitch,
             f"vs {side}",
@@ -383,7 +389,7 @@ def team_hitter_pool(sc, team_code):
         if not name or pd.isna(name):
             continue
 
-        avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(g)
+        avg, slg, iso, woba, xwoba, xba, xslg, barrel, hard, sweet, whiff, pa, singles, hits, tb = event_stats(g)
 
         if pa < 10:
             continue
@@ -409,7 +415,7 @@ def team_hitter_pool(sc, team_code):
     return df.sort_values(["PA", "wOBA"], ascending=[False, False]).head(12)
 
 def hitter_pool_md(df):
-    headers = ["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    headers = ["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
 
     if df.empty:
         return md_table(headers, [])
@@ -447,7 +453,7 @@ def hitter_vs_pitch_rows(sc, hitters, pitches):
             if h.empty:
                 continue
 
-            avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(h)
+            avg, slg, iso, woba, xwoba, xba, xslg, barrel, hard, sweet, whiff, pa, singles, hits, tb = event_stats(h)
 
             if pa < 3:
                 continue
@@ -457,6 +463,9 @@ def hitter_vs_pitch_rows(sc, hitters, pitches):
                 "AVG": avg, "SLG": slg, "ISO": iso,
                 "wOBA": woba if pd.notna(woba) else 0,
                 "xwOBA": xwoba if pd.notna(xwoba) else 0,
+            "xBA": xba if pd.notna(xba) else 0,
+            "xSLG": xslg if pd.notna(xslg) else 0,
+            "SweetSpot%": sweet,
                 "Barrel%": barrel, "HardHit%": hard, "Whiff%": whiff,
             })
 
@@ -464,7 +473,7 @@ def hitter_vs_pitch_rows(sc, hitters, pitches):
     return rows[:30]
 
 def hitter_vs_pitch(sc, hitters, pitches):
-    headers = ["Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    headers = ["Pitch", "Hitter", "PA", "Hits", "1B", "TB", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
 
     if sc.empty or hitters.empty or not pitches or "batter_name" not in sc.columns or "pitch_type" not in sc.columns:
         return md_table(headers, [])
@@ -481,7 +490,7 @@ def hitter_vs_pitch(sc, hitters, pitches):
             if h.empty:
                 continue
 
-            avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(h)
+            avg, slg, iso, woba, xwoba, xba, xslg, barrel, hard, sweet, whiff, pa, singles, hits, tb = event_stats(h)
 
             if pa < 3:
                 continue
@@ -511,6 +520,26 @@ def game_dissection(sc, g, away_hitters, home_hitters):
     home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
 
     return f"""
+## Projected Lineups
+
+### Away Projected Lineup
+
+{projected_lineup_table(away_hitters)}
+
+### Home Projected Lineup
+
+{projected_lineup_table(home_hitters)}
+
+## Bullpen / Staff Context
+
+### Away Staff
+
+{bullpen_context_table(sc, g.get("away_code"))}
+
+### Home Staff
+
+{bullpen_context_table(sc, g.get("home_code"))}
+
 ## Final Game Dissection
 
 - Away pitcher pitch mix to inspect: {", ".join(away_mix) if away_mix else "No current Statcast sample"}
@@ -552,6 +581,10 @@ def game_card(i, g, sc):
 
 {pitcher_profile(sc, g["away_sp"], g.get("away_sp_id"))}
 
+#### Last 5 Starts
+
+{last_five_starts_table(sc, g.get("away_sp_id"))}
+
 ### Full Pitch Arsenal vs L/R
 
 {arsenal(sc, g["away_sp"], g.get("away_sp_id"))}
@@ -569,6 +602,10 @@ def game_card(i, g, sc):
 ### Pitcher Profile
 
 {pitcher_profile(sc, g["home_sp"], g.get("home_sp_id"))}
+
+#### Last 5 Starts
+
+{last_five_starts_table(sc, g.get("home_sp_id"))}
 
 ### Full Pitch Arsenal vs L/R
 
@@ -703,9 +740,9 @@ def build_game_sheet(wb, i, g, sc):
     ws["A2"] = f"{g['park']}  |  {g['time']}  |  Away SP: {g['away_sp']}  |  Home SP: {g['home_sp']}"
     ws["A2"].font = SUBHEAD_FONT
 
-    arsenal_headers = ["Pitch", "Side", "Usage", "Pitches", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
-    matchup_headers = ["Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
-    pool_headers = ["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    arsenal_headers = ["Pitch", "Side", "Usage", "Pitches", "Hits", "1B", "TB", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
+    matchup_headers = ["Pitch", "Hitter", "PA", "Hits", "1B", "TB", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
+    pool_headers = ["Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
     bullpen_headers = ["Reliever", "Date", "IP", "Pitches"]
 
     row = 4
@@ -757,15 +794,374 @@ def arsenal_rows(sc, name, pitcher_id=None):
     rows = []
     total = max(1, len(p))
     for (pitch, side), g in p.groupby(["pitch_type", "stand"]):
-        avg, slg, iso, woba, xwoba, barrel, hard, whiff, pa = event_stats(g)
+        avg, slg, iso, woba, xwoba, xba, xslg, barrel, hard, sweet, whiff, pa, singles, hits, tb = event_stats(g)
         rows.append({
             "Pitch": pitch, "Side": f"vs {side}", "Usage": len(g) / total, "Pitches": len(g),
+            "Hits": hits,
+            "1B": singles,
+            "TB": tb,
             "AVG": avg, "SLG": slg, "ISO": iso,
             "wOBA": woba if pd.notna(woba) else 0,
             "xwOBA": xwoba if pd.notna(xwoba) else 0,
+            "xBA": xba if pd.notna(xba) else 0,
+            "xSLG": xslg if pd.notna(xslg) else 0,
+            "SweetSpot%": sweet,
             "Barrel%": barrel, "HardHit%": hard, "Whiff%": whiff,
         })
     return sorted(rows, key=lambda r: (r["Pitch"], r["Side"]))
+
+
+def build_top_plays_sheet(wb, games, sc):
+    ws = wb.create_sheet("Top Plays", 1)
+    headers = ["Category", "Rank", "Score", "Tier", "Game", "Team", "Hitter", "Opp SP", "Pitch", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%", "Hits", "1B", "TB"]
+
+    def val(r, k):
+        try:
+            return float(r.get(k, 0) or 0)
+        except Exception:
+            return 0
+
+    def score(r, cat):
+        avg, slg, iso = val(r,"AVG"), val(r,"SLG"), val(r,"ISO")
+        woba, xwoba, xba, xslg = val(r,"wOBA"), val(r,"xwOBA"), val(r,"xBA"), val(r,"xSLG")
+        sweet, barrel, hard, whiff = val(r,"SweetSpot%"), val(r,"Barrel%"), val(r,"HardHit%"), val(r,"Whiff%")
+        hits, singles, tb = val(r,"Hits"), val(r,"1B"), val(r,"TB")
+
+        if cat == "Hits":
+            return xba*30 + avg*25 + xwoba*20 + woba*15 + (1-whiff)*10
+        if cat == "Singles":
+            return avg*30 + xba*25 + singles*2 + (1-whiff)*15 + sweet*10
+        if cat == "Total Bases":
+            return xslg*30 + slg*20 + iso*20 + tb*1.5 + barrel*15 + hard*10
+        if cat == "HRR":
+            return woba*25 + xwoba*25 + xba*15 + hits*1.2 + tb*1 + hard*10
+        if cat == "Home Runs":
+            return iso*30 + xslg*25 + barrel*25 + hard*15 + slg*10
+        return 0
+
+    rows = []
+    for i, g in enumerate(games, 1):
+        away_hitters = team_hitter_pool(sc, g["away_code"])
+        home_hitters = team_hitter_pool(sc, g["home_code"])
+        away_mix = major_pitches(sc, g["away_sp"], g.get("away_sp_id"))
+        home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
+
+        for r in hitter_vs_pitch_rows(sc, home_hitters, away_mix):
+            r.update({"Game": g["game"], "Team": g["home_team"], "Opp SP": g["away_sp"]})
+            rows.append(r)
+        for r in hitter_vs_pitch_rows(sc, away_hitters, home_mix):
+            r.update({"Game": g["game"], "Team": g["away_team"], "Opp SP": g["home_sp"]})
+            rows.append(r)
+
+    rownum = 1
+    categories = ["Hits", "Singles", "Total Bases", "HRR", "Home Runs"]
+
+    for cat in categories:
+        ws.cell(row=rownum, column=1, value=f"TOP 5 {cat.upper()}")
+        ws.cell(row=rownum, column=1).font = HEADER_FONT
+        ws.cell(row=rownum, column=1).fill = HEADER_FILL
+        rownum += 1
+
+        for c, h in enumerate(headers, 1):
+            cell = ws.cell(row=rownum, column=c, value=h)
+            cell.font = HEADER_FONT
+            cell.fill = HEADER_FILL
+        rownum += 1
+
+        ranked = []
+        for r in rows:
+            scv = score(r, cat)
+            tier = "T1" if scv >= 35 else "T2" if scv >= 25 else "T3"
+            ranked.append((scv, tier, r))
+
+        for rank, (scv, tier, r) in enumerate(sorted(ranked, key=lambda x: x[0], reverse=True)[:5], 1):
+            vals = [cat, rank, round(scv, 3), tier, r.get("Game"), r.get("Team"), r.get("Hitter"), r.get("Opp SP"), r.get("Pitch"),
+                    r.get("PA"), r.get("AVG"), r.get("SLG"), r.get("ISO"), r.get("wOBA"), r.get("xwOBA"), r.get("xBA"), r.get("xSLG"),
+                    r.get("SweetSpot%"), r.get("Barrel%"), r.get("HardHit%"), r.get("Whiff%"), r.get("Hits"), r.get("1B"), r.get("TB")]
+            for c, v in enumerate(vals, 1):
+                ws.cell(row=rownum, column=c, value=v)
+            rownum += 1
+        rownum += 2
+
+    ws.freeze_panes = "A3"
+    for c in range(1, len(headers)+1):
+        ws.column_dimensions[get_column_letter(c)].width = 15
+
+
+def build_category_boards_sheet(wb, games, sc):
+    from openpyxl.styles import PatternFill, Font, Alignment
+    from openpyxl.utils import get_column_letter
+
+    SECTION_FONT = Font(bold=True, color="FFFFFF", size=11)
+    HEADER_FONT  = Font(bold=True, color="FFFFFF", size=9)
+    BODY_FONT    = Font(size=9)
+    SECTION_FILL = PatternFill("solid", fgColor="0D2137")
+    HEADER_FILL  = PatternFill("solid", fgColor="1F4E79")
+    T1_FILL      = PatternFill("solid", fgColor="C6EFCE")
+    T2_FILL      = PatternFill("solid", fgColor="FFEB9C")
+    T3_FILL      = PatternFill("solid", fgColor="FBBF72")
+
+    COLS = ["Category","Rank","Hitter","Team","Game","Opp SP","Pitch","PA","Hits","1B","TB","AVG","SLG","ISO","wOBA","xwOBA","xBA","xSLG","SweetSpot%","Barrel%","HardHit%","Whiff%"]
+
+    CATEGORIES = [
+        ("Hits Leaders", ["Hits", "xBA", "AVG"]),
+        ("Singles Leaders", ["1B", "AVG", "xBA"]),
+        ("Total Bases Leaders", ["TB", "xSLG", "SLG", "ISO"]),
+        ("HRR Leaders", ["wOBA", "xwOBA", "Hits", "TB", "HardHit%"]),
+        ("Home Run Leaders", ["ISO", "xSLG", "Barrel%", "HardHit%"]),
+    ]
+
+    all_rows = []
+    for g in games:
+        away_hitters = team_hitter_pool(sc, g["away_code"])
+        home_hitters = team_hitter_pool(sc, g["home_code"])
+        away_mix = major_pitches(sc, g["away_sp"], g.get("away_sp_id"))
+        home_mix = major_pitches(sc, g["home_sp"], g.get("home_sp_id"))
+
+        for r in hitter_vs_pitch_rows(sc, home_hitters, away_mix):
+            all_rows.append({**r, "Game": g.get("game", ""), "Team": g.get("home_team", ""), "Opp SP": g.get("away_sp", "")})
+        for r in hitter_vs_pitch_rows(sc, away_hitters, home_mix):
+            all_rows.append({**r, "Game": g.get("game", ""), "Team": g.get("away_team", ""), "Opp SP": g.get("home_sp", "")})
+
+    ws = wb.create_sheet("Category Boards", 1)
+    rownum = 1
+
+    for section_label, sort_keys in CATEGORIES:
+        primary_key = sort_keys[0]
+
+        def composite(r, keys=sort_keys):
+            vals = []
+            for k in keys:
+                try:
+                    vals.append(float(r.get(k, 0) or 0))
+                except Exception:
+                    pass
+            return sum(vals) / len(vals) if vals else 0
+
+        top20 = sorted(all_rows, key=composite, reverse=True)[:20]
+
+        ws.cell(row=rownum, column=1, value=section_label).font = SECTION_FONT
+        ws.cell(row=rownum, column=1).fill = SECTION_FILL
+        ws.merge_cells(start_row=rownum, start_column=1, end_row=rownum, end_column=len(COLS))
+        rownum += 1
+
+        for c, h in enumerate(COLS, 1):
+            cell = ws.cell(row=rownum, column=c, value=h)
+            cell.font = HEADER_FONT
+            cell.fill = HEADER_FILL
+            cell.alignment = Alignment(horizontal="center")
+        rownum += 1
+
+        for rank, r in enumerate(top20, 1):
+            try:
+                scv = float(r.get(primary_key, 0) or 0)
+            except Exception:
+                scv = 0
+            fill = T1_FILL if scv >= 10 else T2_FILL if scv >= 5 else T3_FILL if primary_key in ("Hits","1B","TB") else T1_FILL if scv >= 0.370 else T2_FILL if scv >= 0.320 else T3_FILL
+            row_vals = {"Category": section_label, "Rank": rank, **r}
+
+            for c, h in enumerate(COLS, 1):
+                val = row_vals.get(h, "")
+                cell = ws.cell(row=rownum, column=c, value=val)
+                cell.font = BODY_FONT
+                cell.fill = fill
+                if isinstance(val, float):
+                    cell.number_format = "0.000"
+            rownum += 1
+
+        rownum += 2
+
+    ws.freeze_panes = "H3"
+    for col in ws.columns:
+        letter = get_column_letter(col[0].column)
+        max_len = max((len(str(cell.value)) for cell in col if cell.value is not None), default=8)
+        ws.column_dimensions[letter].width = min(max_len + 2, 24)
+
+
+def build_betting_command_center(wb, games, sc):
+    from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+
+    for name in ["Top Plays", "Category Boards", "🚨 Command Center", "Category Explorer"]:
+        if name in wb.sheetnames:
+            del wb[name]
+
+    DARK="0D1117"; NAVY="1F4E79"; BLUE="243B55"; GREEN="1A9C3E"; YELLOW="F0B429"; ORANGE="E07B39"; RED="C0392B"; WHITE="FFFFFF"; GOLD="D4A017"
+    thin = Side(style="thin", color="30363D")
+    border = Border(left=thin,right=thin,top=thin,bottom=thin)
+
+    def fill(x): return PatternFill("solid", fgColor=x)
+    def font(sz=9,bold=False,color=WHITE): return Font(name="Calibri", size=sz, bold=bold, color=color)
+    center = Alignment(horizontal="center", vertical="center")
+    left = Alignment(horizontal="left", vertical="center")
+
+    def num(r,k):
+        try: return float(r.get(k,0) or 0)
+        except Exception: return 0
+
+    def rate(n,d): return n/d if d else 0
+
+    def score(r, cat):
+        pa=num(r,"PA")
+        if cat=="Hits": return 100*(num(r,"xBA")*.30+num(r,"AVG")*.25+num(r,"xwOBA")*.20+num(r,"wOBA")*.15+(1-num(r,"Whiff%"))*.10)
+        if cat=="Singles": return 100*(num(r,"AVG")*.30+num(r,"xBA")*.25+rate(num(r,"1B"),pa)*.20+(1-num(r,"Whiff%"))*.15+num(r,"SweetSpot%")*.10)
+        if cat=="Total Bases": return 100*(num(r,"xSLG")*.30+num(r,"SLG")*.20+num(r,"ISO")*.20+rate(num(r,"TB"),pa)*.15+num(r,"Barrel%")*.10+num(r,"HardHit%")*.05)
+        if cat=="HRR": return 100*(num(r,"wOBA")*.20+num(r,"xwOBA")*.20+num(r,"xBA")*.15+rate(num(r,"Hits"),pa)*.15+rate(num(r,"TB"),pa)*.15+num(r,"HardHit%")*.15)
+        if cat=="Home Runs": return 100*(num(r,"ISO")*.25+num(r,"xSLG")*.25+num(r,"Barrel%")*.25+num(r,"HardHit%")*.15+num(r,"SLG")*.10)
+        return 0
+
+    def tier(v): return "A" if v>=70 else "B" if v>=55 else "C" if v>=42 else "D"
+    def tfill(t): return fill(GREEN if t=="A" else YELLOW if t=="B" else ORANGE if t=="C" else RED)
+
+    def reason(r,cat):
+        if cat=="Hits": return f"xBA {num(r,'xBA'):.3f} / AVG {num(r,'AVG'):.3f} / Whiff {num(r,'Whiff%'):.1%}"
+        if cat=="Singles": return f"1B {int(num(r,'1B'))} / xBA {num(r,'xBA'):.3f} / Sweet {num(r,'SweetSpot%'):.1%}"
+        if cat=="Total Bases": return f"xSLG {num(r,'xSLG'):.3f} / TB {int(num(r,'TB'))} / ISO {num(r,'ISO'):.3f}"
+        if cat=="HRR": return f"wOBA {num(r,'wOBA'):.3f} / TB {int(num(r,'TB'))} / HardHit {num(r,'HardHit%'):.1%}"
+        return f"ISO {num(r,'ISO'):.3f} / Barrel {num(r,'Barrel%'):.1%} / xSLG {num(r,'xSLG'):.3f}"
+
+    rows=[]
+    for g in games:
+        away_h=team_hitter_pool(sc,g["away_code"])
+        home_h=team_hitter_pool(sc,g["home_code"])
+        away_mix=major_pitches(sc,g["away_sp"],g.get("away_sp_id"))
+        home_mix=major_pitches(sc,g["home_sp"],g.get("home_sp_id"))
+        for r in hitter_vs_pitch_rows(sc,home_h,away_mix):
+            rows.append({**r,"Game":g.get("game",""),"Team":g.get("home_team",""),"Opp SP":g.get("away_sp","")})
+        for r in hitter_vs_pitch_rows(sc,away_h,home_mix):
+            rows.append({**r,"Game":g.get("game",""),"Team":g.get("away_team",""),"Opp SP":g.get("home_sp","")})
+
+    cats=[("🔥 Hits","Hits"),("🎯 Singles","Singles"),("💥 Total Bases","Total Bases"),("⚡ HRR","HRR"),("💣 Home Runs","Home Runs")]
+
+    ws=wb.create_sheet("🚨 Command Center",1)
+    ws.sheet_view.showGridLines=False
+    ws.sheet_properties.tabColor="1A9C3E"
+    ws["A1"]="⚾ MLB-LAB COMMAND CENTER"
+    ws["A1"].fill=fill(DARK); ws["A1"].font=font(16,True,GOLD); ws.merge_cells("A1:J1")
+
+    headers=["Rank","Category","Hitter","Team","Game","Opp SP","Pitch","Score","Tier","Why"]
+    row=3
+    for label,cat in cats:
+        ws.cell(row,1,label).fill=fill(NAVY); ws.cell(row,1).font=font(11,True); ws.merge_cells(start_row=row,start_column=1,end_row=row,end_column=10); row+=1
+        for c,h in enumerate(headers,1):
+            cell=ws.cell(row,c,h); cell.fill=fill(DARK); cell.font=font(9,True); cell.alignment=center; cell.border=border
+        row+=1
+        for rank,r in enumerate(sorted(rows,key=lambda x:score(x,cat),reverse=True)[:5],1):
+            scv=score(r,cat); tr=tier(scv)
+            vals=[rank,label,r.get("Hitter",""),r.get("Team",""),r.get("Game",""),r.get("Opp SP",""),r.get("Pitch",""),round(scv,1),tr,reason(r,cat)]
+            for c,v in enumerate(vals,1):
+                cell=ws.cell(row,c,v); cell.border=border; cell.font=font(9,c in [1,3,8,9]); cell.alignment=left if c in [3,10] else center
+                cell.fill=tfill(tr) if c==9 else fill("161B22" if rank%2 else "1C2128")
+            row+=1
+        row+=2
+
+    for c,w in enumerate([7,16,20,16,32,18,8,9,7,50],1): ws.column_dimensions[get_column_letter(c)].width=w
+    ws.freeze_panes="A3"
+
+    bs=wb.create_sheet("Category Explorer",2)
+    bs.sheet_view.showGridLines=False
+    bs.sheet_properties.tabColor="2E75B6"
+    cols=["Category","Rank","Hitter","Team","Game","Opp SP","Pitch","Score","Tier","PA","Hits","1B","TB","AVG","SLG","ISO","wOBA","xwOBA","xBA","xSLG","SweetSpot%","Barrel%","HardHit%","Whiff%"]
+    row=1
+    for label,cat in cats:
+        bs.cell(row,1,f"{label.upper()} BOARD — TOP 20").fill=fill(NAVY); bs.cell(row,1).font=font(11,True); bs.merge_cells(start_row=row,start_column=1,end_row=row,end_column=len(cols)); row+=1
+        for c,h in enumerate(cols,1):
+            cell=bs.cell(row,c,h); cell.fill=fill(DARK); cell.font=font(8,True); cell.alignment=center; cell.border=border
+        row+=1
+        for rank,r in enumerate(sorted(rows,key=lambda x:score(x,cat),reverse=True)[:20],1):
+            scv=score(r,cat); tr=tier(scv)
+            vals=[label,rank,r.get("Hitter",""),r.get("Team",""),r.get("Game",""),r.get("Opp SP",""),r.get("Pitch",""),round(scv,1),tr,r.get("PA",""),r.get("Hits",""),r.get("1B",""),r.get("TB",""),r.get("AVG",""),r.get("SLG",""),r.get("ISO",""),r.get("wOBA",""),r.get("xwOBA",""),r.get("xBA",""),r.get("xSLG",""),r.get("SweetSpot%",""),r.get("Barrel%",""),r.get("HardHit%",""),r.get("Whiff%","")]
+            for c,v in enumerate(vals,1):
+                cell=bs.cell(row,c,v); cell.border=border; cell.font=font(8,c in [2,3,8,9]); cell.alignment=center
+                cell.fill=tfill(tr) if c==9 else fill("161B22" if rank%2 else "1C2128")
+                if isinstance(v,float): cell.number_format="0.000"
+            row+=1
+        row+=2
+
+    for c in range(1,len(cols)+1): bs.column_dimensions[get_column_letter(c)].width=13
+    bs.freeze_panes="J3"
+
+
+def polish_workbook_flow(wb):
+    from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+
+    DARK = "0D1117"
+    NAVY = "1F4E79"
+    BLUE = "243B55"
+    GREEN = "1A9C3E"
+    GOLD = "D4A017"
+    WHITE = "FFFFFF"
+
+    thin = Side(style="thin", color="30363D")
+    border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+    def fill(c): return PatternFill("solid", fgColor=c)
+
+    def is_header_cell(v):
+        if v is None:
+            return False
+        t = str(v).lower()
+        keys = ["pitch", "hitter", "pa", "avg", "slg", "iso", "woba", "xwoba", "barrel", "hardhit", "whiff", "game", "team", "opp sp"]
+        return any(k in t for k in keys)
+
+    for ws in wb.worksheets:
+        ws.sheet_view.showGridLines = False
+
+        if ws.title == "Slate":
+            ws.sheet_properties.tabColor = GREEN
+            ws.freeze_panes = "A2"
+        elif ws.title in ["🚨 Command Center", "Category Explorer"]:
+            continue
+        elif ws.title == "Master Matchups":
+            ws.sheet_properties.tabColor = GOLD
+            ws.freeze_panes = "A2"
+        else:
+            ws.sheet_properties.tabColor = BLUE
+            ws.freeze_panes = "A4"
+
+        max_row = min(ws.max_row, 250)
+        max_col = min(ws.max_column, 30)
+
+        for row in ws.iter_rows(min_row=1, max_row=max_row, max_col=max_col):
+            values = [c.value for c in row]
+            joined = " ".join(str(v) for v in values if v is not None).lower()
+
+            section_like = (
+                "pitch arsenal" in joined or
+                "hitter pool" in joined or
+                "pitch mix" in joined or
+                "bullpen" in joined or
+                "projected lineup" in joined or
+                "master matchups" in joined
+            )
+
+            header_like = sum(1 for v in values if is_header_cell(v)) >= 3
+
+            for cell in row:
+                cell.border = border
+                cell.alignment = Alignment(vertical="center")
+
+                if section_like:
+                    cell.fill = fill(NAVY)
+                    cell.font = Font(color=WHITE, bold=True, size=10)
+                elif header_like:
+                    cell.fill = fill(DARK)
+                    cell.font = Font(color=WHITE, bold=True, size=9)
+                    cell.alignment = Alignment(horizontal="center", vertical="center")
+                else:
+                    if cell.value is not None:
+                        cell.font = Font(size=9)
+
+        for col_idx in range(1, min(ws.max_column, 28) + 1):
+            letter = get_column_letter(col_idx)
+            max_len = 8
+            for cell in ws[letter][:120]:
+                if cell.value is not None:
+                    max_len = max(max_len, len(str(cell.value)))
+            ws.column_dimensions[letter].width = min(max_len + 2, 28)
+
+        ws.sheet_view.zoomScale = 90
 
 def build_workbook(games, sc):
     wb = Workbook()
@@ -791,7 +1187,7 @@ def build_workbook(games, sc):
     master_rows.sort(key=lambda r: (r["Game #"], -r["wOBA"]))
 
     ws = wb.create_sheet("Master Matchups")
-    headers = ["Game #", "Game", "Hitter Team", "Opp SP", "Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "Barrel%", "HardHit%", "Whiff%"]
+    headers = ["Game #", "Game", "Hitter Team", "Opp SP", "Pitch", "Hitter", "PA", "AVG", "SLG", "ISO", "wOBA", "xwOBA", "xBA", "xSLG", "SweetSpot%", "Barrel%", "HardHit%", "Whiff%"]
     for c, h in enumerate(headers, 1):
         cell = ws.cell(row=1, column=c, value=h)
         cell.font = HEADER_FONT
@@ -825,6 +1221,8 @@ def build_workbook(games, sc):
     for i, g in enumerate(games, 1):
         build_game_sheet(wb, i, g, sc)
 
+    build_betting_command_center(wb, games, sc)
+    polish_workbook_flow(wb)
     WORKBOOK.parent.mkdir(parents=True, exist_ok=True)
     wb.save(WORKBOOK)
     print(f"Updated {WORKBOOK}")
@@ -871,6 +1269,105 @@ Removed:
     print(f"Updated {REPORT}")
 
     build_workbook(games, sc)
+
+# ===== MLB-LAB EMERGENCY V5 ADD-ON: lineups / last 5 / bullpen / conclusions =====
+
+def last_five_starts_table(sc, pitcher_id):
+    if pitcher_id is None or sc is None or sc.empty:
+        return md_table(["Date","Opponent","IP","H","ER","BB","K","HR"], [["—","—","—","—","—","—","—","—"]])
+    d = sc[sc["pitcher"] == pitcher_id].copy()
+    if d.empty or "game_date" not in d.columns:
+        return md_table(["Date","Opponent","IP","H","ER","BB","K","HR"], [["—","—","—","—","—","—","—","—"]])
+    games = []
+    for date_val, x in d.groupby("game_date"):
+        outs = x["outs_when_up"].max() if "outs_when_up" in x.columns else None
+        ip = round((len(x[x["events"].notna()]) / 3), 1) if "events" in x.columns else "—"
+        h = int(x["events"].isin(["single","double","triple","home_run"]).sum()) if "events" in x.columns else 0
+        er = int(x["events"].isin(["home_run"]).sum()) if "events" in x.columns else 0
+        bb = int(x["events"].isin(["walk","hit_by_pitch"]).sum()) if "events" in x.columns else 0
+        k = int(x["events"].isin(["strikeout","strikeout_double_play"]).sum()) if "events" in x.columns else 0
+        hr = int(x["events"].isin(["home_run"]).sum()) if "events" in x.columns else 0
+        opp = x["home_team"].iloc[0] if "home_team" in x.columns else "—"
+        games.append([str(date_val), opp, ip, h, er, bb, k, hr])
+    games = sorted(games, key=lambda r: r[0], reverse=True)[:5]
+    return md_table(["Date","Opponent","IP","H","ER","BB","K","HR"], games or [["—","—","—","—","—","—","—","—"]])
+
+
+def projected_lineup_table(hitter_pool):
+    if hitter_pool is None or hitter_pool.empty:
+        return md_table(["Order","Hitter","PA","AVG","SLG","ISO","wOBA","Barrel%","HardHit%"], [["—","—","—","—","—","—","—","—","—"]])
+    df = hitter_pool.copy()
+    if "PA" in df.columns:
+        df = df.sort_values("PA", ascending=False)
+    rows = []
+    for n, (_, r) in enumerate(df.head(9).iterrows(), 1):
+        rows.append([
+            n,
+            r.get("Hitter", r.get("player_name", r.get("Name", "—"))),
+            r.get("PA", "—"),
+            fmt(r.get("AVG", "—")),
+            fmt(r.get("SLG", "—")),
+            fmt(r.get("ISO", "—")),
+            fmt(r.get("wOBA", "—")),
+            pct(r.get("Barrel%", r.get("barrel", "—"))),
+            pct(r.get("HardHit%", r.get("hard_hit", "—"))),
+        ])
+    return md_table(["Order","Hitter","PA","AVG","SLG","ISO","wOBA","Barrel%","HardHit%"], rows)
+
+
+def bullpen_context_table(sc, team_code):
+    if sc is None or sc.empty or not team_code:
+        return md_table(["Metric","Value"], [["Bullpen/Staff Sample","—"]])
+    d = sc.copy()
+    team_cols = [c for c in ["pitcher_team","home_team","away_team"] if c in d.columns]
+    if team_cols:
+        d = d[(d[team_cols[0]] == team_code) | (d.get("home_team", "") == team_code) | (d.get("away_team", "") == team_code)]
+    events = d[d["events"].notna()] if "events" in d.columns else d
+    if events.empty:
+        return md_table(["Metric","Value"], [["Bullpen/Staff Sample","—"]])
+    bf = len(events)
+    h = int(events["events"].isin(["single","double","triple","home_run"]).sum())
+    bb = int(events["events"].isin(["walk","hit_by_pitch"]).sum())
+    k = int(events["events"].isin(["strikeout","strikeout_double_play"]).sum())
+    hr = int(events["events"].isin(["home_run"]).sum())
+    return md_table(["Metric","Value"], [
+        ["Recent Staff BF", bf],
+        ["Hits Allowed", h],
+        ["Walks/HBP", bb],
+        ["Strikeouts", k],
+        ["Home Runs Allowed", hr],
+        ["K Event Rate", pct(k / bf if bf else 0)],
+        ["BB/HBP Event Rate", pct(bb / bf if bf else 0)],
+        ["HR Event Rate", pct(hr / bf if bf else 0)],
+    ])
+
+
+def automated_conclusions(g, away_mix, home_mix, away_hitters, home_hitters):
+    away_pitches = ", ".join(away_mix) if away_mix else "No current sample"
+    home_pitches = ", ".join(home_mix) if home_mix else "No current sample"
+
+    def top_hitter(df):
+        if df is None or df.empty:
+            return "No hitter-pool sample"
+        sort_col = "wOBA" if "wOBA" in df.columns else ("ISO" if "ISO" in df.columns else None)
+        if sort_col:
+            row = df.sort_values(sort_col, ascending=False).iloc[0]
+        else:
+            row = df.iloc[0]
+        return f"{row.get('Hitter', row.get('player_name', row.get('Name','—')))} — {sort_col or 'sample'} {fmt(row.get(sort_col, '—')) if sort_col else '—'}"
+
+    return f"""
+## Final Game Dissection
+
+- Away pitcher pitch mix to inspect: {away_pitches}
+- Home pitcher pitch mix to inspect: {home_pitches}
+- Strongest home attack candidate: {top_hitter(home_hitters)}
+- Strongest away attack candidate: {top_hitter(away_hitters)}
+- Lineup advantage: compare projected top 9 hitter pools below.
+- Handedness advantage: use full arsenal vs L/R tables above.
+- Bullpen context: use recent staff pressure table below.
+- Final MLB-LAB read: prioritize pitch mix + hitter pool + L/R damage + current form.
+"""
 
 if __name__ == "__main__":
     main()
