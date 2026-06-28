@@ -1,0 +1,15 @@
+{
+  "minimum_confidence": 30.0,
+  "minimum_edge": 7.0,
+  "top_players_per_game": 5,
+  "lotto_legs": 4,
+  "safe_legs": 2,
+  "csv_exports": {
+    "daily_report": "exports/daily_report.csv",
+    "singles": "exports/singles.csv",
+    "total_bases": "exports/total_bases.csv",
+    "command_center": "exports/command_center.csv"
+  },
+  "pdf_output": "exports/daily_report.pdf",
+  "text_output": "exports/daily_report.txt"
+}
