@@ -1,4 +1,36 @@
-data/cache/
-data/cache/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environments
+.venv/
+venv/
+
+# Database
+database/*.db
+*.sqlite
+
+# Exports
+exports/*.csv
+exports/*.pdf
+exports/*.html
+exports/*.txt
+exports/*.json
+
+# Logs
+*.log
+run_log.txt
+run_error.txt
+
+# macOS
 .DS_Store
-.DS_Store
+
+# VSCode
+.vscode/
+
+# Cache
+.pytest_cache/
+
+data/cache/
