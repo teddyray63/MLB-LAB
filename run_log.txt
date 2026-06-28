@@ -57,3 +57,71 @@ This is a large query, it may take a moment to complete
 Skipping offseason dates
 Updated reports/mlb-lab-v5-matchup-engine.md
 Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-25 to 2026-06-25
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-25 to 2026-06-25
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-25 to 2026-06-25
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Schedule lookup failed for team 120: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-25 to 2026-06-25
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-26 to 2026-06-26
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-26 to 2026-06-26
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-26 to 2026-06-26
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Schedule lookup failed for team 146: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-26 to 2026-06-26
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-27 to 2026-06-27
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-27 to 2026-06-27
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Boxscore lookup failed for game 823210: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-27 to 2026-06-27
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-27 to 2026-06-27
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
+Pulling Statcast 2026-02-28 to 2026-06-28
+This is a large query, it may take a moment to complete
+Skipping offseason dates
+Updated reports/mlb-lab-v5-matchup-engine.md
+Updated reports/mlb-lab-v5-matchup-engine.xlsx
