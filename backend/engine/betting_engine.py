@@ -1,7 +1,10 @@
 import json
+import logging
 from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
+logger = logging.getLogger(__name__)
 
 from jinja2 import Template
 
@@ -15,7 +18,7 @@ from backend.engine.warehouse import ensure_warehouse_tables, record_recommendat
 from backend.odds.edge_calculator import build_model_scores, build_odds_exports
 from backend.odds.importer import import_odds_csv
 from backend.reports.html import open_dashboard, save_dashboard
-from backend.utils import normalize_name
+from backend.utils import get_run_date, normalize_name
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 CONFIG_PATH = ROOT / "backend" / "betting_config.json"
@@ -153,6 +156,8 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
 
 def build_daily_report() -> Dict[str, Any]:
     """Run the full daily workflow: load data, score players, build cards, write exports."""
+    run_date = get_run_date()
+    logger.info("build_daily_report: run_date=%s", run_date)
     games, lineups, scores, initial_warnings = load_data()
     slate = validate_slate(games, lineups, scores)
     warnings = list(initial_warnings) + list(slate.get("warnings", []))
@@ -256,7 +261,7 @@ def build_daily_report() -> Dict[str, Any]:
                 })
 
     ensure_warehouse_tables()
-    today_date = date.today().isoformat()
+    today_date = get_run_date()
     for entry in overall_rows:
         record_recommendation(
             {

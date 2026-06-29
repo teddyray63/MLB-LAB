@@ -1,8 +1,13 @@
 import logging
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from datetime import date
 import requests
 
 from backend.database.database import get_connection
+from backend.utils import get_run_date
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +32,8 @@ def ensure_table():
 
 def collect_schedule(target_date=None):
     ensure_table()
-    target_date = target_date or date.today().strftime("%Y-%m-%d")
+    target_date = target_date or get_run_date()
+    logger.info("collect_schedule: run_date=%s", target_date)
 
     url = (
         "https://statsapi.mlb.com/api/v1/schedule"
@@ -62,8 +68,10 @@ def collect_schedule(target_date=None):
 
     conn.commit()
     conn.close()
+    logger.info("collect_schedule: stored %d games for %s", count, target_date)
     return count
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     n = collect_schedule()
-    logger.info("Stored %d games", n)
+    logger.info("Done: %d games", n)

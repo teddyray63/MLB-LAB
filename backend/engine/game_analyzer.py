@@ -1,10 +1,12 @@
-from datetime import date
+import logging
 from typing import Any, Dict, List, Tuple
 
 import pandas as pd
 
 from backend.database.database import DB_PATH, get_connection
-from backend.utils import normalize_name
+from backend.utils import get_run_date, normalize_name
+
+logger = logging.getLogger(__name__)
 
 
 def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]]:
@@ -31,7 +33,8 @@ def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]]:
 
 
 def validate_slate(games: pd.DataFrame, lineups: pd.DataFrame, scores: pd.DataFrame) -> Dict[str, Any]:
-    today = date.today().strftime("%Y-%m-%d")
+    run_date = get_run_date()
+    logger.info("validate_slate: run_date=%s, games_in_db=%d", run_date, len(games))
     warnings: List[str] = []
     issues: List[str] = []
 
@@ -42,9 +45,10 @@ def validate_slate(games: pd.DataFrame, lineups: pd.DataFrame, scores: pd.DataFr
     games_copy = games.copy()
     if "game_date" in games_copy.columns:
         games_copy["game_date"] = games_copy["game_date"].astype(str)
-        today_games = games_copy[games_copy["game_date"] == today]
+        today_games = games_copy[games_copy["game_date"] == run_date]
+        logger.info("validate_slate: games for %s = %d", run_date, len(today_games))
         if today_games.empty:
-            warnings.append("No games found for today's date")
+            warnings.append(f"No games found for run date {run_date}")
             today_games = games_copy.head(8)
     else:
         today_games = games_copy.head(8)
