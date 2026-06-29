@@ -15,6 +15,7 @@ from backend.engine.warehouse import ensure_warehouse_tables, record_recommendat
 from backend.odds.edge_calculator import build_model_scores, build_odds_exports
 from backend.odds.importer import import_odds_csv
 from backend.reports.html import open_dashboard, save_dashboard
+from backend.utils import normalize_name
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 CONFIG_PATH = ROOT / "backend" / "betting_config.json"
@@ -62,16 +63,6 @@ def load_config() -> Dict[str, Any]:
 
 
 CONFIG = load_config()
-
-
-def normalize_name(name: Any) -> str:
-    if not isinstance(name, str):
-        return ""
-    name = name.strip()
-    if "," in name:
-        last, first = [x.strip() for x in name.split(",", 1)]
-        return f"{first} {last}".lower()
-    return name.lower()
 
 
 def ensure_alignment(scores: pd.DataFrame, lineups: pd.DataFrame) -> pd.DataFrame:

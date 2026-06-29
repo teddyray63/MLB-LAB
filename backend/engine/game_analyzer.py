@@ -4,16 +4,7 @@ from typing import Any, Dict, List, Tuple
 import pandas as pd
 
 from backend.database.database import DB_PATH, get_connection
-
-
-def normalize_name(name: Any) -> str:
-    if not isinstance(name, str):
-        return ""
-    name = name.strip()
-    if "," in name:
-        last, first = [x.strip() for x in name.split(",", 1)]
-        return f"{first} {last}".lower()
-    return name.lower()
+from backend.utils import normalize_name
 
 
 def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]]:

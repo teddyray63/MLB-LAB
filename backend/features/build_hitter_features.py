@@ -2,11 +2,9 @@ import logging
 from datetime import datetime, UTC
 
 from backend.database.database import get_connection
+from backend.utils import nz
 
 logger = logging.getLogger(__name__)
-
-def nz(v):
-    return 0 if v is None else v
 
 def build_hitter_features():
     conn = get_connection()
