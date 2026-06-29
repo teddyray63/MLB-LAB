@@ -5,3 +5,4 @@ requests
 pandas
 python-dotenv
 pydantic
+pybaseball>=2.2.7
