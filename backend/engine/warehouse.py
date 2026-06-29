@@ -11,6 +11,7 @@ def _connect() -> sqlite3.Connection:
 
 
 def ensure_warehouse_tables() -> None:
+    """Create all warehouse tables (bets, history, sportsbook_lines, results) if absent."""
     conn = _connect()
     cur = conn.cursor()
 
@@ -104,6 +105,7 @@ def _now() -> str:
 
 
 def record_recommendation(payload: Dict[str, Any], event_date: Optional[str] = None) -> Dict[str, Any]:
+    """Persist a daily recommendation to the bets and history tables."""
     ensure_warehouse_tables()
     conn = _connect()
     cur = conn.cursor()
@@ -144,6 +146,7 @@ def record_recommendation(payload: Dict[str, Any], event_date: Optional[str] = N
 
 
 def record_sportsbook_line(payload: Dict[str, Any], event_date: Optional[str] = None) -> Dict[str, Any]:
+    """Store a sportsbook odds line for later edge analysis."""
     ensure_warehouse_tables()
     conn = _connect()
     cur = conn.cursor()
@@ -172,6 +175,7 @@ def record_sportsbook_line(payload: Dict[str, Any], event_date: Optional[str] = 
 
 
 def record_result(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Record an actual game outcome and mark the matching bet as won or lost."""
     ensure_warehouse_tables()
     conn = _connect()
     cur = conn.cursor()
@@ -212,6 +216,7 @@ def record_result(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def generate_performance() -> List[Dict[str, Any]]:
+    """Aggregate historical bets into win-rate and ROI performance metrics."""
     ensure_warehouse_tables()
     conn = _connect()
     cur = conn.cursor()
@@ -272,6 +277,7 @@ def generate_performance() -> List[Dict[str, Any]]:
 
 
 def query_warehouse(table: str = "history", player: Optional[str] = None, market: Optional[str] = None, date: Optional[str] = None, team: Optional[str] = None, sportsbook: Optional[str] = None, confidence: Optional[float] = None) -> List[Dict[str, Any]]:
+    """Query the warehouse with optional filters; returns matching rows as dicts."""
     ensure_warehouse_tables()
     conn = _connect()
     cur = conn.cursor()

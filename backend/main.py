@@ -13,14 +13,17 @@ app.include_router(statcast_router)
 
 @app.get("/")
 def root():
+    """Service liveness check."""
     return {"status": "MLB-LAB backend running"}
 
 @app.get("/health")
 def health():
+    """Health probe for load balancers."""
     return {"ok": True}
 
 @app.get("/games")
 def games():
+    """Return all scheduled games ordered by start time."""
     try:
         conn = get_connection()
         try:
@@ -40,6 +43,7 @@ def games():
 
 @app.get("/lineups")
 def lineups():
+    """Return all lineup entries across all games."""
     try:
         conn = get_connection()
         try:
@@ -59,6 +63,7 @@ def lineups():
 
 @app.get("/game/{game_pk}/lineups")
 def game_lineups(game_pk: int):
+    """Return lineup for a specific game. Raises 404 if game_pk is unknown."""
     try:
         conn = get_connection()
         try:

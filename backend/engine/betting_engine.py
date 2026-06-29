@@ -24,6 +24,7 @@ EXPORT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_config() -> Dict[str, Any]:
+    """Load betting config from JSON, returning built-in defaults on any failure."""
     defaults = {
         "minimum_confidence": 30.0,
         "minimum_edge": 7.0,
@@ -66,6 +67,7 @@ CONFIG = load_config()
 
 
 def ensure_alignment(scores: pd.DataFrame, lineups: pd.DataFrame) -> pd.DataFrame:
+    """Attach lineup team data to scores by matching on normalized player name."""
     if scores.empty or lineups.empty:
         return scores
     work_scores = scores.copy()
@@ -79,6 +81,7 @@ def ensure_alignment(scores: pd.DataFrame, lineups: pd.DataFrame) -> pd.DataFram
 
 
 def load_odds() -> pd.DataFrame:
+    """Read odds CSV from the configured path; returns empty DataFrame if missing."""
     odds_path = ROOT / CONFIG.get("odds_path", "exports/odds.csv")
     if not odds_path.exists():
         return pd.DataFrame(columns=["player_name", "team", "market", "line", "odds", "book"])
@@ -86,6 +89,7 @@ def load_odds() -> pd.DataFrame:
 
 
 def attach_odds(scores: pd.DataFrame, odds: pd.DataFrame) -> pd.DataFrame:
+    """Merge odds into scores and compute edge_score, value_flag, and implied_probability."""
     if scores.empty:
         return scores
     if odds.empty:
@@ -107,6 +111,7 @@ def attach_odds(scores: pd.DataFrame, odds: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Build confidence-ranked recommendation rows for a single game's player pool."""
     rows: List[Dict[str, Any]] = []
     if game_df.empty:
         return rows
@@ -147,6 +152,7 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
 
 
 def build_daily_report() -> Dict[str, Any]:
+    """Run the full daily workflow: load data, score players, build cards, write exports."""
     games, lineups, scores, initial_warnings = load_data()
     slate = validate_slate(games, lineups, scores)
     warnings = list(initial_warnings) + list(slate.get("warnings", []))
@@ -337,4 +343,5 @@ def build_daily_report() -> Dict[str, Any]:
 
 
 def run_workflow() -> Dict[str, Any]:
+    """Entry point called by command_center.py to execute the daily betting workflow."""
     return build_daily_report()

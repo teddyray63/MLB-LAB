@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 @router.get("/statcast/hitters")
 def hitters():
+    """Return all Statcast hitter metrics ordered by hard-hit rate."""
     try:
         conn = get_connection()
         try:
@@ -28,6 +29,7 @@ def hitters():
 
 @router.get("/statcast/pitchers")
 def pitchers():
+    """Return all Statcast pitcher metrics ordered by whiff rate."""
     try:
         conn = get_connection()
         try:
@@ -46,6 +48,7 @@ def pitchers():
 
 @router.get("/park-factors")
 def park_factors():
+    """Return park factor adjustments for all tracked venues."""
     try:
         conn = get_connection()
         try:

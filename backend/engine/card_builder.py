@@ -77,6 +77,7 @@ def _select_diversified_legs(candidates: List[Dict[str, Any]], count: int, max_s
 
 
 def build_market_cards(game_df: pd.DataFrame, config: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
+    """Return ranked leg lists per market (singles, total_bases, runs, rbi, lotto, safest)."""
     cards: Dict[str, List[Dict[str, Any]]] = {"safest": [], "lotto": [], "singles": [], "total_bases": []}
     if game_df.empty:
         return cards
@@ -99,6 +100,7 @@ def build_market_cards(game_df: pd.DataFrame, config: Dict[str, Any]) -> Dict[st
 
 
 def build_betting_card_portfolios(game_df: pd.DataFrame, config: Dict[str, Any]) -> Dict[str, Any]:
+    """Build named multi-leg card portfolios (safe 2-leg, value 4-leg, lotto 6-leg) from all games."""
     if game_df.empty:
         return {
             "top_10_singles": {"name": "Top 10 Singles", "legs": [], "leg_count": 0, "confidence": 0.0, "confidence_pct": 0.0, "risk": "high", "grade": "PASS"},

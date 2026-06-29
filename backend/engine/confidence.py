@@ -5,6 +5,7 @@ GRADE_ORDER = ["A+", "A", "A-", "B+", "B", "B-", "C", "PASS"]
 
 
 def grade_for_market(score: float, market: str, minimum_confidence: float = 30.0) -> str:
+    """Map a numeric score to a letter grade (A+ through PASS) for the given market type."""
     try:
         score_value = float(score)
     except (TypeError, ValueError):
@@ -70,6 +71,7 @@ def build_recommendation_context(
     market: str,
     minimum_confidence: float = 30.0,
 ) -> Dict[str, Any]:
+    """Combine raw score with contextual factors to produce a graded recommendation dict."""
     try:
         base_score = float(score)
     except (TypeError, ValueError):
@@ -176,6 +178,7 @@ def build_recommendation_context(
 
 
 def edge_from_odds(model_score: float, line: Any, odds: Any) -> Dict[str, Any]:
+    """Compute edge_score, value_flag, and implied_probability from American odds vs model score."""
     try:
         model = float(model_score)
     except (TypeError, ValueError):
