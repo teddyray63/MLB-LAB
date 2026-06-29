@@ -26,7 +26,6 @@ def collect_statcast_hitters():
             continue
 
         cur.execute("""
-        cur.execute("""
         INSERT OR REPLACE INTO statcast_hitters
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
         """, (

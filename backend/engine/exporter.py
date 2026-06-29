@@ -22,8 +22,13 @@ def export_json(payload: Dict[str, Any], filename: str) -> Path:
 
 
 def write_exports(rows: List[Dict[str, Any]], export_name: str) -> Path:
+    base_columns = ["section", "game", "player", "team", "market", "score", "grade", "confidence", "confidence_pct", "risk", "reasons", "edge", "risk_note"]
     if not rows:
-        df = pd.DataFrame(columns=["section", "game", "player", "team", "market", "score", "grade", "confidence", "edge", "risk_note"])
+        df = pd.DataFrame(columns=base_columns)
     else:
         df = pd.DataFrame(rows)
+        for column in base_columns:
+            if column not in df.columns:
+                df[column] = None
+        df = df[base_columns]
     return export_csv(df, export_name)

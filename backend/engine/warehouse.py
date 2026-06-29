@@ -1,0 +1,313 @@
+import os
+import sqlite3
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+DB_PATH = Path(os.getenv("MLB_LAB_DB_PATH", str(ROOT / "database" / "mlb_lab.db")))
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _connect() -> sqlite3.Connection:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def ensure_warehouse_tables() -> None:
+    conn = _connect()
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS bets (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        player TEXT,
+        team TEXT,
+        market TEXT,
+        date TEXT,
+        sportsbook TEXT,
+        odds TEXT,
+        line REAL,
+        confidence REAL,
+        edge REAL,
+        ev REAL,
+        clv REAL,
+        wager_amount REAL,
+        status TEXT,
+        created_at TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS results (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        player TEXT,
+        team TEXT,
+        market TEXT,
+        date TEXT,
+        sportsbook TEXT,
+        result TEXT,
+        profit REAL,
+        roi REAL,
+        ev REAL,
+        clv REAL,
+        confidence REAL,
+        edge REAL,
+        closing_line REAL,
+        created_at TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS performance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        player TEXT,
+        team TEXT,
+        market TEXT,
+        date TEXT,
+        sportsbook TEXT,
+        bets_count INTEGER,
+        wins INTEGER,
+        losses INTEGER,
+        pushes INTEGER,
+        total_profit REAL,
+        total_roi REAL,
+        avg_ev REAL,
+        avg_clv REAL,
+        avg_confidence REAL,
+        avg_edge REAL,
+        created_at TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event_type TEXT,
+        player TEXT,
+        team TEXT,
+        market TEXT,
+        date TEXT,
+        sportsbook TEXT,
+        payload TEXT,
+        created_at TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_performance_key
+    ON performance (player, team, market, date, sportsbook)
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def record_recommendation(payload: Dict[str, Any], event_date: Optional[str] = None) -> Dict[str, Any]:
+    ensure_warehouse_tables()
+    conn = _connect()
+    cur = conn.cursor()
+    dt = event_date or payload.get("date") or datetime.now(timezone.utc).date().isoformat()
+    row = {
+        "player": payload.get("player", ""),
+        "team": payload.get("team", ""),
+        "market": payload.get("market", ""),
+        "date": dt,
+        "sportsbook": payload.get("sportsbook", ""),
+        "odds": payload.get("odds", ""),
+        "line": payload.get("line"),
+        "confidence": payload.get("confidence"),
+        "edge": payload.get("edge"),
+        "ev": payload.get("ev"),
+        "clv": payload.get("clv"),
+        "wager_amount": payload.get("wager_amount"),
+        "status": payload.get("status", "open"),
+        "created_at": _now(),
+    }
+    cur.execute(
+        """
+        INSERT INTO bets (player, team, market, date, sportsbook, odds, line, confidence, edge, ev, clv, wager_amount, status, created_at)
+        VALUES (:player, :team, :market, :date, :sportsbook, :odds, :line, :confidence, :edge, :ev, :clv, :wager_amount, :status, :created_at)
+        """,
+        row,
+    )
+    cur.execute(
+        """
+        INSERT INTO history (event_type, player, team, market, date, sportsbook, payload, created_at)
+        VALUES ('recommendation', :player, :team, :market, :date, :sportsbook, :payload, :created_at)
+        """,
+        {"player": row["player"], "team": row["team"], "market": row["market"], "date": dt, "sportsbook": row["sportsbook"], "payload": str(payload), "created_at": row["created_at"]},
+    )
+    conn.commit()
+    conn.close()
+    return row
+
+
+def record_sportsbook_line(payload: Dict[str, Any], event_date: Optional[str] = None) -> Dict[str, Any]:
+    ensure_warehouse_tables()
+    conn = _connect()
+    cur = conn.cursor()
+    dt = event_date or payload.get("date") or datetime.now(timezone.utc).date().isoformat()
+    row = {
+        "player": payload.get("player", ""),
+        "team": payload.get("team", ""),
+        "market": payload.get("market", ""),
+        "date": dt,
+        "sportsbook": payload.get("sportsbook", ""),
+        "line": payload.get("line"),
+        "confidence": payload.get("confidence"),
+        "edge": payload.get("edge"),
+        "created_at": _now(),
+    }
+    cur.execute(
+        """
+        INSERT INTO history (event_type, player, team, market, date, sportsbook, payload, created_at)
+        VALUES ('line', :player, :team, :market, :date, :sportsbook, :payload, :created_at)
+        """,
+        {"player": row["player"], "team": row["team"], "market": row["market"], "date": dt, "sportsbook": row["sportsbook"], "payload": str(payload), "created_at": row["created_at"]},
+    )
+    conn.commit()
+    conn.close()
+    return row
+
+
+def record_result(payload: Dict[str, Any]) -> Dict[str, Any]:
+    ensure_warehouse_tables()
+    conn = _connect()
+    cur = conn.cursor()
+    dt = payload.get("date") or datetime.now(timezone.utc).date().isoformat()
+    row = {
+        "player": payload.get("player", ""),
+        "team": payload.get("team", ""),
+        "market": payload.get("market", ""),
+        "date": dt,
+        "sportsbook": payload.get("sportsbook", ""),
+        "result": payload.get("result", "pending"),
+        "profit": payload.get("profit"),
+        "roi": payload.get("roi"),
+        "ev": payload.get("ev"),
+        "clv": payload.get("clv"),
+        "confidence": payload.get("confidence"),
+        "edge": payload.get("edge"),
+        "closing_line": payload.get("closing_line"),
+        "created_at": _now(),
+    }
+    cur.execute(
+        """
+        INSERT INTO results (player, team, market, date, sportsbook, result, profit, roi, ev, clv, confidence, edge, closing_line, created_at)
+        VALUES (:player, :team, :market, :date, :sportsbook, :result, :profit, :roi, :ev, :clv, :confidence, :edge, :closing_line, :created_at)
+        """,
+        row,
+    )
+    cur.execute(
+        """
+        INSERT INTO history (event_type, player, team, market, date, sportsbook, payload, created_at)
+        VALUES ('result', :player, :team, :market, :date, :sportsbook, :payload, :created_at)
+        """,
+        {"player": row["player"], "team": row["team"], "market": row["market"], "date": dt, "sportsbook": row["sportsbook"], "payload": str(payload), "created_at": row["created_at"]},
+    )
+    conn.commit()
+    conn.close()
+    return row
+
+
+def generate_performance() -> List[Dict[str, Any]]:
+    ensure_warehouse_tables()
+    conn = _connect()
+    cur = conn.cursor()
+    cur.execute("SELECT player, team, market, date, sportsbook FROM results")
+    rows = cur.fetchall()
+    for row in rows:
+        key = (row["player"], row["team"], row["market"], row["date"], row["sportsbook"])
+        cur.execute(
+            "SELECT COUNT(*) AS bets_count, SUM(CASE WHEN result='win' THEN 1 ELSE 0 END) AS wins, SUM(CASE WHEN result='loss' THEN 1 ELSE 0 END) AS losses, SUM(CASE WHEN result='push' THEN 1 ELSE 0 END) AS pushes, SUM(profit) AS total_profit, AVG(roi) AS total_roi, AVG(ev) AS avg_ev, AVG(clv) AS avg_clv, AVG(confidence) AS avg_confidence, AVG(edge) AS avg_edge FROM results WHERE player=? AND team=? AND market=? AND date=? AND sportsbook=?",
+            key,
+        )
+        stats = cur.fetchone()
+        cur.execute(
+            "SELECT COUNT(*) FROM bets WHERE player=? AND team=? AND market=? AND date=? AND sportsbook=?",
+            key,
+        )
+        bets_count = cur.fetchone()[0]
+        insert_row = {
+            "player": row["player"],
+            "team": row["team"],
+            "market": row["market"],
+            "date": row["date"],
+            "sportsbook": row["sportsbook"],
+            "bets_count": bets_count or 0,
+            "wins": stats["wins"] or 0,
+            "losses": stats["losses"] or 0,
+            "pushes": stats["pushes"] or 0,
+            "total_profit": stats["total_profit"] or 0.0,
+            "total_roi": stats["total_roi"] or 0.0,
+            "avg_ev": stats["avg_ev"] or 0.0,
+            "avg_clv": stats["avg_clv"] or 0.0,
+            "avg_confidence": stats["avg_confidence"] or 0.0,
+            "avg_edge": stats["avg_edge"] or 0.0,
+            "created_at": _now(),
+        }
+        cur.execute(
+            """
+            INSERT INTO performance (player, team, market, date, sportsbook, bets_count, wins, losses, pushes, total_profit, total_roi, avg_ev, avg_clv, avg_confidence, avg_edge, created_at)
+            VALUES (:player, :team, :market, :date, :sportsbook, :bets_count, :wins, :losses, :pushes, :total_profit, :total_roi, :avg_ev, :avg_clv, :avg_confidence, :avg_edge, :created_at)
+            ON CONFLICT(player, team, market, date, sportsbook) DO UPDATE SET
+                bets_count = excluded.bets_count,
+                wins = excluded.wins,
+                losses = excluded.losses,
+                pushes = excluded.pushes,
+                total_profit = excluded.total_profit,
+                total_roi = excluded.total_roi,
+                avg_ev = excluded.avg_ev,
+                avg_clv = excluded.avg_clv,
+                avg_confidence = excluded.avg_confidence,
+                avg_edge = excluded.avg_edge,
+                created_at = excluded.created_at
+            """,
+            insert_row,
+        )
+    conn.commit()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def query_warehouse(table: str = "history", player: Optional[str] = None, market: Optional[str] = None, date: Optional[str] = None, team: Optional[str] = None, sportsbook: Optional[str] = None, confidence: Optional[float] = None) -> List[Dict[str, Any]]:
+    ensure_warehouse_tables()
+    conn = _connect()
+    cur = conn.cursor()
+    where = []
+    params: List[Any] = []
+    if player:
+        where.append("player LIKE ?")
+        params.append(f"%{player}%")
+    if market:
+        where.append("market LIKE ?")
+        params.append(f"%{market}%")
+    if date:
+        where.append("date = ?")
+        params.append(date)
+    if team:
+        where.append("team LIKE ?")
+        params.append(f"%{team}%")
+    if sportsbook:
+        where.append("sportsbook LIKE ?")
+        params.append(f"%{sportsbook}%")
+    if confidence is not None:
+        if table == "performance":
+            where.append("avg_confidence >= ?")
+        else:
+            where.append("confidence >= ?")
+        params.append(confidence)
+    sql = f"SELECT * FROM {table}"
+    if where:
+        sql += " WHERE " + " AND ".join(where)
+    sql += " ORDER BY date DESC, created_at DESC"
+    cur.execute(sql, params)
+    rows = [dict(row) for row in cur.fetchall()]
+    conn.close()
+    return rows

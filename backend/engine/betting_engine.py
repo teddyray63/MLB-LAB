@@ -8,10 +8,14 @@ from jinja2 import Template
 
 import pandas as pd
 
-from backend.engine.card_builder import build_market_cards
-from backend.engine.confidence import edge_from_odds, grade_for_market
+from backend.engine.card_builder import build_betting_card_portfolios, build_market_cards
+from backend.engine.confidence import build_recommendation_context, edge_from_odds, grade_for_market
 from backend.engine.exporter import export_json, export_csv, write_exports
 from backend.engine.game_analyzer import load_data, validate_slate
+from backend.engine.warehouse import ensure_warehouse_tables, record_recommendation
+from backend.odds.edge_calculator import build_model_scores, build_odds_exports
+from backend.odds.importer import import_odds_csv
+from backend.reports.html import open_dashboard, save_dashboard
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB_PATH = ROOT / "database" / "mlb_lab.db"
@@ -121,7 +125,20 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
     for _, row in game_df.iterrows():
         market = "singles"
         score = float(row.get("singles_score", 0) or 0)
-        grade = grade_for_market(score, market, config.get("minimum_confidence", 30.0))
+        context = build_recommendation_context(
+            score=score,
+            edge=float(row.get("edge_score", 0.0) or 0.0),
+            lineup_certainty=float(row.get("lineup_certainty", 0.7) or 0.7),
+            statcast_quality=float(row.get("statcast_quality", 0.7) or 0.7),
+            sample_size=float(row.get("sample_size", 0.7) or 0.7),
+            opponent_strength=float(row.get("opponent_strength", 0.7) or 0.7),
+            weather=float(row.get("weather", 0.7) or 0.7),
+            bullpen=float(row.get("bullpen", 0.7) or 0.7),
+            park_factor=float(row.get("park_factor", 0.7) or 0.7),
+            pitcher_quality=float(row.get("pitcher_quality", 0.7) or 0.7),
+            market=market,
+            minimum_confidence=config.get("minimum_confidence", 30.0),
+        )
         rows.append({
             "section": "game_card",
             "game": game_name,
@@ -129,8 +146,11 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
             "team": row.get("team", ""),
             "market": market,
             "score": score,
-            "grade": grade,
-            "confidence": score,
+            "grade": context["grade"],
+            "confidence": context["confidence"],
+            "confidence_pct": context["confidence_pct"],
+            "risk": context["risk"],
+            "reasons": context["reasons"],
             "edge": row.get("edge_score", 0.0),
             "risk_note": "monitor lineup status",
         })
@@ -151,6 +171,19 @@ def build_daily_report() -> Dict[str, Any]:
     scored = attach_odds(aligned_scores, odds)
 
     today_games = slate.get("today_games", [])
+    game_lookup = {}
+    for game in today_games:
+        away = game.get("away_team", "")
+        home = game.get("home_team", "")
+        game_name = f"{away} @ {home}"
+        for team in [away, home]:
+            game_lookup[team] = game_name
+
+    portfolio_df = scored.copy()
+    if "game_name" not in portfolio_df.columns:
+        portfolio_df["game_name"] = ""
+    if not portfolio_df.empty:
+        portfolio_df["game_name"] = portfolio_df["team"].map(game_lookup).fillna("")
     game_cards: List[Dict[str, Any]] = []
     overall_rows: List[Dict[str, Any]] = []
     value_rows: List[Dict[str, Any]] = []
@@ -159,7 +192,7 @@ def build_daily_report() -> Dict[str, Any]:
         away = game.get("away_team", "")
         home = game.get("home_team", "")
         game_name = f"{away} @ {home}"
-        game_df = scored[scored["team"].isin([away, home])].copy()
+        game_df = portfolio_df[portfolio_df["team"].isin([away, home])].copy()
         if game_df.empty:
             continue
         cards = build_market_cards(game_df, CONFIG)
@@ -174,10 +207,78 @@ def build_daily_report() -> Dict[str, Any]:
                 "market": leg["market"],
                 "score": leg["score"],
                 "grade": leg["grade"],
-                "confidence": leg["score"],
+                "confidence": leg.get("confidence", leg["score"]),
+                "confidence_pct": leg.get("confidence_pct", leg.get("confidence", leg["score"])),
+                "risk": leg.get("risk", "medium"),
+                "reasons": leg.get("reasons", []),
                 "edge": 0.0,
                 "risk_note": "monitor lineup status",
             })
+
+    portfolio_cards = build_betting_card_portfolios(portfolio_df, CONFIG)
+    card_rows = []
+    betting_card_rows = []
+    lotto_rows = []
+    for card_name, card in portfolio_cards.items():
+        card_rows.append({
+            "card_name": card_name,
+            "name": card.get("name", card_name),
+            "leg_count": card.get("leg_count", 0),
+            "confidence": card.get("confidence", 0.0),
+            "confidence_pct": card.get("confidence_pct", 0.0),
+            "risk": card.get("risk", "high"),
+            "grade": card.get("grade", "PASS"),
+            "legs": json.dumps(card.get("legs", [])),
+        })
+        for leg in card.get("legs", []):
+            betting_card_rows.append({
+                "card_name": card_name,
+                "player": leg.get("player", ""),
+                "team": leg.get("team", ""),
+                "game": leg.get("game", ""),
+                "market": leg.get("market", ""),
+                "score": leg.get("score", 0.0),
+                "grade": leg.get("grade", "PASS"),
+                "confidence": leg.get("confidence", 0.0),
+                "confidence_pct": leg.get("confidence_pct", 0.0),
+                "risk": leg.get("risk", "high"),
+                "reasons": json.dumps(leg.get("reasons", [])),
+            })
+        if card_name == "best_6_leg_lotto":
+            for leg in card.get("legs", []):
+                lotto_rows.append({
+                    "card_name": card_name,
+                    "player": leg.get("player", ""),
+                    "team": leg.get("team", ""),
+                    "game": leg.get("game", ""),
+                    "market": leg.get("market", ""),
+                    "score": leg.get("score", 0.0),
+                    "grade": leg.get("grade", "PASS"),
+                    "confidence": leg.get("confidence", 0.0),
+                    "confidence_pct": leg.get("confidence_pct", 0.0),
+                    "risk": leg.get("risk", "high"),
+                    "reasons": json.dumps(leg.get("reasons", [])),
+                })
+
+    ensure_warehouse_tables()
+    today_date = date.today().isoformat()
+    for entry in overall_rows:
+        record_recommendation(
+            {
+                "player": entry.get("player", ""),
+                "team": entry.get("team", ""),
+                "market": entry.get("market", ""),
+                "sportsbook": entry.get("sportsbook", ""),
+                "confidence": entry.get("confidence", 0.0),
+                "edge": entry.get("edge", 0.0),
+                "line": entry.get("line"),
+                "odds": entry.get("odds"),
+                "details": entry.get("reasons", []),
+                "grade": entry.get("grade", "PASS"),
+                "risk": entry.get("risk", "medium"),
+            },
+            event_date=today_date,
+        )
 
     export_rows = []
     for entry in overall_rows:
@@ -190,7 +291,9 @@ def build_daily_report() -> Dict[str, Any]:
     write_exports([entry for entry in overall_rows if entry["market"] == "runs"], "runs.csv")
     write_exports([entry for entry in overall_rows if entry["market"] == "rbis"], "rbis.csv")
     write_exports([entry for entry in overall_rows if entry["market"] == "lotto"], "lotto.csv")
-    write_exports([{"card_name": f"{item['game']} safest", "legs": item['cards'].get('safest', []), "market": "safe"} for item in game_cards], "cards.csv")
+    export_csv(pd.DataFrame(card_rows), "cards.csv")
+    export_csv(pd.DataFrame(betting_card_rows), "betting_cards.csv")
+    export_csv(pd.DataFrame(lotto_rows), "lotto.csv")
     write_exports(value_rows, "value_edges.csv")
 
     summary_lines = ["MLB-LAB BETTING CARDS", f"Games analyzed: {len(today_games)}", ""]
@@ -223,9 +326,25 @@ def build_daily_report() -> Dict[str, Any]:
     html_path = EXPORT_DIR / "daily_report.html"
     html_path.write_text(Template(html_template).render(games=len(today_games), cards=game_cards), encoding="utf-8")
 
-    export_csv(pd.DataFrame([{"summary": "cards generated"}]), "betting_cards.csv")
-    export_json({"warnings": warnings, "issues": issues, "games": len(today_games), "cards": game_cards}, "daily_report.json")
-    return {"warnings": warnings, "issues": issues, "rows": export_rows, "cards": game_cards, "value_rows": value_rows}
+    export_csv(pd.DataFrame(betting_card_rows), "betting_cards.csv")
+    dashboard_path = save_dashboard(pd.DataFrame(card_rows), pd.DataFrame(betting_card_rows), pd.DataFrame(lotto_rows), today_games, EXPORT_DIR / "daily_dashboard.html")
+    open_dashboard(dashboard_path)
+    odds_path = ROOT / CONFIG.get("odds_path", "exports/odds.csv")
+    slate_players = pd.DataFrame([{"player_name": row["player"], "team": row["team"]} for row in overall_rows])
+    if odds_path.exists():
+        odds_exports = build_odds_exports(odds_path, slate_players, EXPORT_DIR)
+    else:
+        odds_exports = {
+            "live_odds": EXPORT_DIR / "live_odds.csv",
+            "value_edges": EXPORT_DIR / "value_edges.csv",
+            "betting_edges": EXPORT_DIR / "betting_edges.csv",
+        }
+        empty_columns = ["player_name", "book", "team", "market", "line", "odds", "implied_probability", "model_probability", "expected_value", "edge_pct", "kelly_fraction", "positive_ev", "negative_ev", "missing_player", "duplicate_player"]
+        for export_name, export_path in odds_exports.items():
+            pd.DataFrame(columns=empty_columns).to_csv(export_path, index=False)
+
+    export_json({"warnings": warnings, "issues": issues, "games": len(today_games), "cards": game_cards, "odds_exports": {key: str(path.name) for key, path in odds_exports.items()}}, "daily_report.json")
+    return {"warnings": warnings, "issues": issues, "rows": export_rows, "cards": game_cards, "value_rows": value_rows, "odds_exports": odds_exports}
 
 
 def run_workflow() -> Dict[str, Any]:
