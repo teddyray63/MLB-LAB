@@ -1,18 +1,13 @@
-import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-DB_PATH = Path(os.getenv("MLB_LAB_DB_PATH", str(ROOT / "database" / "mlb_lab.db")))
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+from backend.database.database import get_connection
 
 
 def _connect() -> sqlite3.Connection:
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return get_connection()
 
 
 def ensure_warehouse_tables() -> None:
