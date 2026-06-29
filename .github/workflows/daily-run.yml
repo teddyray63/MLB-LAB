@@ -8,25 +8,32 @@ on:
 jobs:
   run-mlb-lab:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.14'
-    
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-    
-    - name: Run MLB Lab
-      run: python3 scripts/mlb_lab_runner.py
-    
-    - name: Commit and push results
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add reports/
-        git commit -m "Daily run $(date +%Y-%m-%d)" || echo "No changes"
-        git push
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify pybaseball installed
+        run: |
+          python -c "import pybaseball; print('pybaseball import OK')"
+
+      - name: Run MLB Lab
+        run: python3 scripts/mlb_lab_runner.py
+
+      - name: Commit and push results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add reports/
+          git commit -m "Daily run $(date +%Y-%m-%d)" || echo "No changes"
+          git push
