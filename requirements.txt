@@ -6,3 +6,4 @@ pandas
 python-dotenv
 pydantic
 pybaseball>=2.2.7
+openpyxl>=3.1.5
