@@ -1,9 +1,12 @@
 import importlib
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import pandas as pd
 
 from backend.database.database import DB_PATH, get_connection
+
+ROOT = Path(__file__).resolve().parent.parent.parent
 EXPORT_DIR = ROOT / "exports"
 
 REQUIRED_TABLES = ["games", "lineups", "park_factors", "statcast_hitters", "statcast_pitchers", "hitter_features", "daily_scores"]
