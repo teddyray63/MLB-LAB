@@ -1,5 +1,4 @@
 import json
-import sqlite3
 from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -18,7 +17,6 @@ from backend.odds.importer import import_odds_csv
 from backend.reports.html import open_dashboard, save_dashboard
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-DB_PATH = ROOT / "database" / "mlb_lab.db"
 CONFIG_PATH = ROOT / "backend" / "betting_config.json"
 EXPORT_DIR = ROOT / "exports"
 EXPORT_DIR.mkdir(parents=True, exist_ok=True)
