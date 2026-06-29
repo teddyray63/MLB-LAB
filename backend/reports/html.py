@@ -79,9 +79,51 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             "game_name": f"{game.get('away_team', '')} @ {game.get('home_team', '')}",
         })
 
-    cards_rows = ''.join(f'<tr><td>{card["name"]}</td><td>{card["leg_count"]}</td><td style="color:{_color_for_confidence(card["confidence"])}">{card["confidence"]:.1f}%</td><td>{card["risk"]}</td><td>{_grade_badge(card["grade"])}</td></tr>' for card in cards_payload)
-    betting_rows = ''.join(f'<tr><td>{row["player"]}</td><td>{row["market"]}</td><td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td><td>{_grade_badge(row["grade"])}</td></tr>' for row in betting_payload)
-    lotto_rows = ''.join(f'<tr><td>{row["player"]}</td><td>{row["team"]}</td><td>{row["market"]}</td><td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td><td>{row["risk"]}</td><td>{_grade_badge(row["grade"])}</td></tr>' for row in lotto_payload)
+    def _reason_pills(reasons: list) -> str:
+        if not reasons:
+            return '<span class="muted">—</span>'
+        return " ".join(f'<span class="pill">{r}</span>' for r in reasons[:4])
+
+    def _edge_cell(row: dict) -> str:
+        edge = row.get("edge_score") or row.get("edge") or 0.0
+        try:
+            edge = float(edge)
+        except (TypeError, ValueError):
+            edge = 0.0
+        color = "#2ecc71" if edge > 0 else "#e74c3c" if edge < 0 else "#94a3b8"
+        return f'<span style="color:{color}">{edge:+.1f}</span>' if edge else '<span class="muted">—</span>'
+
+    cards_rows = ''.join(
+        f'<tr><td>{card["name"]}</td><td>{card["leg_count"]}</td>'
+        f'<td style="color:{_color_for_confidence(card["confidence"])}">{card["confidence"]:.1f}%</td>'
+        f'<td>{card["risk"]}</td><td>{_grade_badge(card["grade"])}</td></tr>'
+        for card in cards_payload
+    )
+    betting_rows = ''.join(
+        f'<tr>'
+        f'<td><strong>{row["player"]}</strong><div class="summary">{row.get("team","")}</div></td>'
+        f'<td>{row["game"]}</td>'
+        f'<td>{row["market"]}</td>'
+        f'<td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td>'
+        f'<td>{_edge_cell(row)}</td>'
+        f'<td><span class="risk-{row["risk"]}">{row["risk"]}</span></td>'
+        f'<td><strong>{_grade_badge(row["grade"])}</strong></td>'
+        f'<td class="reasons-cell">{_reason_pills(row["reasons"])}</td>'
+        f'</tr>'
+        for row in betting_payload
+    )
+    lotto_rows = ''.join(
+        f'<tr>'
+        f'<td><strong>{row["player"]}</strong></td>'
+        f'<td>{row["team"]}</td>'
+        f'<td>{row["market"]}</td>'
+        f'<td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td>'
+        f'<td><span class="risk-{row["risk"]}">{row["risk"]}</span></td>'
+        f'<td><strong>{_grade_badge(row["grade"])}</strong></td>'
+        f'<td class="reasons-cell">{_reason_pills(row["reasons"])}</td>'
+        f'</tr>'
+        for row in lotto_payload
+    )
     games_rows = ''.join(f'<div class="card"><strong>{game["game_name"]}</strong><div class="summary">{game["away"]} vs {game["home"]}</div></div>' for game in games_payload)
 
     return f"""
@@ -109,6 +151,9 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
     .summary {{ font-size:12px; color:var(--muted); }}
     .toolbar {{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }}
     .hidden {{ display:none; }}
+    .pill {{ display:inline-block; background:rgba(79,209,197,0.12); color:var(--accent); border-radius:6px; padding:2px 7px; font-size:11px; margin:1px; white-space:nowrap; }}
+    .reasons-cell {{ max-width:280px; }}
+    .risk-low {{ color:#2ecc71; }} .risk-medium {{ color:#f1c40f; }} .risk-high {{ color:#e74c3c; }}
   </style>
 </head>
 <body>
@@ -161,7 +206,7 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
       <div class=\"card\">
         <h3 style=\"margin-top:0\">Player Search</h3>
         <table id=\"bettingTable\">
-          <thead><tr><th>Player</th><th>Market</th><th>Confidence</th><th>Grade</th></tr></thead>
+          <thead><tr><th>Player</th><th>Game</th><th>Market</th><th>Confidence</th><th>Edge</th><th>Risk</th><th>Grade</th><th>Why</th></tr></thead>
           <tbody>{betting_rows}</tbody>
         </table>
       </div>
@@ -170,7 +215,7 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
     <div class=\"card\">
       <h3 style=\"margin-top:0\">Lotto / Best 6-Leg</h3>
       <table id=\"lottoTable\">
-        <thead><tr><th>Player</th><th>Team</th><th>Market</th><th>Confidence</th><th>Risk</th><th>Grade</th></tr></thead>
+        <thead><tr><th>Player</th><th>Team</th><th>Market</th><th>Confidence</th><th>Risk</th><th>Grade</th><th>Why</th></tr></thead>
         <tbody>{lotto_rows}</tbody>
       </table>
     </div>
