@@ -1,8 +1,11 @@
+import logging
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from backend.database.database import get_connection
+
+logger = logging.getLogger(__name__)
 
 conn = get_connection()
 cur = conn.cursor()
@@ -42,4 +45,4 @@ CREATE TABLE IF NOT EXISTS statcast_pitchers (
 conn.commit()
 conn.close()
 
-print("✅ Statcast tables ready")
+logger.info("Statcast tables ready")

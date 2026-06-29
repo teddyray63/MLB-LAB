@@ -1,5 +1,9 @@
+import logging
 import subprocess
 import sys
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
 
 steps = [
     "backend/collectors/warehouse.py",
@@ -9,12 +13,12 @@ steps = [
 ]
 
 for step in steps:
-    print(f"\n🚀 RUNNING: {step}")
+    logger.info("RUNNING: %s", step)
     result = subprocess.run([sys.executable, step])
 
     if result.returncode != 0:
-        print(f"\n❌ FAILED at: {step}")
+        logger.error("FAILED at: %s", step)
         sys.exit(result.returncode)
 
-print("\n✅ ALL DATA BUILT SUCCESSFULLY")
-print("Now run: streamlit run frontend/app.py")
+logger.info("ALL DATA BUILT SUCCESSFULLY")
+logger.info("Now run: streamlit run frontend/app.py")

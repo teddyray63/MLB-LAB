@@ -1,6 +1,9 @@
+import logging
 from datetime import datetime, UTC
 
 from backend.database.database import get_connection
+
+logger = logging.getLogger(__name__)
 
 def nz(v):
     return 0 if v is None else v
@@ -70,7 +73,7 @@ def build_daily_scores():
 
     conn.commit()
     conn.close()
-    print(f"✅ Built daily_scores: {len(hitters)} hitters")
+    logger.info("Built daily_scores: %d hitters", len(hitters))
 
 if __name__ == "__main__":
     build_daily_scores()

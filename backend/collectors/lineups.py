@@ -1,8 +1,11 @@
+import logging
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 from backend.database.database import get_connection
 
@@ -14,7 +17,7 @@ SELECT game_pk,away_team,home_team
 FROM games
 """).fetchall()
 
-print(f"Checking {len(games)} games...")
+logger.info("Checking %d games...", len(games))
 
 loaded = 0
 
@@ -57,9 +60,9 @@ for game_pk, away, home in games:
                 loaded += 1
 
     except Exception as e:
-        print(game_pk, e)
+        logger.exception("Error loading lineups for game_pk=%s", game_pk)
 
 conn.commit()
 conn.close()
 
-print(f"✅ Loaded {loaded} lineup rows")
+logger.info("Loaded %d lineup rows", loaded)

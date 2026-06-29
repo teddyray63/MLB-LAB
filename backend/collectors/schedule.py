@@ -1,7 +1,10 @@
+import logging
 from datetime import date
 import requests
 
 from backend.database.database import get_connection
+
+logger = logging.getLogger(__name__)
 
 def ensure_table():
     conn = get_connection()
@@ -63,4 +66,4 @@ def collect_schedule(target_date=None):
 
 if __name__ == "__main__":
     n = collect_schedule()
-    print(f"✅ Stored {n} games")
+    logger.info("Stored %d games", n)

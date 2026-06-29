@@ -1,6 +1,9 @@
+import logging
 from datetime import datetime, UTC
 
 from backend.database.database import get_connection
+
+logger = logging.getLogger(__name__)
 
 def nz(v):
     return 0 if v is None else v
@@ -56,7 +59,7 @@ def build_hitter_features():
 
     conn.commit()
     conn.close()
-    print(f"✅ Built hitter_features: {loaded} hitters")
+    logger.info("Built hitter_features: %d hitters", loaded)
 
 if __name__ == "__main__":
     build_hitter_features()

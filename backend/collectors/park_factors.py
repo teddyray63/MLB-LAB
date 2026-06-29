@@ -1,3 +1,4 @@
+import logging
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
@@ -5,6 +6,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from datetime import datetime, timezone
 
 from backend.database.database import get_connection
+
+logger = logging.getLogger(__name__)
 
 PARKS = [
     ("Rogers Centre", 102, 101, 105),
@@ -48,4 +51,4 @@ for park in PARKS:
 conn.commit()
 conn.close()
 
-print(f"✅ Loaded {len(PARKS)} park factors")
+logger.info("Loaded %d park factors", len(PARKS))

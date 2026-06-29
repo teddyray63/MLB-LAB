@@ -1,8 +1,12 @@
+import logging
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pandas as pd
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
 
 from backend.database.database import get_connection
 
@@ -19,7 +23,7 @@ games = pd.read_sql("SELECT * FROM games", conn)
 
 conn.close()
 
-print("\n================ MLB-LAB DAILY REPORT ================\n")
+logger.info("\n================ MLB-LAB DAILY REPORT ================\n")
 
 for _, g in games.iterrows():
     away = g.get("away_team")
@@ -32,25 +36,20 @@ for _, g in games.iterrows():
     if game_scores.empty:
         continue
 
-    print(f"\n\n### {away} @ {home} — {venue}")
-    print("=" * 70)
+    logger.info("\n\n### %s @ %s — %s", away, home, venue)
+    logger.info("=" * 70)
 
-    print("\nTOP 5 SINGLES")
-    print(top(game_scores, "singles_score").to_string(index=False))
+    logger.info("\nTOP 5 SINGLES\n%s", top(game_scores, "singles_score").to_string(index=False))
+    logger.info("\nTOP 5 TOTAL BASES\n%s", top(game_scores, "total_bases_score").to_string(index=False))
 
-    print("\nTOP 5 TOTAL BASES")
-    print(top(game_scores, "total_bases_score").to_string(index=False))
-
-    print("\nBEST 2-LEG CARD")
     singles = top(game_scores, "singles_score", 1)
     tb = top(game_scores, "total_bases_score", 1)
-    print(pd.concat([singles, tb]).drop_duplicates("player_name").head(2).to_string(index=False))
+    logger.info("\nBEST 2-LEG CARD\n%s", pd.concat([singles, tb]).drop_duplicates("player_name").head(2).to_string(index=False))
 
-    print("\nBEST 4-LEG LOTTO")
     lotto_cols = ["singles_score", "doubles_score", "total_bases_score", "runs_score", "rbi_score", "lotto_score"]
     lotto_cols = [c for c in lotto_cols if c in game_scores.columns]
-    print(game_scores.sort_values("lotto_score", ascending=False)[
+    logger.info("\nBEST 4-LEG LOTTO\n%s", game_scores.sort_values("lotto_score", ascending=False)[
         ["player_name", "team"] + lotto_cols
     ].head(4).to_string(index=False))
 
-print("\n================ END REPORT ================\n")
+logger.info("\n================ END REPORT ================\n")

@@ -1,13 +1,16 @@
+import logging
 from datetime import datetime
 import pandas as pd
 from pybaseball import statcast_batter_exitvelo_barrels
 
 from backend.database.database import get_connection
 
+logger = logging.getLogger(__name__)
+
 def collect_statcast_hitters():
     year = datetime.now().year
 
-    print(f"Downloading Statcast hitters ({year})...")
+    logger.info("Downloading Statcast hitters (%d)...", year)
 
     df = statcast_batter_exitvelo_barrels(year)
 

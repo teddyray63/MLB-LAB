@@ -1,3 +1,4 @@
+import logging
 import sys
 from pathlib import Path
 
@@ -8,29 +9,32 @@ if str(ROOT) not in sys.path:
 from backend.doctor.doctor import run_doctor
 from backend.doctor.repair import suggest_repairs
 
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
+
 
 def main():
     result = run_doctor()
-    print("\n================ MLB-LAB DOCTOR ================\n")
-    print(f"Database: {'found' if (ROOT / 'database' / 'mlb_lab.db').exists() else 'missing'}")
+    logger.info("\n================ MLB-LAB DOCTOR ================\n")
+    logger.info("Database: %s", "found" if (ROOT / "database" / "mlb_lab.db").exists() else "missing")
 
     if result.get("issues"):
-        print("\nIssues:")
+        logger.warning("\nIssues:")
         for issue in result["issues"]:
-            print(f"- {issue}")
+            logger.warning("- %s", issue)
     else:
-        print("No issues detected.")
+        logger.info("No issues detected.")
 
     if result.get("warnings"):
-        print("\nWarnings:")
+        logger.warning("\nWarnings:")
         for warning in result["warnings"]:
-            print(f"- {warning}")
+            logger.warning("- %s", warning)
 
     repairs = suggest_repairs(result)
     if repairs:
-        print("\nSuggested repairs:")
+        logger.info("\nSuggested repairs:")
         for repair in repairs:
-            print(f"- {repair}")
+            logger.info("- %s", repair)
 
 
 if __name__ == "__main__":

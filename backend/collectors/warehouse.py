@@ -1,4 +1,8 @@
+import logging
+
 from backend.database.database import get_connection
+
+logger = logging.getLogger(__name__)
 
 def ensure_warehouse_tables():
     conn = get_connection()
@@ -62,7 +66,7 @@ def ensure_warehouse_tables():
 
     conn.commit()
     conn.close()
-    print("✅ Warehouse tables ready")
+    logger.info("Warehouse tables ready")
 
 if __name__ == "__main__":
     ensure_warehouse_tables()
