@@ -1,9 +1,12 @@
-import sqlite3
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 import requests
 
-DB = "database/mlb_lab.db"
+from backend.database.database import get_connection
 
-conn = sqlite3.connect(DB)
+conn = get_connection()
 cur = conn.cursor()
 
 games = cur.execute("""

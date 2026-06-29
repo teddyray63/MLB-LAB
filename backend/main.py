@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from backend.api.statcast import router as statcast_router
 
-import sqlite3
-
-DB = "database/mlb_lab.db"
+from backend.database.database import get_connection
 
 app = FastAPI(title="MLB-LAB API")
 
@@ -19,8 +17,7 @@ def health():
 
 @app.get("/games")
 def games():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cur = conn.cursor()
 
     rows = cur.execute("""
@@ -36,8 +33,7 @@ def games():
 
 @app.get("/lineups")
 def lineups():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cur = conn.cursor()
 
     rows = cur.execute("""
@@ -53,8 +49,7 @@ def lineups():
 
 @app.get("/game/{game_pk}/lineups")
 def game_lineups(game_pk: int):
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
     cur = conn.cursor()
 
     rows = cur.execute("""

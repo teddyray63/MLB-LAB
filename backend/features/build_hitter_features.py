@@ -1,13 +1,12 @@
-import sqlite3
 from datetime import datetime, UTC
 
-DB = "database/mlb_lab.db"
+from backend.database.database import get_connection
 
 def nz(v):
     return 0 if v is None else v
 
 def build_hitter_features():
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     now = datetime.now(UTC).isoformat()

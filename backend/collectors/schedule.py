@@ -1,12 +1,10 @@
-import sqlite3
-from pathlib import Path
 from datetime import date
 import requests
 
-DB = Path("database/mlb_lab.db")
+from backend.database.database import get_connection
 
 def ensure_table():
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
     CREATE TABLE IF NOT EXISTS games (
@@ -37,7 +35,7 @@ def collect_schedule(target_date=None):
     r.raise_for_status()
     data = r.json()
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cur = conn.cursor()
     count = 0
 

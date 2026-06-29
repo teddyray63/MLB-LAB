@@ -1,7 +1,10 @@
-import sqlite3
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from datetime import datetime, timezone
 
-DB = "database/mlb_lab.db"
+from backend.database.database import get_connection
 
 PARKS = [
     ("Rogers Centre", 102, 101, 105),
@@ -21,7 +24,7 @@ PARKS = [
     ("Petco Park", 95, 98, 89),
 ]
 
-conn = sqlite3.connect(DB)
+conn = get_connection()
 cur = conn.cursor()
 
 cur.execute("""

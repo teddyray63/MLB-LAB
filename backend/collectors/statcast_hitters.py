@@ -1,9 +1,8 @@
-import sqlite3
 from datetime import datetime
 import pandas as pd
 from pybaseball import statcast_batter_exitvelo_barrels
 
-DB = "database/mlb_lab.db"
+from backend.database.database import get_connection
 
 def collect_statcast_hitters():
     year = datetime.now().year
@@ -12,7 +11,7 @@ def collect_statcast_hitters():
 
     df = statcast_batter_exitvelo_barrels(year)
 
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cur = conn.cursor()
 
     loaded = 0

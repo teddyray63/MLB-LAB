@@ -1,12 +1,9 @@
-import sqlite3
 from datetime import date
-from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-DB_PATH = ROOT / "database" / "mlb_lab.db"
+from backend.database.database import DB_PATH, get_connection
 
 
 def normalize_name(name: Any) -> str:
@@ -24,7 +21,7 @@ def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]]:
     if not DB_PATH.exists():
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame(), ["Database missing: database/mlb_lab.db"]
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     try:
         games = pd.read_sql("SELECT * FROM games", conn)
         lineups = pd.read_sql("SELECT * FROM lineups", conn)

@@ -1,15 +1,13 @@
 from fastapi import APIRouter
-import sqlite3
+
+from backend.database.database import get_connection
 
 router = APIRouter()
-
-DB = "database/mlb_lab.db"
 
 
 @router.get("/statcast/hitters")
 def hitters():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     rows = conn.execute("""
         SELECT *
@@ -23,8 +21,7 @@ def hitters():
 
 @router.get("/statcast/pitchers")
 def pitchers():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     rows = conn.execute("""
         SELECT *
@@ -36,8 +33,7 @@ def pitchers():
     return [dict(r) for r in rows]
 @router.get("/park-factors")
 def park_factors():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
     rows = conn.execute("""
         SELECT *

@@ -1,9 +1,7 @@
-import sqlite3
-
-DB = "database/mlb_lab.db"
+from backend.database.database import get_connection
 
 def ensure_warehouse_tables():
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
     cur = conn.cursor()
 
     cur.execute("""

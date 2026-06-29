@@ -1,12 +1,9 @@
 import importlib
-import sqlite3
-from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-DB_PATH = ROOT / "database" / "mlb_lab.db"
+from backend.database.database import DB_PATH, get_connection
 EXPORT_DIR = ROOT / "exports"
 
 REQUIRED_TABLES = ["games", "lineups", "park_factors", "statcast_hitters", "statcast_pitchers", "hitter_features", "daily_scores"]
@@ -49,7 +46,7 @@ def run_doctor() -> Dict[str, Any]:
     if not DB_PATH.exists():
         issues.append(f"Database missing: {DB_PATH}")
     else:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_connection()
         try:
             tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
             available = set(tables["name"].tolist())
