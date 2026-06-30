@@ -113,6 +113,19 @@ def attach_odds(scores: pd.DataFrame, odds: pd.DataFrame) -> pd.DataFrame:
     return merged
 
 
+def _safe_optional_float(value: Any) -> Any:
+    """Return a plain float, or None if the value is missing/NaN (avoids fabricating data)."""
+    if value is None:
+        return None
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return None
+    if pd.isna(value):
+        return None
+    return value
+
+
 def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Build confidence-ranked recommendation rows for a single game's player pool."""
     rows: List[Dict[str, Any]] = []
@@ -122,6 +135,10 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
     for _, row in game_df.iterrows():
         market = "singles"
         score = float(row.get("singles_score", 0) or 0)
+        implied_probability = _safe_optional_float(row.get("implied_probability"))
+        closing_line_value = _safe_optional_float(row.get("closing_line_value"))
+        recent_form = _safe_optional_float(row.get("recent_form"))
+        handedness_advantage = _safe_optional_float(row.get("handedness_advantage"))
         context = build_recommendation_context(
             score=score,
             edge=float(row.get("edge_score", 0.0) or 0.0),
@@ -135,6 +152,10 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
             pitcher_quality=float(row.get("pitcher_quality", 0.7) or 0.7),
             market=market,
             minimum_confidence=config.get("minimum_confidence", 30.0),
+            recent_form=recent_form if recent_form is not None else 0.7,
+            implied_probability=implied_probability,
+            handedness_advantage=handedness_advantage if handedness_advantage is not None else 0.7,
+            closing_line_value=closing_line_value,
         )
         rows.append({
             "section": "game_card",
@@ -150,6 +171,9 @@ def build_ranked_rows(game_df: pd.DataFrame, game_name: str, config: Dict[str, A
             "reasons": context["reasons"],
             "edge": row.get("edge_score", 0.0),
             "risk_note": "monitor lineup status",
+            "park_adjusted_ev": context.get("park_adjusted_ev"),
+            "implied_probability": context.get("implied_probability"),
+            "clv": context.get("clv"),
         })
     return rows
 
@@ -276,6 +300,12 @@ def build_daily_report() -> Dict[str, Any]:
                 "details": entry.get("reasons", []),
                 "grade": entry.get("grade", "PASS"),
                 "risk": entry.get("risk", "medium"),
+                "implied_probability": entry.get("implied_probability"),
+                "clv": entry.get("clv"),
+                "park_adjusted_ev": entry.get("park_adjusted_ev"),
+                "kelly_fraction": None,
+                "stake_pct": None,
+                "roi": None,
             },
             event_date=today_date,
         )

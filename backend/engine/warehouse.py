@@ -40,7 +40,16 @@ def ensure_warehouse_tables() -> None:
     )
     """)
     # Migrate existing bets table that may lack the newer columns
-    for col, col_type in [("grade", "TEXT"), ("risk", "TEXT"), ("implied_probability", "REAL"), ("reasons_json", "TEXT")]:
+    for col, col_type in [
+        ("grade", "TEXT"),
+        ("risk", "TEXT"),
+        ("implied_probability", "REAL"),
+        ("reasons_json", "TEXT"),
+        ("park_adjusted_ev", "REAL"),
+        ("roi", "REAL"),
+        ("kelly_fraction", "REAL"),
+        ("stake_pct", "REAL"),
+    ]:
         try:
             cur.execute(f"ALTER TABLE bets ADD COLUMN {col} {col_type}")
         except Exception:
@@ -141,11 +150,15 @@ def record_recommendation(payload: Dict[str, Any], event_date: Optional[str] = N
         "risk": payload.get("risk", ""),
         "implied_probability": payload.get("implied_probability"),
         "reasons_json": json.dumps(reasons) if isinstance(reasons, list) else str(reasons),
+        "park_adjusted_ev": payload.get("park_adjusted_ev"),
+        "roi": payload.get("roi"),
+        "kelly_fraction": payload.get("kelly_fraction"),
+        "stake_pct": payload.get("stake_pct"),
     }
     cur.execute(
         """
-        INSERT INTO bets (player, team, market, date, sportsbook, odds, line, confidence, edge, ev, clv, wager_amount, status, created_at, grade, risk, implied_probability, reasons_json)
-        VALUES (:player, :team, :market, :date, :sportsbook, :odds, :line, :confidence, :edge, :ev, :clv, :wager_amount, :status, :created_at, :grade, :risk, :implied_probability, :reasons_json)
+        INSERT INTO bets (player, team, market, date, sportsbook, odds, line, confidence, edge, ev, clv, wager_amount, status, created_at, grade, risk, implied_probability, reasons_json, park_adjusted_ev, roi, kelly_fraction, stake_pct)
+        VALUES (:player, :team, :market, :date, :sportsbook, :odds, :line, :confidence, :edge, :ev, :clv, :wager_amount, :status, :created_at, :grade, :risk, :implied_probability, :reasons_json, :park_adjusted_ev, :roi, :kelly_fraction, :stake_pct)
         """,
         row,
     )

@@ -73,18 +73,25 @@ def build_recommendation_context(
     recent_form: float = 0.7,
     implied_probability: Optional[float] = None,
     handedness_advantage: float = 0.7,
+    closing_line_value: Optional[float] = None,
 ) -> Dict[str, Any]:
     """Combine raw score with contextual factors to produce a graded recommendation dict.
 
     Additional signals beyond the base nine:
-      recent_form         — recency-weighted performance (0-1); pass actual value when available
-      implied_probability — sportsbook implied prob (0-1); used to compare vs model estimate
+      recent_form          — recency-weighted performance (0-1); pass actual value when available
+      implied_probability  — sportsbook implied prob (0-1); used to compare vs model estimate
       handedness_advantage — L/R matchup advantage (0-1); pass actual split when available
+      closing_line_value   — CLV in probability points (opening implied prob - closing implied
+                              prob); only meaningful once a closing line has been recorded, so it
+                              defaults to None and is passed through unchanged (no fabricated value)
+
+    All contextual signals default to a neutral 0.7 and degrade gracefully — callers can omit any
+    factor that isn't available yet (handedness splits, bullpen strength, closing lines, etc.)
+    without the confidence calculation erroring out.
 
     TODO: wire weather from real forecast API (weather_score currently passed as default 0.7)
     TODO: wire umpire strike zone tendency when umpire data source is available
     TODO: wire pitch-mix matchup (hitter vs pitcher arsenal) when pitch data is integrated
-    TODO: wire closing-line-value (CLV) signal once line-movement tracking is in place
     """
     try:
         base_score = float(score)
@@ -133,6 +140,16 @@ def build_recommendation_context(
     confidence = max(0.0, min(100.0, confidence))
     grade = grade_for_market(confidence, market, minimum_confidence)
     risk = _risk_from_confidence(confidence)
+
+    # Park-adjusted EV: model edge (in probability points) scaled by park-factor weighting,
+    # expressed as expected value per unit staked. Degrades to plain edge_score when no
+    # implied_probability is available (no fabricated market comparison).
+    if implied_probability is not None and 0 < implied_probability < 1:
+        model_prob = base_score / 100.0
+        raw_edge_pct = (model_prob - implied_probability) * 100.0
+    else:
+        raw_edge_pct = (edge_score - 0.5) * 40.0
+    park_adjusted_ev = round(raw_edge_pct * (0.7 + 0.3 * park_score), 2)
 
     reasons: List[str] = []
 
@@ -225,6 +242,9 @@ def build_recommendation_context(
         "risk": risk,
         "grade": grade,
         "reasons": reasons,
+        "park_adjusted_ev": park_adjusted_ev,
+        "implied_probability": implied_probability,
+        "clv": closing_line_value,
     }
 
 

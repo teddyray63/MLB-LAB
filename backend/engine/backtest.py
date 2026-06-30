@@ -34,6 +34,7 @@ def run_backtest(
     empty = {
         "bet_count": 0,
         "resolved_count": 0,
+        "open_count": 0,
         "hit_rate": None,
         "roi_placeholder": None,
         "date_range": {"start": start_date, "end": end_date},
@@ -90,6 +91,7 @@ def run_backtest(
 
     if not resolved:
         empty["bet_count"] = bet_count
+        empty["open_count"] = bet_count
         empty["note"] = f"{bet_count} bets found, none resolved yet." if bet_count else "No bets recorded."
         return empty
 
@@ -131,6 +133,7 @@ def run_backtest(
     return {
         "bet_count": bet_count,
         "resolved_count": resolved_count,
+        "open_count": bet_count - resolved_count,
         "wins": wins,
         "losses": losses,
         "hit_rate": hit_rate,
@@ -156,6 +159,7 @@ def print_backtest_report(
     print(f"Date range : {dr['start'] or 'all'} → {dr['end'] or 'all'}")
     print(f"Total bets : {result['bet_count']}")
     print(f"Resolved   : {result['resolved_count']}")
+    print(f"Open       : {result['open_count']}")
     if result["hit_rate"] is not None:
         print(f"Hit rate   : {result['hit_rate']}%")
         print(f"ROI (est.) : {result['roi_placeholder']}%")

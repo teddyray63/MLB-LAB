@@ -30,6 +30,12 @@ def test_warehouse_stores_and_queries_betting_data(tmp_path, monkeypatch):
             "sportsbook": "DraftKings",
             "line": -110,
             "details": "strong edge",
+            "implied_probability": 0.45,
+            "clv": None,
+            "park_adjusted_ev": 6.5,
+            "kelly_fraction": None,
+            "stake_pct": None,
+            "roi": None,
         },
         event_date="2026-06-28",
     )
@@ -72,3 +78,10 @@ def test_warehouse_stores_and_queries_betting_data(tmp_path, monkeypatch):
     perf_rows = query_warehouse(table="performance", player="Judge", market="singles", date="2026-06-28")
     assert perf_rows
     assert perf_rows[0]["wins"] >= 1
+
+    bet_rows = query_warehouse(table="bets", player="Judge", market="singles", date="2026-06-28")
+    assert bet_rows
+    assert bet_rows[0]["park_adjusted_ev"] == 6.5
+    assert bet_rows[0]["implied_probability"] == 0.45
+    assert bet_rows[0]["roi"] is None
+    assert bet_rows[0]["kelly_fraction"] is None
