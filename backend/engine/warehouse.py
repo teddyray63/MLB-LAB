@@ -311,30 +311,38 @@ def get_history_summary(start_date: Optional[str] = None, end_date: Optional[str
     conn = _connect()
     cur = conn.cursor()
 
-    where_clauses = []
+    date_clauses = []
     params: List[Any] = []
     if start_date:
-        where_clauses.append("date >= ?")
+        date_clauses.append("date >= ?")
         params.append(start_date)
     if end_date:
-        where_clauses.append("date <= ?")
+        date_clauses.append("date <= ?")
         params.append(end_date)
-    where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
+    where_sql = ("WHERE " + " AND ".join(date_clauses)) if date_clauses else ""
+
+    def _with_clause(extra: str) -> str:
+        """Build a WHERE clause combining the date filters (if any) with an extra condition."""
+        all_clauses = date_clauses + [extra]
+        return "WHERE " + " AND ".join(all_clauses)
 
     cur.execute(f"SELECT COUNT(*) FROM bets {where_sql}", params)
     total = cur.fetchone()[0]
 
-    cur.execute(f"SELECT COUNT(*) FROM bets {where_sql} AND status='open'" if where_clauses else "SELECT COUNT(*) FROM bets WHERE status='open'", params)
+    open_clause = _with_clause("status='open'")
+    cur.execute(f"SELECT COUNT(*) FROM bets {open_clause}", params)
     open_count = cur.fetchone()[0]
 
+    settled_clause = _with_clause("status IN ('win','loss','push')")
     cur.execute(
-        f"SELECT COUNT(*) FROM bets {where_sql} AND status IN ('win','loss','push')" if where_clauses else "SELECT COUNT(*) FROM bets WHERE status IN ('win','loss','push')",
+        f"SELECT COUNT(*) FROM bets {settled_clause}",
         params,
     )
     settled = cur.fetchone()[0]
 
+    win_clause = _with_clause("status='win'")
     cur.execute(
-        f"SELECT COUNT(*) FROM bets {where_sql} AND status='win'" if where_clauses else "SELECT COUNT(*) FROM bets WHERE status='win'",
+        f"SELECT COUNT(*) FROM bets {win_clause}",
         params,
     )
     wins = cur.fetchone()[0]

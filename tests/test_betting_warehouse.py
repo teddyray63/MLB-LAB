@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from backend.engine.warehouse import (
     ensure_warehouse_tables,
     generate_performance,
+    get_history_summary,
     query_warehouse,
     record_recommendation,
     record_result,
@@ -85,3 +86,27 @@ def test_warehouse_stores_and_queries_betting_data(tmp_path, monkeypatch):
     assert bet_rows[0]["implied_probability"] == 0.45
     assert bet_rows[0]["roi"] is None
     assert bet_rows[0]["kelly_fraction"] is None
+
+
+def test_get_history_summary_with_no_date_filters():
+    """get_history_summary() must build a valid query when start_date/end_date are both omitted."""
+    ensure_warehouse_tables()
+    before = get_history_summary()
+
+    record_recommendation(
+        {
+            "player": "Ohtani, Shohei",
+            "team": "Dodgers",
+            "market": "singles",
+            "confidence": 88.0,
+            "edge": 9.0,
+            "sportsbook": "DraftKings",
+        },
+        event_date="2026-06-29",
+    )
+
+    after = get_history_summary()
+
+    assert after["total_recommendations"] == before["total_recommendations"] + 1
+    assert after["open"] == before["open"] + 1
+    assert after["date_range"] == {"start": None, "end": None}
