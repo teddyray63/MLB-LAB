@@ -118,6 +118,27 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             f'</div>'
         )
 
+    def _conf_gauge(confidence: float) -> str:
+        """Compact radial confidence gauge (conic-gradient donut) for summary card lists."""
+        pct = min(100, max(0, confidence))
+        color = _color_for_confidence(confidence)
+        return (
+            f'<div class="gauge" style="background:conic-gradient({color} {pct * 3.6:.0f}deg, '
+            f'var(--border) 0deg)"><span style="color:{color}">{confidence:.0f}</span></div>'
+        )
+
+    def _ev_bar(edge: float) -> str:
+        """Compact horizontal EV magnitude bar paired with the existing edge cell."""
+        try:
+            edge = float(edge)
+        except (TypeError, ValueError):
+            edge = 0.0
+        pct = min(100, abs(edge) * 4)
+        cls = "ev-bar-pos" if edge > 0 else ("ev-bar-neg" if edge < 0 else "")
+        if not cls:
+            return ""
+        return f'<div class="ev-bar-track"><div class="ev-bar-fill {cls}" style="width:{pct:.0f}%"></div></div>'
+
     def _optional_pct_cell(value: Any) -> str:
         """Render an optional probability/pct value, or '—' when missing/null."""
         if value is None:
@@ -157,13 +178,36 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
         kelly = round(conf * (e / 100.0) * 0.5, 4)  # half-Kelly
         return f'<span class="kelly" data-kelly="{kelly}">{kelly*100:.1f}%</span>'
 
-    cards_rows = ''.join(
-        f'<tr><td>{card["name"]}</td><td>{card["leg_count"]}</td>'
-        f'<td>{_conf_bar(card["confidence"])}</td>'
-        f'<td><span class="risk-{card["risk"]}">{card["risk"]}</span></td>'
-        f'<td><strong>{_grade_badge(card["grade"])}</strong></td></tr>'
-        for card in cards_payload
-    )
+    card_row_idx = [0]
+
+    def _card_legs_html(legs: list) -> str:
+        if not legs:
+            return '<span class="muted">No legs available.</span>'
+        pills = []
+        for leg in legs:
+            if isinstance(leg, dict):
+                pills.append(
+                    f'<span class="pill">{leg.get("player", "")} '
+                    f'({leg.get("team", "")}) {leg.get("market", "")}</span>'
+                )
+        return " ".join(pills) if pills else '<span class="muted">No legs available.</span>'
+
+    def _card_row(card: dict) -> str:
+        i = card_row_idx[0]
+        card_row_idx[0] += 1
+        legs_html = _card_legs_html(card.get("legs", []))
+        return (
+            f'<tr class="bet-row" onclick="toggleReasons(\'cr{i}\')">'
+            f'<td>{card["name"]}</td><td>{card["leg_count"]}</td>'
+            f'<td>{_conf_gauge(card["confidence"])}</td>'
+            f'<td><span class="badge risk-{card["risk"]}">{card["risk"]}</span></td>'
+            f'<td><span class="badge grade-badge">{_grade_badge(card["grade"])}</span></td></tr>'
+            f'<tr id="cr{i}" class="reasons-row hidden"><td colspan="5">'
+            f'<div class="reasons-expand">{legs_html}</div>'
+            f'</td></tr>'
+        )
+
+    cards_rows = ''.join(_card_row(card) for card in cards_payload)
     bet_row_idx = [0]
 
     def _betting_row(row: dict) -> str:
@@ -177,13 +221,13 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             f'<td>{row["game"]}</td>'
             f'<td><span class="pill pill-mkt">{row["market"]}</span></td>'
             f'<td>{_conf_bar(row["confidence"])}</td>'
-            f'<td>{_edge_cell(row)}</td>'
+            f'<td>{_edge_cell(row)}{_ev_bar(edge)}</td>'
             f'<td>{_kelly_cell(row["confidence"], edge)}</td>'
             f'<td>{_optional_pct_cell(row.get("implied_probability"))}</td>'
             f'<td>{_optional_signed_cell(row.get("clv"))}</td>'
             f'<td>{_optional_signed_cell(row.get("park_adjusted_ev"))}</td>'
-            f'<td><span class="risk-{row["risk"]}">{row["risk"]}</span></td>'
-            f'<td><strong>{_grade_badge(row["grade"])}</strong></td>'
+            f'<td><span class="badge risk-{row["risk"]}">{row["risk"]}</span></td>'
+            f'<td><span class="badge grade-badge">{_grade_badge(row["grade"])}</span></td>'
             f'</tr>'
             f'<tr id="r{i}" class="reasons-row hidden"><td colspan="11">'
             f'<div class="reasons-expand">{reasons_html}</div>'
@@ -207,8 +251,8 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             f'<td>{_optional_pct_cell(row.get("implied_probability"))}</td>'
             f'<td>{_optional_signed_cell(row.get("clv"))}</td>'
             f'<td>{_optional_signed_cell(row.get("park_adjusted_ev"))}</td>'
-            f'<td><span class="risk-{row["risk"]}">{row["risk"]}</span></td>'
-            f'<td><strong>{_grade_badge(row["grade"])}</strong></td>'
+            f'<td><span class="badge risk-{row["risk"]}">{row["risk"]}</span></td>'
+            f'<td><span class="badge grade-badge">{_grade_badge(row["grade"])}</span></td>'
             f'</tr>'
             f'<tr id="lr{i}" class="reasons-row hidden"><td colspan="9">'
             f'<div class="reasons-expand">{reasons_html}</div>'
@@ -232,8 +276,9 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
     .page {{ max-width:1500px; margin:0 auto; padding:20px 16px; }}
     .header {{ display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px; flex-wrap:wrap; }}
     .controls {{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }}
-    .card {{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.18); }}
-    .grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-bottom:16px; }}
+    .card {{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,0.18); transition:box-shadow 0.15s; }}
+    .card:hover {{ box-shadow:0 10px 30px rgba(0,0,0,0.26); }}
+    .grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-bottom:18px; }}
     input,select,button {{ border-radius:8px; border:1px solid var(--border); padding:8px 11px; background:rgba(255,255,255,0.05); color:var(--text); font-size:13px; }}
     input:focus,select:focus {{ outline:none; border-color:var(--accent); }}
     button {{ cursor:pointer; transition:opacity 0.15s; }} button:hover {{ opacity:0.8; }}
@@ -253,12 +298,23 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
     .pill-mkt {{ background:rgba(99,179,237,0.1); color:#63b3ed; }}
     .reasons-expand {{ padding:8px 4px; display:flex; flex-wrap:wrap; gap:4px; }}
     .reasons-row td {{ background:rgba(255,255,255,0.02); }}
-    .risk-low {{ color:#2ecc71; font-weight:600; }} .risk-medium {{ color:#f1c40f; font-weight:600; }} .risk-high {{ color:#e74c3c; font-weight:600; }}
+    .badge {{ display:inline-block; border-radius:999px; padding:3px 10px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; }}
+    .risk-low {{ color:#0a3d24; background:rgba(46,204,113,0.18); }} .risk-medium {{ color:#5c4400; background:rgba(241,196,15,0.18); }} .risk-high {{ color:#5a1414; background:rgba(231,76,60,0.18); }}
+    html[data-theme='dark'] .risk-low, [data-theme='dark'] .risk-low {{ color:#2ecc71; }}
+    html[data-theme='dark'] .risk-medium, [data-theme='dark'] .risk-medium {{ color:#f1c40f; }}
+    html[data-theme='dark'] .risk-high, [data-theme='dark'] .risk-high {{ color:#e74c3c; }}
+    .grade-badge {{ color:var(--accent); background:rgba(79,209,197,0.14); }}
     .ev-strong {{ color:#2ecc71; font-weight:700; }} .ev-pos {{ color:#82e0aa; }} .ev-fair {{ color:#f7dc6f; }} .ev-neg {{ color:#e74c3c; }}
     .kelly {{ font-family:monospace; font-size:12px; color:var(--accent); }}
     .conf-wrap {{ display:flex; align-items:center; gap:6px; min-width:100px; }}
     .conf-bar {{ height:6px; border-radius:3px; flex-shrink:0; }}
     .conf-label {{ font-size:12px; font-weight:600; white-space:nowrap; }}
+    .gauge {{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; background:var(--card); position:relative; }}
+    .gauge::before {{ content:""; position:absolute; inset:4px; border-radius:50%; background:var(--card); }}
+    .gauge span {{ position:relative; z-index:1; }}
+    .ev-bar-track {{ height:4px; border-radius:2px; background:var(--border); margin-top:4px; width:80px; overflow:hidden; }}
+    .ev-bar-fill {{ height:100%; border-radius:2px; }}
+    .ev-bar-pos {{ background:#2ecc71; }} .ev-bar-neg {{ background:#e74c3c; }}
     .bankroll-bar {{ display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid var(--border); }}
     .bankroll-bar label {{ font-size:12px; color:var(--muted); white-space:nowrap; }}
     .bankroll-bar input {{ width:90px; }}
