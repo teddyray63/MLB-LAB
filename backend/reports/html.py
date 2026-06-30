@@ -53,6 +53,9 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
                 "confidence": float(row.get("confidence", 0.0) or 0.0),
                 "risk": row.get("risk", "high"),
                 "reasons": json.loads(row.get("reasons", "[]")) if isinstance(row.get("reasons", "[]"), str) else row.get("reasons", []),
+                "implied_probability": row.get("implied_probability"),
+                "clv": row.get("clv"),
+                "park_adjusted_ev": row.get("park_adjusted_ev"),
             })
 
     lotto_payload = []
@@ -69,6 +72,9 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
                 "confidence": float(row.get("confidence", 0.0) or 0.0),
                 "risk": row.get("risk", "high"),
                 "reasons": json.loads(row.get("reasons", "[]")) if isinstance(row.get("reasons", "[]"), str) else row.get("reasons", []),
+                "implied_probability": row.get("implied_probability"),
+                "clv": row.get("clv"),
+                "park_adjusted_ev": row.get("park_adjusted_ev"),
             })
 
     games_payload = []
@@ -112,6 +118,32 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             f'</div>'
         )
 
+    def _optional_pct_cell(value: Any) -> str:
+        """Render an optional probability/pct value, or '—' when missing/null."""
+        if value is None:
+            return '<span class="muted">—</span>'
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            return '<span class="muted">—</span>'
+        if pd.isna(value):
+            return '<span class="muted">—</span>'
+        return f'<span>{value * 100:.1f}%</span>' if abs(value) <= 1 else f'<span>{value:.1f}</span>'
+
+    def _optional_signed_cell(value: Any) -> str:
+        """Render an optional signed numeric value (CLV, park-adjusted EV), or '—' when missing/null."""
+        if value is None:
+            return '<span class="muted">—</span>'
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            return '<span class="muted">—</span>'
+        if pd.isna(value):
+            return '<span class="muted">—</span>'
+        cls = "ev-strong" if value > 0 else ("ev-neg" if value < 0 else "muted")
+        sign = "+" if value > 0 else ""
+        return f'<span class="{cls}">{sign}{value:.2f}</span>'
+
     def _kelly_cell(confidence: float, edge: float) -> str:
         # Conservative half-Kelly stake placeholder rendered by JS from bankroll input
         try:
@@ -147,10 +179,13 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             f'<td>{_conf_bar(row["confidence"])}</td>'
             f'<td>{_edge_cell(row)}</td>'
             f'<td>{_kelly_cell(row["confidence"], edge)}</td>'
+            f'<td>{_optional_pct_cell(row.get("implied_probability"))}</td>'
+            f'<td>{_optional_signed_cell(row.get("clv"))}</td>'
+            f'<td>{_optional_signed_cell(row.get("park_adjusted_ev"))}</td>'
             f'<td><span class="risk-{row["risk"]}">{row["risk"]}</span></td>'
             f'<td><strong>{_grade_badge(row["grade"])}</strong></td>'
             f'</tr>'
-            f'<tr id="r{i}" class="reasons-row hidden"><td colspan="8">'
+            f'<tr id="r{i}" class="reasons-row hidden"><td colspan="11">'
             f'<div class="reasons-expand">{reasons_html}</div>'
             f'</td></tr>'
         )
@@ -169,10 +204,13 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             f'<td>{row["team"]}</td>'
             f'<td><span class="pill pill-mkt">{row["market"]}</span></td>'
             f'<td>{_conf_bar(row["confidence"])}</td>'
+            f'<td>{_optional_pct_cell(row.get("implied_probability"))}</td>'
+            f'<td>{_optional_signed_cell(row.get("clv"))}</td>'
+            f'<td>{_optional_signed_cell(row.get("park_adjusted_ev"))}</td>'
             f'<td><span class="risk-{row["risk"]}">{row["risk"]}</span></td>'
             f'<td><strong>{_grade_badge(row["grade"])}</strong></td>'
             f'</tr>'
-            f'<tr id="lr{i}" class="reasons-row hidden"><td colspan="6">'
+            f'<tr id="lr{i}" class="reasons-row hidden"><td colspan="9">'
             f'<div class="reasons-expand">{reasons_html}</div>'
             f'</td></tr>'
         )
@@ -197,11 +235,15 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
     .card {{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.18); }}
     .grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-bottom:16px; }}
     input,select,button {{ border-radius:8px; border:1px solid var(--border); padding:8px 11px; background:rgba(255,255,255,0.05); color:var(--text); font-size:13px; }}
+    input:focus,select:focus {{ outline:none; border-color:var(--accent); }}
     button {{ cursor:pointer; transition:opacity 0.15s; }} button:hover {{ opacity:0.8; }}
+    h2, h3 {{ letter-spacing:0.01em; }}
     table {{ width:100%; border-collapse:collapse; margin-top:6px; }}
     th,td {{ padding:9px 7px; border-bottom:1px solid var(--border); text-align:left; vertical-align:middle; }}
-    th {{ cursor:pointer; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.07em; user-select:none; }}
+    th {{ cursor:pointer; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.07em; user-select:none;
+      position:sticky; top:0; background:var(--card); z-index:2; box-shadow:0 1px 0 var(--border); }}
     th:hover {{ color:var(--accent); }}
+    .table-scroll {{ max-height:560px; overflow-y:auto; }}
     tr.bet-row {{ cursor:pointer; }} tr.bet-row:hover {{ background:rgba(255,255,255,0.03); }}
     .muted {{ color:var(--muted); }}
     .summary {{ font-size:11px; color:var(--muted); }}
@@ -282,6 +324,7 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
       </div>
       <div class=\"card\" style=\"overflow-x:auto\">
         <h3 style=\"margin-top:0;font-size:0.95rem\">Player Recommendations <span class=\"muted\" style=\"font-weight:normal;font-size:11px\">(click row to expand reasons)</span></h3>
+        <div class=\"table-scroll\">
         <table id=\"bettingTable\">
           <thead><tr>
             <th onclick=\"sortTable('bettingTable',0)\">Player</th>
@@ -290,27 +333,36 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
             <th onclick=\"sortTable('bettingTable',3)\">Confidence</th>
             <th onclick=\"sortTable('bettingTable',4)\">Edge</th>
             <th onclick=\"sortTable('bettingTable',5)\">Kelly Stake</th>
-            <th onclick=\"sortTable('bettingTable',6)\">Risk</th>
-            <th onclick=\"sortTable('bettingTable',7)\">Grade</th>
+            <th onclick=\"sortTable('bettingTable',6)\">Implied %</th>
+            <th onclick=\"sortTable('bettingTable',7)\">CLV</th>
+            <th onclick=\"sortTable('bettingTable',8)\">Park EV</th>
+            <th onclick=\"sortTable('bettingTable',9)\">Risk</th>
+            <th onclick=\"sortTable('bettingTable',10)\">Grade</th>
           </tr></thead>
           <tbody>{betting_rows}</tbody>
         </table>
+        </div>
       </div>
     </div>
 
     <div class=\"card\" style=\"overflow-x:auto\">
       <h3 style=\"margin-top:0;font-size:0.95rem\">Lotto / Best 6-Leg <span class=\"muted\" style=\"font-weight:normal;font-size:11px\">(click row to expand reasons)</span></h3>
+      <div class=\"table-scroll\">
       <table id=\"lottoTable\">
         <thead><tr>
           <th onclick=\"sortTable('lottoTable',0)\">Player</th>
           <th onclick=\"sortTable('lottoTable',1)\">Team</th>
           <th onclick=\"sortTable('lottoTable',2)\">Market</th>
           <th onclick=\"sortTable('lottoTable',3)\">Confidence</th>
-          <th onclick=\"sortTable('lottoTable',4)\">Risk</th>
-          <th onclick=\"sortTable('lottoTable',5)\">Grade</th>
+          <th onclick=\"sortTable('lottoTable',4)\">Implied %</th>
+          <th onclick=\"sortTable('lottoTable',5)\">CLV</th>
+          <th onclick=\"sortTable('lottoTable',6)\">Park EV</th>
+          <th onclick=\"sortTable('lottoTable',7)\">Risk</th>
+          <th onclick=\"sortTable('lottoTable',8)\">Grade</th>
         </tr></thead>
         <tbody>{lotto_rows}</tbody>
       </table>
+      </div>
     </div>
   </div>
 
