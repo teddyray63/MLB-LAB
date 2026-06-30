@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,9 +32,19 @@ def ensure_warehouse_tables() -> None:
         clv REAL,
         wager_amount REAL,
         status TEXT,
-        created_at TEXT
+        created_at TEXT,
+        grade TEXT,
+        risk TEXT,
+        implied_probability REAL,
+        reasons_json TEXT
     )
     """)
+    # Migrate existing bets table that may lack the newer columns
+    for col, col_type in [("grade", "TEXT"), ("risk", "TEXT"), ("implied_probability", "REAL"), ("reasons_json", "TEXT")]:
+        try:
+            cur.execute(f"ALTER TABLE bets ADD COLUMN {col} {col_type}")
+        except Exception:
+            pass  # column already exists
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS results (
@@ -110,6 +121,7 @@ def record_recommendation(payload: Dict[str, Any], event_date: Optional[str] = N
     conn = _connect()
     cur = conn.cursor()
     dt = event_date or payload.get("date") or datetime.now(timezone.utc).date().isoformat()
+    reasons = payload.get("details") or payload.get("reasons") or []
     row = {
         "player": payload.get("player", ""),
         "team": payload.get("team", ""),
@@ -125,11 +137,15 @@ def record_recommendation(payload: Dict[str, Any], event_date: Optional[str] = N
         "wager_amount": payload.get("wager_amount"),
         "status": payload.get("status", "open"),
         "created_at": _now(),
+        "grade": payload.get("grade", ""),
+        "risk": payload.get("risk", ""),
+        "implied_probability": payload.get("implied_probability"),
+        "reasons_json": json.dumps(reasons) if isinstance(reasons, list) else str(reasons),
     }
     cur.execute(
         """
-        INSERT INTO bets (player, team, market, date, sportsbook, odds, line, confidence, edge, ev, clv, wager_amount, status, created_at)
-        VALUES (:player, :team, :market, :date, :sportsbook, :odds, :line, :confidence, :edge, :ev, :clv, :wager_amount, :status, :created_at)
+        INSERT INTO bets (player, team, market, date, sportsbook, odds, line, confidence, edge, ev, clv, wager_amount, status, created_at, grade, risk, implied_probability, reasons_json)
+        VALUES (:player, :team, :market, :date, :sportsbook, :odds, :line, :confidence, :edge, :ev, :clv, :wager_amount, :status, :created_at, :grade, :risk, :implied_probability, :reasons_json)
         """,
         row,
     )
@@ -274,6 +290,82 @@ def generate_performance() -> List[Dict[str, Any]]:
     conn.commit()
     conn.close()
     return [dict(row) for row in rows]
+
+
+def get_history_summary(start_date: Optional[str] = None, end_date: Optional[str] = None) -> Dict[str, Any]:
+    """Return aggregated recommendation history: totals, open/settled, win rate, ROI, grouped by market."""
+    ensure_warehouse_tables()
+    conn = _connect()
+    cur = conn.cursor()
+
+    where_clauses = []
+    params: List[Any] = []
+    if start_date:
+        where_clauses.append("date >= ?")
+        params.append(start_date)
+    if end_date:
+        where_clauses.append("date <= ?")
+        params.append(end_date)
+    where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
+
+    cur.execute(f"SELECT COUNT(*) FROM bets {where_sql}", params)
+    total = cur.fetchone()[0]
+
+    cur.execute(f"SELECT COUNT(*) FROM bets {where_sql} AND status='open'" if where_clauses else "SELECT COUNT(*) FROM bets WHERE status='open'", params)
+    open_count = cur.fetchone()[0]
+
+    cur.execute(
+        f"SELECT COUNT(*) FROM bets {where_sql} AND status IN ('win','loss','push')" if where_clauses else "SELECT COUNT(*) FROM bets WHERE status IN ('win','loss','push')",
+        params,
+    )
+    settled = cur.fetchone()[0]
+
+    cur.execute(
+        f"SELECT COUNT(*) FROM bets {where_sql} AND status='win'" if where_clauses else "SELECT COUNT(*) FROM bets WHERE status='win'",
+        params,
+    )
+    wins = cur.fetchone()[0]
+
+    win_rate = round(wins / settled, 4) if settled else None
+
+    cur.execute(f"SELECT AVG(confidence) FROM bets {where_sql}", params)
+    avg_conf_row = cur.fetchone()
+    avg_confidence = round(avg_conf_row[0], 2) if avg_conf_row and avg_conf_row[0] is not None else None
+
+    cur.execute(f"SELECT AVG(edge) FROM bets {where_sql}", params)
+    avg_edge_row = cur.fetchone()
+    avg_edge = round(avg_edge_row[0], 2) if avg_edge_row and avg_edge_row[0] is not None else None
+
+    cur.execute(
+        f"SELECT market, COUNT(*) as cnt, AVG(confidence) as avg_conf, AVG(edge) as avg_edge, SUM(CASE WHEN status='win' THEN 1 ELSE 0 END) as wins, SUM(CASE WHEN status IN ('win','loss','push') THEN 1 ELSE 0 END) as settled FROM bets {where_sql} GROUP BY market",
+        params,
+    )
+    by_market: Dict[str, Dict[str, Any]] = {}
+    for row in cur.fetchall():
+        mkt = row[0] or "unknown"
+        s = row[4]
+        w = row[3]
+        by_market[mkt] = {
+            "count": row[1],
+            "avg_confidence": round(row[2], 2) if row[2] is not None else None,
+            "avg_edge": round(w, 2) if w is not None else None,
+            "settled": s,
+            "wins": row[4],
+            "win_rate": round(row[4] / s, 4) if s else None,
+        }
+
+    conn.close()
+    return {
+        "total_recommendations": total,
+        "open": open_count,
+        "settled": settled,
+        "wins": wins,
+        "win_rate": win_rate,
+        "avg_confidence": avg_confidence,
+        "avg_edge": avg_edge,
+        "by_market": by_market,
+        "date_range": {"start": start_date, "end": end_date},
+    }
 
 
 def query_warehouse(table: str = "history", player: Optional[str] = None, market: Optional[str] = None, date: Optional[str] = None, team: Optional[str] = None, sportsbook: Optional[str] = None, confidence: Optional[float] = None) -> List[Dict[str, Any]]:
