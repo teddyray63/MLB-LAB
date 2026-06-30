@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mlb-lab
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MLB_LAB_DB_PATH
+        value: /opt/render/project/src/database/mlb_lab.db
+      - key: MLB_LAB_RUN_DATE
+        value: ""          # leave blank to use today; set to YYYY-MM-DD to override
+      - key: PYTHONUNBUFFERED
+        value: "1"

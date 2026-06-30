@@ -77,6 +77,56 @@ python -m pytest tests/ -x -q
 
 ---
 
+## Render Deployment
+
+MLB-LAB runs as a FastAPI web service on [Render](https://render.com). A `render.yaml` blueprint is included for one-click setup.
+
+### Quick steps
+
+1. Push the repo to GitHub and log in to Render.
+2. **New → Blueprint** → point at your GitHub repo → Render reads `render.yaml` automatically.
+
+   Or create a **Web Service** manually with these settings:
+
+   | Setting | Value |
+   |---|---|
+   | **Runtime** | Python 3 |
+   | **Build command** | `pip install -r requirements.txt` |
+   | **Start command** | `uvicorn backend.main:app --host 0.0.0.0 --port $PORT` |
+   | **Health check path** | `/health` |
+
+3. Set environment variables in the Render dashboard (Settings → Environment):
+
+   | Variable | Purpose | Example |
+   |---|---|---|
+   | `MLB_LAB_DB_PATH` | SQLite file path on the Render disk | `/opt/render/project/src/database/mlb_lab.db` |
+   | `MLB_LAB_RUN_DATE` | Override today's date (optional) | `2026-06-29` — leave blank to use today |
+
+4. After first deploy, the root URL (`/`) shows a "No report generated yet" page until you run the pipeline. Trigger via a GitHub Actions workflow or SSH/one-off job:
+   ```bash
+   python backend/command_center.py
+   ```
+
+### Live endpoints once deployed
+
+| Endpoint | Description |
+|---|---|
+| `GET /` | Daily dashboard HTML (placeholder if no report yet) |
+| `GET /dashboard` | Same as `/` |
+| `GET /health` | Health probe (`{"ok": true}`) |
+| `GET /report` | Latest `daily_report.json` summary |
+| `GET /cards` | Latest `command_center.csv` rows as JSON |
+| `GET /exports/{file}` | Raw file download from `exports/` directory |
+| `GET /games` | All scheduled games from DB |
+| `GET /lineups` | All lineup entries from DB |
+| `GET /docs` | Interactive Swagger UI |
+
+### Persistent storage note
+
+Render free-tier web services have an ephemeral filesystem — exports and the database are lost on redeploy. For persistence, attach a **Render Disk** at `/opt/render/project/src` and set `MLB_LAB_DB_PATH` accordingly, or export to an external store (S3, Supabase) from your pipeline.
+
+---
+
 ## GitHub Actions
 
 Two workflows are included in `.github/workflows/`:

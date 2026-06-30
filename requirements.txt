@@ -1,9 +1,10 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
 requests
 pandas
 python-dotenv
 pydantic
+jinja2
 pybaseball>=2.2.7
 openpyxl>=3.1.5
