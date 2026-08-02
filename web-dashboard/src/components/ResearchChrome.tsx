@@ -3,20 +3,17 @@ import { ResearchContextHeader } from './ResearchContextHeader'
 import { FilterBar } from './FilterBar'
 import { ResearchUrlBootstrap } from './ResearchUrlBootstrap'
 
-const RESEARCH_PATH_PREFIXES = [
-  '/today',
-  '/research',
-  '/leaderboards',
-  '/game',
-  '/player',
-  '/matchup',
-]
+const RESEARCH_CHROME_PREFIXES = ['/today', '/research', '/leaderboards']
+
+const RESEARCH_CHROME_EXCLUDED = ['/settings', '/data-status', '/history']
 
 export function useResearchChrome(): boolean {
   const { pathname } = useLocation()
   if (pathname.startsWith('/legacy')) return false
-  if (pathname === '/settings' || pathname === '/history') return false
-  return RESEARCH_PATH_PREFIXES.some(
+  if (RESEARCH_CHROME_EXCLUDED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+    return false
+  }
+  return RESEARCH_CHROME_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   )
 }

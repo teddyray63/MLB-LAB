@@ -13,7 +13,7 @@ interface HitterLinkProps {
   gamePk?: number | null
   /** Opposing SP from row — overrides inferred pitcher */
   pitcher?: string | null
-  /** Force legacy `/player?name=` navigation even on new-IA routes */
+  /** Force legacy `/legacy/player?name=` navigation even on new-IA routes */
   legacy?: boolean
 }
 
@@ -30,7 +30,7 @@ function inferSide(
 
 /**
  * Hitter navigation:
- * - Legacy routes (`/legacy/*`) → `/player?name=` (unchanged Phase 0 behavior)
+ * - Legacy routes (`/legacy/*`) → `/legacy/player?name=` (unchanged legacy behavior)
  * - New IA routes → `openResearch()` preserving game, filters, side, and opposing SP
  */
 export function HitterLink({
@@ -85,7 +85,10 @@ export function HitterLink({
   }
 
   return (
-    <Link to={`/player?name=${encodeURIComponent(name)}`} className={linkClass}>
+    <Link
+      to={`/legacy/player?name=${encodeURIComponent(name)}`}
+      className={linkClass}
+    >
       {name}
     </Link>
   )

@@ -8,12 +8,11 @@ import { GameHubPage } from './pages/GameHubPage'
 import { BattedBallsPage } from './pages/BattedBallsPage'
 import { TeamSplitsPage } from './pages/TeamSplitsPage'
 import { TodayPage } from './pages/TodayPage'
-import { GameResearchPage } from './pages/GameResearchPage'
-import { PlayerResearchPage } from './pages/PlayerResearchPage'
 import { MatchupLabPage } from './pages/MatchupLabPage'
 import { LeaderboardsPage } from './pages/LeaderboardsPage'
 import { HistoryPage } from './pages/HistoryPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { ResearchRedirect } from './components/ResearchRedirect'
 import { ExportProvider } from './context/ExportContext'
 import { ResearchProviders } from './context/ResearchContext'
 import { useDailyExport } from './hooks/useDailyExport'
@@ -50,24 +49,10 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
   )
 }
 
-/** Redirect that preserves the original query string (for legacy deep links). */
+/** Redirect that preserves the original query string (legacy deep links). */
 function QueryRedirect({ to }: { to: string }) {
   const { search } = useLocation()
   return <Navigate to={`${to}${search}`} replace />
-}
-
-/**
- * New Player Research landing. Preserves the legacy `/player?name=…` deep link
- * by forwarding it to the still-operational legacy page; otherwise shows the
- * new (Phase 1) placeholder.
- */
-function PlayerResearchEntry() {
-  const { search } = useLocation()
-  const params = new URLSearchParams(search)
-  if (params.get('name')) {
-    return <Navigate to={`/legacy/player${search}`} replace />
-  }
-  return <PlayerResearchPage />
 }
 
 export function App() {
@@ -84,21 +69,22 @@ export function App() {
         <ResearchProviders>
           <Routes>
             <Route element={<AppLayout exportDate={data.date} onReload={reload} />}>
-            {/* Root → new home */}
             <Route index element={<Navigate to="/today" replace />} />
 
-            {/* New information architecture (Phase 1 placeholders) */}
+            {/* Canonical new-IA workspaces */}
             <Route path="today" element={<TodayPage />} />
-            <Route path="game" element={<GameResearchPage />} />
-            <Route path="game/:gameId" element={<GameResearchPage />} />
-            <Route path="player" element={<PlayerResearchEntry />} />
-            <Route path="player/:playerId" element={<PlayerResearchPage />} />
-            <Route path="matchup" element={<MatchupLabPage />} />
-            <Route path="matchup/:gameId/:playerId" element={<MatchupLabPage />} />
             <Route path="research" element={<MatchupLabPage />} />
             <Route path="leaderboards" element={<LeaderboardsPage />} />
-            <Route path="history" element={<HistoryPage />} />
+            <Route path="data-status" element={<HistoryPage />} />
             <Route path="settings" element={<SettingsPage />} />
+
+            {/* Old new-IA aliases → canonical `/research` */}
+            <Route path="game" element={<ResearchRedirect />} />
+            <Route path="game/:gameId" element={<ResearchRedirect />} />
+            <Route path="player" element={<ResearchRedirect />} />
+            <Route path="player/:playerId" element={<ResearchRedirect />} />
+            <Route path="matchup" element={<ResearchRedirect />} />
+            <Route path="matchup/:gameId/:playerId" element={<ResearchRedirect />} />
 
             {/* Legacy pages — still fully operational, removed from primary nav */}
             <Route path="legacy">
@@ -112,13 +98,13 @@ export function App() {
             </Route>
 
             {/* Backward-compatible redirects (bookmarks / deep links) */}
+            <Route path="history" element={<QueryRedirect to="/data-status" />} />
             <Route path="top-plays" element={<QueryRedirect to="/legacy/top-plays" />} />
             <Route path="boards" element={<QueryRedirect to="/legacy/boards" />} />
             <Route path="games" element={<QueryRedirect to="/legacy/games" />} />
             <Route path="batted-balls" element={<QueryRedirect to="/legacy/batted-balls" />} />
             <Route path="splits" element={<QueryRedirect to="/legacy/splits" />} />
 
-            {/* Unknown routes → new home */}
             <Route path="*" element={<Navigate to="/today" replace />} />
           </Route>
         </Routes>

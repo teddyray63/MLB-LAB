@@ -4,7 +4,7 @@ Last Updated: 2026-08-01
 
 ## Stable Milestone
 
-Phase C complete (React Dashboard Foundation)
+Phase D complete (Leaderboards workspace)
 
 ## Active Branch
 
@@ -22,31 +22,34 @@ cursor/fix-dashboard-blank-panels
 - Phase B – Today workspace
 - Phase B.5 – Centralized research navigation
 - Phase C – Research workspace
+- Phase D – Leaderboards workspace (Codex accessibility audit passed)
 
 ## Current Architecture
 
 - Shared GameContext
 - Shared FilterContext
 - URL-synchronized research navigation
-- Legacy dashboard preserved until feature parity
+- Canonical routes: `/today`, `/research`, `/leaderboards`, `/data-status`, `/settings`
+- Legacy dashboard preserved at `/legacy/*` until feature parity
 - React/Vite dashboard builds successfully
 
-## Next Phase
+## Active Phase
 
-Phase D – Leaderboards
+Phase E – Navigation cleanup (in progress)
 
 Goals:
-- Leaderboards workspace
-- Research navigation from leaderboard rows
-- Context-aware filtering
-- Preserve legacy pages until parity
+- Primary nav: Today · Research · Leaderboards · Data Status · Settings
+- Canonical routes and safe redirects from old IA aliases
+- ResearchChrome isolation on non-research pages
+- Preserve legacy pages until Phase F retirement approval
 
 ## Known Limitations
 
 - L5/L10 timeframe filtering not fully implemented
 - Browser Back behavior not fully verified
 - Duplicate game_pk export warning exists
-- Legacy pages remain until Phases E/F
+- Legacy pages remain until Phase F
+- Phase 1 placeholder pages (`GameResearchPage`, `PlayerResearchPage`) may be removable after Phase E sign-off
 
 ## Notes for New Agents
 
@@ -56,4 +59,3 @@ Read these first:
 2. web-dashboard/ARCHITECTURE.md
 
 Do not modify export logic or shared context without understanding the architecture.
-

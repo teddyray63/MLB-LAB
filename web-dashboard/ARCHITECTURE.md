@@ -1,6 +1,6 @@
 # MLB-LAB Dashboard — Architecture Rules (Locked)
 
-These rules govern the new information architecture (`/today`, `/research`, `/leaderboards`, …). Legacy routes under `/legacy/*` remain frozen until parity is verified.
+These rules govern the new information architecture (`/today`, `/research`, `/leaderboards`, `/data-status`, `/settings`, …). Legacy routes under `/legacy/*` remain frozen until parity is verified.
 
 ---
 
@@ -49,7 +49,8 @@ Prefer hooks: `useGameContext()`, `useFilters()`, `useFilteredMatchupRows()`, an
 
 ## Chrome
 
-- **`ResearchChrome`** renders only on new-IA paths (not `/legacy/*`, `/history`, `/settings`).
+- **`ResearchChrome`** renders only on `/today`, `/research`, and `/leaderboards` (not `/legacy/*`, `/data-status`, `/settings`).
+- Old IA aliases (`/player`, `/matchup`, `/game`, …) redirect to `/research` via `buildResearchRedirectPath()` in `lib/routeRedirects.ts`.
 - Header + `FilterBar` + URL bootstrap — pages do not duplicate this chrome.
 
 ---
@@ -57,4 +58,4 @@ Prefer hooks: `useGameContext()`, `useFilters()`, `useFilteredMatchupRows()`, an
 ## Legacy isolation
 
 - `/legacy/*` routes are unchanged until explicit parity sign-off.
-- `HitterLink` uses legacy `/player?name=` on `/legacy/*`; new IA uses `openResearch()`.
+- `HitterLink` uses legacy `/legacy/player?name=` on `/legacy/*`; new IA uses `openResearch()`.

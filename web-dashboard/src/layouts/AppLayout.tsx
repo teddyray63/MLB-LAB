@@ -10,14 +10,9 @@ interface NavItem {
 
 const PRIMARY_NAV: NavItem[] = [
   { to: '/today', label: 'Today' },
-  { to: '/game', label: 'Game Research' },
-  { to: '/player', label: 'Player Research' },
-  { to: '/matchup', label: 'Matchup Lab' },
+  { to: '/research', label: 'Research' },
   { to: '/leaderboards', label: 'Leaderboards' },
-]
-
-const SECONDARY_NAV: NavItem[] = [
-  { to: '/history', label: 'History' },
+  { to: '/data-status', label: 'Data Status', match: ['/history'] },
   { to: '/settings', label: 'Settings' },
 ]
 
@@ -58,34 +53,24 @@ export function AppLayout({ exportDate, onReload }: AppLayoutProps) {
                 Reload
               </button>
             )}
-            <nav className="flex flex-wrap items-center gap-1">
-              {PRIMARY_NAV.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                    isActive(pathname, item)
-                      ? 'bg-[#1F6FEB33] text-[#58A6FF]'
-                      : 'text-[#8B949E] hover:bg-[#161B22] hover:text-[#F0F6FC]'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <span className="mx-1 hidden h-4 w-px bg-[#30363D] sm:inline-block" aria-hidden />
-              {SECONDARY_NAV.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
-                    isActive(pathname, item)
-                      ? 'bg-[#1F6FEB33] text-[#58A6FF]'
-                      : 'text-[#6E7681] hover:bg-[#161B22] hover:text-[#F0F6FC]'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+            <nav aria-label="Primary" className="flex flex-wrap items-center gap-1">
+              {PRIMARY_NAV.map((item) => {
+                const active = isActive(pathname, item)
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    aria-current={active ? 'page' : undefined}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                      active
+                        ? 'bg-[#1F6FEB33] text-[#58A6FF]'
+                        : 'text-[#8B949E] hover:bg-[#161B22] hover:text-[#F0F6FC]'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
             </nav>
           </div>
         </div>
