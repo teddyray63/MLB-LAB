@@ -34,3 +34,15 @@ run_error.txt
 .pytest_cache/
 
 data/cache/
+
+# React/Vite frontend artifacts
+web-dashboard/node_modules/
+web-dashboard/dist/
+web-dashboard/coverage/
+web-dashboard/playwright-report/
+web-dashboard/test-results/
+web-dashboard/.vite/
+
+# Generated dashboard data
+web-dashboard/dist/data/daily_export.json
+web-dashboard/public/data/daily_export.json
