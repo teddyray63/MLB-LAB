@@ -8,13 +8,19 @@ steps = [
     "backend/features/build_daily_scores.py",
 ]
 
-for step in steps:
-    print(f"\n🚀 RUNNING: {step}")
-    result = subprocess.run([sys.executable, step])
 
-    if result.returncode != 0:
-        print(f"\n❌ FAILED at: {step}")
-        sys.exit(result.returncode)
+def main() -> None:
+    for step in steps:
+        print(f"\n🚀 RUNNING: {step}")
+        result = subprocess.run([sys.executable, step])
 
-print("\n✅ ALL DATA BUILT SUCCESSFULLY")
-print("Now run: python3 scripts/mlb_lab_runner.py")
+        if result.returncode != 0:
+            print(f"\n❌ FAILED at: {step}")
+            sys.exit(result.returncode)
+
+    print("\n✅ ALL DATA BUILT SUCCESSFULLY")
+    print("Now run: python3 scripts/mlb_lab_runner.py")
+
+
+if __name__ == "__main__":
+    main()
