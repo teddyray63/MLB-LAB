@@ -14,6 +14,8 @@ interface TopPlaysTableProps {
   emptyMessage?: string
   /** Custom hitter cell — used by leaderboards for row-scoped research navigation */
   renderHitter?: (play: TopPlayRow) => ReactNode
+  /** Custom pitch cell — leaderboards show full pitch names */
+  renderPitch?: (play: TopPlayRow) => ReactNode
 }
 
 export function TopPlaysTable({
@@ -21,6 +23,7 @@ export function TopPlaysTable({
   showCategory = false,
   emptyMessage = 'No plays',
   renderHitter,
+  renderPitch,
 }: TopPlaysTableProps) {
   const headers = [
     'Rank',
@@ -83,7 +86,13 @@ export function TopPlaysTable({
                   {play.game}
                 </td>
                 <td className="px-2 py-1.5 text-xs text-[#C9D1D9]">{play.opp_sp}</td>
-                <td className="px-2 py-1.5 text-xs font-mono text-[#58A6FF]">{play.pitch}</td>
+                <td className="px-2 py-1.5 text-xs">
+                  {renderPitch ? (
+                    renderPitch(play)
+                  ) : (
+                    <span className="font-mono text-[#58A6FF]">{play.pitch}</span>
+                  )}
+                </td>
                 <td className="px-2 py-1.5 text-xs tabular-nums text-[#F0F6FC]">
                   {fmtScore(play.score)}
                 </td>

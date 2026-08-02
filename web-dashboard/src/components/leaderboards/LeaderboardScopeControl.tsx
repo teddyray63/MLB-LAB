@@ -32,6 +32,7 @@ export function LeaderboardScopeControl({
                 type="button"
                 title={description}
                 disabled={disabled}
+                aria-pressed={scope === key}
                 onClick={() => onScopeChange(key)}
                 className={`rounded-md px-3 py-1.5 text-[11px] font-medium transition-colors ${
                   scope === key

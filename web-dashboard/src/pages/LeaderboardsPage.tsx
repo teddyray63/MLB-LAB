@@ -43,10 +43,7 @@ export function LeaderboardsPage() {
 
       <LeaderboardCategoryNav category={category} onCategoryChange={setCategory} />
 
-      <LeaderboardFilterNote
-        category={category}
-        pitchFilterApplied={data.pitchFilterApplied}
-      />
+      <LeaderboardFilterNote pitchFilterApplied={data.pitchFilterApplied} />
 
       {data.rowCount === 0 ? (
         <LeaderboardEmptyState

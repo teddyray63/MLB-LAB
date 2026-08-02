@@ -29,6 +29,7 @@ export function LeaderboardPlayerLink({ row }: { row: LeaderboardRowData }) {
   return (
     <button
       type="button"
+      aria-label={`Open research for ${row.hitter}`}
       onClick={() =>
         gameCtx.openResearch({
           player: row.hitter,

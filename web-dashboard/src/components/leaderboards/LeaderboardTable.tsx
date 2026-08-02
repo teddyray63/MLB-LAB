@@ -1,4 +1,5 @@
 import { Card } from '../ui/Card'
+import { PitchTypeCell } from '../ui/PitchTypeCell'
 import { CategoryBoardTable } from '../CategoryBoardTable'
 import { TopPlaysTable, type TopPlayRow } from '../TopPlaysTable'
 import { LeaderboardPlayerLink } from './LeaderboardRow'
@@ -29,6 +30,7 @@ export function LeaderboardTable({
         showCategory={false}
         emptyMessage={`No top plays for ${categoryLabel}`}
         renderHitter={(play) => <LeaderboardPlayerLink row={play} />}
+        renderPitch={(play) => <PitchTypeCell code={play.pitch} />}
       />
     )
   }
@@ -37,6 +39,7 @@ export function LeaderboardTable({
     <CategoryBoardTable
       rows={boardRows}
       renderHitter={(row) => <LeaderboardPlayerLink row={row} />}
+      renderPitch={(row) => <PitchTypeCell code={row.pitch} />}
       emptyMessage={`No rows for ${categoryLabel}`}
     />
   )

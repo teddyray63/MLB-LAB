@@ -1,15 +1,12 @@
 import { useFilters } from '../../context/ResearchContext'
 import { TIMEFRAME_OPTIONS } from '../../types/research'
-import type { LeaderboardCategory } from '../../types/leaderboard'
 
 interface LeaderboardFilterNoteProps {
-  category: LeaderboardCategory
   pitchFilterApplied: boolean
 }
 
 /** Honest filter support notes for pre-computed leaderboard exports. */
 export function LeaderboardFilterNote({
-  category,
   pitchFilterApplied,
 }: LeaderboardFilterNoteProps) {
   const { filters } = useFilters()
@@ -32,10 +29,6 @@ export function LeaderboardFilterNote({
 
   if (pitchFilterApplied) {
     notes.push(`Pitch filter active (${filters.pitchType}) — showing matching pitch rows only.`)
-  }
-
-  if (category === 'top-plays' && !pitchFilterApplied && filters.pitchType) {
-    notes.push('Pitch filter could not be applied — no matching rows.')
   }
 
   if (!notes.length) return null

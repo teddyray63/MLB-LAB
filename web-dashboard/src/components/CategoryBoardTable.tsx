@@ -152,6 +152,8 @@ interface CategoryBoardTableProps {
   emptyMessage?: string
   /** Custom hitter cell — used by leaderboards for row-scoped research navigation */
   renderHitter?: (row: HitterRow) => ReactNode
+  /** Custom pitch cell — leaderboards show full pitch names */
+  renderPitch?: (row: HitterRow) => ReactNode
 }
 
 export function CategoryBoardTable({
@@ -160,6 +162,7 @@ export function CategoryBoardTable({
   hideIdentity = false,
   emptyMessage = 'No rows for this filter',
   renderHitter,
+  renderPitch,
 }: CategoryBoardTableProps) {
   const filtered = useMemo(() => {
     if (!teamFilter) return rows
@@ -168,16 +171,17 @@ export function CategoryBoardTable({
 
   const visibleColumns = useMemo(() => {
     const cols = hideIdentity ? columns.filter((col) => !IDENTITY_KEYS.has(col.key)) : columns
-    if (!renderHitter) return cols
-    return cols.map((col) =>
-      col.key === 'hitter'
-        ? {
-            ...col,
-            render: (r: HitterRow) => renderHitter(r),
-          }
-        : col,
-    )
-  }, [hideIdentity, renderHitter])
+    if (!renderHitter && !renderPitch) return cols
+    return cols.map((col) => {
+      if (col.key === 'hitter' && renderHitter) {
+        return { ...col, render: (r: HitterRow) => renderHitter(r) }
+      }
+      if (col.key === 'pitch' && renderPitch) {
+        return { ...col, render: (r: HitterRow) => renderPitch(r) }
+      }
+      return col
+    })
+  }, [hideIdentity, renderHitter, renderPitch])
 
   return (
     <DataTable columns={visibleColumns} rows={filtered} emptyMessage={emptyMessage} />
