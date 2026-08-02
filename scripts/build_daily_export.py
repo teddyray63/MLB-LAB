@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dry-run CLI for the daily export pipeline (Phase G0b.1 — validation only)."""
+"""Dry-run CLI for the daily export pipeline (Phase G0b)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from backend.export.daily_export_validation import ValidationReport, validate_export_dict  # noqa: E402
+from backend.export.builders.game_details import build_game_details_shell  # noqa: E402
+from backend.export.builders.games import build_games_from_schedule_json  # noqa: E402
+from backend.export.daily_export_validation import (  # noqa: E402
+    ValidationReport,
+    validate_export_dict,
+    validate_games_shell,
+)
+from backend.export.mlb_schedule import fetch_schedule_json  # noqa: E402
 
 DEFAULT_REFERENCE = ROOT / "data" / "daily_export.json"
 
@@ -28,7 +35,7 @@ def _load_json(path: Path) -> dict:
     return payload
 
 
-def _print_report(path: Path, report: ValidationReport) -> None:
+def _print_report(path: Path | str, report: ValidationReport) -> None:
     print(f"Validated: {path}")
     print(f"Status: {'OK' if report.valid else 'FAILED'}")
     print("")
@@ -64,20 +71,74 @@ def _print_report(path: Path, report: ValidationReport) -> None:
         for message in report.errors:
             print(f"  - {message}")
 
-    all_warnings = report.all_warnings
+    all_warnings = report.all_warnings if hasattr(report, "all_warnings") else report.warnings
     if all_warnings:
         print("")
         print(f"Warnings ({len(all_warnings)}):")
-        preview = all_warnings[:10]
-        for message in preview:
+        for message in all_warnings:
             print(f"  - {message}")
-        if len(all_warnings) > 10:
-            print(f"  ... and {len(all_warnings) - 10} more")
+
+
+def _print_coverage(coverage: dict[str, int | str | None]) -> None:
+    print("")
+    print("Coverage:")
+    for key in sorted(coverage):
+        print(f"  {key}: {coverage[key]}")
+
+
+def _run_build_games(
+    slate_date: str,
+    *,
+    schedule_fixture: Path | None = None,
+) -> int:
+    if schedule_fixture is not None:
+        schedule_json = _load_json(schedule_fixture)
+        source_label = str(schedule_fixture.resolve())
+    else:
+        schedule_json = fetch_schedule_json(slate_date)
+        source_label = f"MLB schedule API ({slate_date})"
+
+    games_result = build_games_from_schedule_json(schedule_json, slate_date=slate_date)
+    game_details = build_game_details_shell(games_result.games)
+    report = validate_games_shell(
+        slate_date=slate_date,
+        games=games_result.games,
+        game_details=game_details,
+        builder_warnings=games_result.warnings,
+    )
+
+    print(f"Built games shell from: {source_label}")
+    print(f"Slate date: {slate_date}")
+    print(f"Status: {'OK' if report.valid else 'FAILED'}")
+    print("")
+    print("Counts:")
+    print(f"  games: {len(games_result.games)}")
+    print(f"  game_details: {len(game_details)}")
+    for key, value in sorted(report.counts.items()):
+        if key in {"date", "games", "game_details"}:
+            continue
+        print(f"  {key}: {value}")
+
+    _print_coverage(games_result.coverage)
+
+    if report.errors:
+        print("")
+        print("Errors:")
+        for message in report.errors:
+            print(f"  - {message}")
+
+    if report.warnings:
+        print("")
+        print(f"Warnings ({len(report.warnings)}):")
+        for message in report.warnings:
+            print(f"  - {message}")
+
+    return 0 if report.valid else 1
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate daily export JSON against the G0b schema (dry-run only).",
+        description="Validate or build daily export JSON against the G0b schema.",
     )
     parser.add_argument(
         "--validate-existing",
@@ -90,6 +151,23 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Alias for validating the reference export at data/daily_export.json.",
     )
+    parser.add_argument(
+        "--build-games",
+        action="store_true",
+        help="Build and validate games[] + game_details[] shell for --date (no writes).",
+    )
+    parser.add_argument(
+        "--date",
+        type=str,
+        metavar="YYYY-MM-DD",
+        help="Slate date for --build-games.",
+    )
+    parser.add_argument(
+        "--schedule-fixture",
+        type=Path,
+        metavar="PATH",
+        help="Offline schedule JSON fixture for --build-games (skips live API).",
+    )
     return parser
 
 
@@ -97,12 +175,19 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    if args.build_games:
+        if not args.date:
+            parser.error("--build-games requires --date YYYY-MM-DD")
+        return _run_build_games(args.date, schedule_fixture=args.schedule_fixture)
+
     if args.validate_existing:
         target = args.validate_existing
     elif args.dry_run:
         target = DEFAULT_REFERENCE
     else:
-        parser.error("Specify --validate-existing PATH or --dry-run")
+        parser.error(
+            "Specify --validate-existing PATH, --dry-run, or --build-games --date YYYY-MM-DD"
+        )
 
     target = target.resolve()
     payload = _load_json(target)

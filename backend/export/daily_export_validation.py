@@ -14,6 +14,8 @@ from backend.export.daily_export_models import (
     DailyExport,
     FilterSupportEntry,
     FilterSupportMetadata,
+    Game,
+    GameDetail,
     HitterRow,
     parse_daily_export,
 )
@@ -346,6 +348,147 @@ def _validate_player_map_relationships(export: DailyExport) -> list[str]:
             )
 
     return warnings
+
+
+def validate_games_shell(
+    *,
+    slate_date: str,
+    games: list[Game],
+    game_details: list[GameDetail],
+    builder_warnings: list[str] | None = None,
+) -> ValidationReport:
+    """Validate games[] + game_details[] shell for G0b.2 without full export sections."""
+    errors: list[str] = []
+    warnings: list[str] = list(builder_warnings or [])
+
+    try:
+        datetime.strptime(slate_date, "%Y-%m-%d")
+    except ValueError:
+        errors.append(f"Invalid slate date: {slate_date!r}")
+
+    counts: dict[str, int | str] = {
+        "date": slate_date,
+        "games": len(games),
+        "game_details": len(game_details),
+    }
+
+    if len(games) != len(game_details):
+        errors.append(
+            f"game_details count ({len(game_details)}) must equal games count ({len(games)})"
+        )
+
+    game_pks = _game_pk_set(games)
+    games_with_pk = sum(1 for game in games if game.game_pk is not None)
+    counts["games_with_game_pk"] = games_with_pk
+
+    pk_counts: dict[int, int] = {}
+    for game in games:
+        if game.game_pk is None:
+            warnings.append(f"Game missing game_pk: {game.game_id}")
+            continue
+        pk_counts[game.game_pk] = pk_counts.get(game.game_pk, 0) + 1
+
+    duplicate_pks = sorted(pk for pk, count in pk_counts.items() if count > 1)
+    counts["duplicate_game_pk_count"] = len(duplicate_pks)
+    for pk in duplicate_pks:
+        warnings.append(f"Duplicate game_pk {pk} appears {pk_counts[pk]} times in games[]")
+
+    detail_pks = {detail.game_pk for detail in game_details if detail.game_pk is not None}
+    for pk in sorted(detail_pks - game_pks):
+        errors.append(f"game_details references game_pk {pk} not present in games[]")
+
+    for index, detail in enumerate(game_details):
+        if detail.game_pk is None:
+            errors.append(f"game_details[{index}] missing game_pk ({detail.game_id})")
+        elif detail.game_pk not in game_pks:
+            errors.append(
+                f"game_details[{index}] game_pk {detail.game_pk} not found in games[]"
+            )
+
+        expected_game = games[index] if index < len(games) else None
+        if expected_game and detail.game_pk != expected_game.game_pk:
+            errors.append(
+                f"game_details[{index}] game_pk {detail.game_pk} "
+                f"does not match games[{index}] game_pk {expected_game.game_pk}"
+            )
+
+        if detail.away_hitters or detail.home_hitters:
+            warnings.append(
+                f"game_details[{index}] contains hitter pools — unexpected in G0b.2 shell"
+            )
+        if detail.away_lineup or detail.home_lineup:
+            warnings.append(
+                f"game_details[{index}] contains lineups — unexpected in G0b.2 shell"
+            )
+        if detail.context is not None:
+            warnings.append(
+                f"game_details[{index}] contains context — unexpected in G0b.2 shell"
+            )
+
+    return ValidationReport(
+        valid=not errors,
+        errors=errors,
+        warnings=_dedupe_warnings(warnings),
+        counts=counts,
+    )
+
+
+def validate_games_shell_dict(data: dict[str, Any]) -> ValidationReport:
+    """Parse and validate a games-shell fragment from plain JSON."""
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    if not isinstance(data, dict):
+        return ValidationReport(valid=False, errors=["Shell root must be a JSON object"])
+
+    slate_date = data.get("date")
+    if not isinstance(slate_date, str):
+        errors.append("Missing or invalid top-level date")
+        return ValidationReport(valid=False, errors=errors, warnings=warnings)
+
+    raw_games = data.get("games")
+    raw_details = data.get("game_details")
+    if not isinstance(raw_games, list):
+        errors.append("games must be an array")
+    if not isinstance(raw_details, list):
+        errors.append("game_details must be an array")
+    if errors:
+        return ValidationReport(valid=False, errors=errors, warnings=warnings)
+
+    try:
+        games = [Game.model_validate(item) for item in raw_games]
+        game_details = [GameDetail.model_validate(item) for item in raw_details]
+    except ValidationError as exc:
+        for issue in exc.errors():
+            location = ".".join(str(part) for part in issue.get("loc", ()))
+            message = issue.get("msg", "validation error")
+            errors.append(f"{location}: {message}" if location else message)
+        return ValidationReport(valid=False, errors=errors, warnings=warnings)
+
+    builder_warnings = data.get("builder_warnings")
+    extra_warnings = builder_warnings if isinstance(builder_warnings, list) else []
+    report = validate_games_shell(
+        slate_date=slate_date,
+        games=games,
+        game_details=game_details,
+        builder_warnings=[str(item) for item in extra_warnings],
+    )
+    report.warnings = warnings + report.warnings
+    if errors:
+        report.errors = errors + report.errors
+        report.valid = False
+    return report
+
+
+def _dedupe_warnings(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    result: list[str] = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        result.append(item)
+    return result
 
 
 def validate_export_dict(data: dict[str, Any]) -> ValidationReport:

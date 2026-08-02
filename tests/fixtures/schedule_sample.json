@@ -1,0 +1,117 @@
+{
+  "copyright": "fixture",
+  "totalItems": 3,
+  "dates": [
+    {
+      "date": "2026-07-19",
+      "totalItems": 3,
+      "games": [
+        {
+          "gamePk": 822786,
+          "gameDate": "2026-07-19T16:15:00Z",
+          "status": {
+            "abstractGameState": "Final",
+            "detailedState": "Final"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 145,
+                "name": "Chicago White Sox"
+              },
+              "probablePitcher": {
+                "id": 680732,
+                "fullName": "Sean Burke"
+              },
+              "score": 2
+            },
+            "home": {
+              "team": {
+                "id": 141,
+                "name": "Toronto Blue Jays"
+              },
+              "probablePitcher": {
+                "id": 702056,
+                "fullName": "Trey Yesavage"
+              },
+              "score": 5
+            }
+          },
+          "venue": {
+            "name": "Rogers Centre"
+          },
+          "linescore": {
+            "currentInningOrdinal": "9th",
+            "inningState": "Bottom"
+          }
+        },
+        {
+          "gamePk": 823523,
+          "gameDate": "2026-07-19T16:35:00Z",
+          "status": {
+            "abstractGameState": "Final",
+            "detailedState": "Final"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 119,
+                "name": "Los Angeles Dodgers"
+              },
+              "probablePitcher": {
+                "id": 808967,
+                "fullName": "Yoshinobu Yamamoto"
+              },
+              "score": 4
+            },
+            "home": {
+              "team": {
+                "id": 147,
+                "name": "New York Yankees"
+              },
+              "probablePitcher": {
+                "id": 693645,
+                "fullName": "Cam Schlittler"
+              },
+              "score": 3
+            }
+          },
+          "venue": {
+            "name": "Yankee Stadium"
+          },
+          "linescore": {
+            "currentInningOrdinal": "9th",
+            "inningState": "Top"
+          }
+        },
+        {
+          "gamePk": 823523,
+          "gameDate": "2026-07-19T16:35:00Z",
+          "status": {
+            "abstractGameState": "Final",
+            "detailedState": "Final"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 119,
+                "name": "Los Angeles Dodgers"
+              },
+              "score": 4
+            },
+            "home": {
+              "team": {
+                "id": 147,
+                "name": "New York Yankees"
+              },
+              "score": 3
+            }
+          },
+          "venue": {
+            "name": "Yankee Stadium"
+          }
+        }
+      ]
+    }
+  ]
+}
