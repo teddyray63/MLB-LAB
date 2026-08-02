@@ -16,18 +16,7 @@ REQUIRED_COLUMNS = {
     "daily_scores": ["player_name", "team", "singles_score", "total_bases_score", "runs_score", "rbi_score", "lotto_score"],
 }
 REQUIRED_EXPORTS = [
-    "exports/command_center.csv",
-    "exports/singles.csv",
-    "exports/total_bases.csv",
-    "exports/runs.csv",
-    "exports/rbis.csv",
-    "exports/lotto.csv",
-    "exports/cards.csv",
-    "exports/value_edges.csv",
-    "exports/daily_report.pdf",
-    "exports/daily_report.html",
-    "exports/betting_cards.txt",
-    "exports/betting_cards.csv",
+    "data/daily_export.json",
 ]
 
 
@@ -96,9 +85,5 @@ def run_doctor() -> Dict[str, Any]:
     missing_imports = check_imports()
     if missing_imports:
         issues.extend([f"Import issue: {item}" for item in missing_imports])
-
-    odds_path = ROOT / "exports" / "odds.csv"
-    if not odds_path.exists():
-        warnings.append("Odds file not found; report will be model-only")
 
     return {"issues": issues, "warnings": warnings, "counts": counts, "exports": REQUIRED_EXPORTS}

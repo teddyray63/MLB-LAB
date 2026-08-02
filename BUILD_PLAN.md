@@ -12,8 +12,3 @@ Core outputs:
 
 Architecture:
 Collectors -> SQLite Database -> Feature Engine -> FastAPI Backend -> React Frontend
-
-Excluded for now:
-- EV
-- Sportsbook odds
-- Prop-line comparison

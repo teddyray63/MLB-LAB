@@ -4,7 +4,6 @@ Date: 2026-06-21
 
 Build: Baseball Savant + FanGraphs + MLB API
 
-No odds.  
 No CSVs.  
 No shortcut weak-pitch labels.  
 Every game gets full pitch tables vs L/R.

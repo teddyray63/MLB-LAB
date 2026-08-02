@@ -8,7 +8,7 @@ Gather:
 - Starting pitchers
 - Confirmed lineups
 - Weather
-- Betting markets
+- Park factors
 
 Output:
 

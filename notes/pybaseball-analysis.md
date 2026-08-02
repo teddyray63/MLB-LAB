@@ -340,8 +340,7 @@ Research:
 
 1. MLB-StatsAPI
 2. Projection systems
-3. Betting models
-4. Statcast feature engineering repos
+3. Statcast feature engineering repos
 
 Then update:
 

@@ -2,7 +2,7 @@ from pathlib import Path
 import py_compile, re, shutil, sys
 
 p = Path("scripts/mlb_lab_runner.py")
-backup = Path("scripts/mlb_lab_runner_auto_repair_backup.py")
+backup = Path("scripts/mlb_lab_runner.repair.bak")
 shutil.copy2(p, backup)
 
 s = p.read_text()

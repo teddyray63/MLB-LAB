@@ -17,4 +17,4 @@ for step in steps:
         sys.exit(result.returncode)
 
 print("\n✅ ALL DATA BUILT SUCCESSFULLY")
-print("Now run: streamlit run frontend/app.py")
+print("Now run: python3 scripts/mlb_lab_runner.py")

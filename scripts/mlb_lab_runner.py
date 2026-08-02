@@ -872,7 +872,6 @@ This runner uses:
 
 Removed:
 - FanGraphs hard dependency
-- sportsbook odds
 - CSV dependency
 - scoring gimmicks
 - weak-pitch labels

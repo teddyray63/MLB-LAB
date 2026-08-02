@@ -7,7 +7,6 @@ Priority 1
 
 Priority 2
 - MLB projection systems
-- MLB betting models
 - MLB feature engineering repos
 - Statcast analysis repos
 - Model evaluation frameworks
@@ -30,8 +29,8 @@ Key Questions
 
 1. Which MLB data sources are most valuable?
 2. Which metrics actually predict future performance?
-3. Which public metrics are already priced into markets?
-4. What information creates real edge?
+3. Which public metrics are already well known to analysts?
+4. What information improves daily research quality?
 5. How should research become actionable reports?
 
 ## Target Architecture

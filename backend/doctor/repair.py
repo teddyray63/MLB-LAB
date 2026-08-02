@@ -10,7 +10,7 @@ def suggest_repairs(doctor_result: Dict[str, Any]) -> List[str]:
         if issue.startswith("Missing table"):
             suggestions.append(f"Create or restore the missing table. {issue}")
         elif issue.startswith("Missing export"):
-            suggestions.append(f"Re-run python3 backend/command_center.py to generate {issue.split(': ', 1)[1]}")
+            suggestions.append(f"Re-run python3 scripts/mlb_lab_runner.py to generate {issue.split(': ', 1)[1]}")
         elif issue.startswith("No games found"):
             suggestions.append("Refresh the schedule data before generating today's slate")
         elif issue.startswith("No lineups"):
