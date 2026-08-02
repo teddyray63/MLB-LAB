@@ -11,6 +11,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from backend.export.build_daily_export_document import (  # noqa: E402
+    compare_to_reference,
+    build_daily_export_document,
+    write_candidate_export,
+)
 from backend.export.build_matchup_layer import build_matchup_layer  # noqa: E402
 from backend.export.build_identity_layer import build_identity_layer  # noqa: E402
 from backend.export.builders.game_details import build_game_details_shell  # noqa: E402
@@ -318,6 +323,172 @@ def _run_build_matchups(
     return 0 if validation.valid else 1
 
 
+def _print_candidate_write(result) -> None:
+    print(f"Wrote candidate: {result.path}")
+    print(f"SHA256: {result.sha256}")
+    print(f"Bytes: {result.byte_size}")
+    print("")
+    print("Counts:")
+    for key in (
+        "games",
+        "game_details",
+        "teams",
+        "players",
+        "lineups",
+        "matchups",
+        "export_matchup_rows",
+        "enrichment_matchups",
+        "top_plays",
+        "category_boards",
+    ):
+        print(f"  {key}: {getattr(result.counts, key, 0)}")
+    if result.warnings:
+        print("")
+        print(f"Warnings ({len(result.warnings)}):")
+        for message in result.warnings:
+            print(f"  - {message}")
+
+
+def _print_comparison(report) -> None:
+    print("")
+    print("Reference comparison:")
+    print(f"  reference: {report.reference_path}")
+    if report.candidate_path:
+        print(f"  candidate: {report.candidate_path}")
+    print(f"  top_level_key_parity: {report.top_level_key_parity}")
+    print(f"  schema_version reference: {report.schema_version_reference}")
+    print(f"  schema_version candidate: {report.schema_version_candidate}")
+    if report.missing_in_candidate:
+        print(f"  missing_in_candidate: {sorted(report.missing_in_candidate)}")
+    if report.extra_in_candidate:
+        print(f"  extra_in_candidate: {sorted(report.extra_in_candidate)}")
+    print("")
+    print("Counts:")
+    for key, value in sorted(report.counts.items()):
+        print(f"  {key}: {value}")
+    print("")
+    print("Cardinality deltas:")
+    for key, value in sorted(report.cardinality_deltas.items()):
+        print(f"  {key}: {value}")
+    if report.null_heavy_fields:
+        print("")
+        print("Null-heavy vs reference:")
+        for field_name in report.null_heavy_fields:
+            print(f"  - {field_name}")
+    print("")
+    print("Matchup cardinality analysis:")
+    for key, value in report.matchup_cardinality.items():
+        if key == "pitches_per_hitter_game_distribution":
+            print(f"  {key}: {value}")
+        elif key == "cause_summary":
+            print(f"  {key}:")
+            print(f"    {value}")
+        else:
+            print(f"  {key}: {value}")
+    print("")
+    print("Relationship integrity:")
+    for key, value in report.relationship_integrity.items():
+        print(f"  {key}: {value}")
+    if report.warnings:
+        print("")
+        print(f"Comparison warnings ({len(report.warnings)}):")
+        for message in report.warnings:
+            print(f"  - {message}")
+
+
+def _run_build_full_candidate(
+    slate_date: str,
+    output: Path,
+    *,
+    schedule_fixture: Path | None = None,
+    game_feed_fixtures: Path | None = None,
+    statcast_fixture: Path | None = None,
+    force_candidate: bool = False,
+    compare_reference: Path | None = None,
+    validate_only: bool = False,
+) -> int:
+    live_export = (ROOT / "data" / "daily_export.json").resolve()
+    if output.resolve() == live_export:
+        raise SystemExit(f"Refusing to write live export path: {live_export}")
+
+    if validate_only:
+        if not output.exists():
+            raise SystemExit(f"Candidate file not found for --validate-only: {output}")
+        payload = _load_json(output)
+        report = validate_export_dict(payload)
+        _print_report(output, report)
+        return 0 if report.valid else 1
+
+    if schedule_fixture is not None:
+        schedule_json = _load_json(schedule_fixture)
+        source_label = str(schedule_fixture.resolve())
+    else:
+        schedule_json = fetch_schedule_json(slate_date)
+        source_label = f"MLB schedule API ({slate_date})"
+
+    if game_feed_fixtures is not None:
+        feeds_by_pk = _load_game_feed_fixtures(game_feed_fixtures)
+        feed_source = str(game_feed_fixtures.resolve())
+    elif schedule_fixture is not None:
+        feeds_by_pk = {}
+        feed_source = "none (offline schedule without game feeds)"
+    else:
+        feeds_by_pk = _fetch_feeds_for_schedule(schedule_json, slate_date)
+        feed_source = f"MLB game feed API ({slate_date})"
+
+    statcast_source = (
+        str(statcast_fixture.resolve())
+        if statcast_fixture is not None
+        else f"pybaseball Statcast ({slate_date})"
+    )
+
+    document = build_daily_export_document(
+        schedule_json,
+        slate_date=slate_date,
+        feeds_by_pk=feeds_by_pk,
+        statcast_fixture=str(statcast_fixture) if statcast_fixture else None,
+    )
+
+    validation = document.matchup_layer.validation
+    if validation is None:
+        raise SystemExit("Enrichment validation did not run")
+
+    write_result = write_candidate_export(
+        document.export,
+        output,
+        force=force_candidate,
+        counts=document.counts,
+        warnings=document.warnings,
+    )
+
+    print(f"Built full candidate from: {source_label}")
+    print(f"Game feeds: {feed_source}")
+    print(f"Statcast source: {statcast_source}")
+    print(f"Slate date: {slate_date}")
+    print(f"Status: {'OK' if validation.valid and write_result.valid else 'FAILED'}")
+    _print_candidate_write(write_result)
+
+    if compare_reference is not None:
+        reference_payload = _load_json(compare_reference)
+        candidate_payload = _load_json(output)
+        comparison = compare_to_reference(
+            candidate_payload,
+            reference_payload,
+            reference_path=compare_reference,
+            candidate_path=output,
+        )
+        _print_comparison(comparison)
+
+    if validation.errors:
+        print("")
+        print("Errors:")
+        for message in validation.errors:
+            print(f"  - {message}")
+        return 1
+
+    return 0 if write_result.valid else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Validate or build daily export JSON against the G0b schema.",
@@ -373,6 +544,33 @@ def build_parser() -> argparse.ArgumentParser:
         help="Offline Statcast events JSON fixture for --build-matchups.",
     )
     parser.add_argument(
+        "--build-full-candidate",
+        action="store_true",
+        help="Assemble and write a validated DailyExport candidate file (never writes live export).",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        metavar="PATH",
+        help="Candidate output path for --build-full-candidate.",
+    )
+    parser.add_argument(
+        "--force-candidate",
+        action="store_true",
+        help="Overwrite an existing candidate file.",
+    )
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Validate --output candidate without rebuilding.",
+    )
+    parser.add_argument(
+        "--compare-reference",
+        type=Path,
+        metavar="PATH",
+        help="Compare candidate to a reference export after build.",
+    )
+    parser.add_argument(
         "--game-feed-fixtures",
         type=Path,
         metavar="DIR",
@@ -384,6 +582,22 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.build_full_candidate or args.validate_only:
+        if not args.output:
+            parser.error("--build-full-candidate and --validate-only require --output PATH")
+        if not args.date and not args.validate_only:
+            parser.error("--build-full-candidate requires --date YYYY-MM-DD")
+        return _run_build_full_candidate(
+            args.date or "",
+            args.output,
+            schedule_fixture=args.schedule_fixture,
+            game_feed_fixtures=args.game_feed_fixtures,
+            statcast_fixture=args.statcast_fixture,
+            force_candidate=args.force_candidate,
+            compare_reference=args.compare_reference,
+            validate_only=args.validate_only,
+        )
 
     if args.build_games:
         if not args.date:
@@ -416,7 +630,8 @@ def main(argv: list[str] | None = None) -> int:
     else:
         parser.error(
             "Specify --validate-existing PATH, --dry-run, --build-games --date YYYY-MM-DD, "
-            "--build-lineups --date YYYY-MM-DD, or --build-matchups --date YYYY-MM-DD"
+            "--build-lineups --date YYYY-MM-DD, --build-matchups --date YYYY-MM-DD, "
+            "or --build-full-candidate --date YYYY-MM-DD --output PATH"
         )
 
     target = target.resolve()

@@ -47,3 +47,6 @@ web-dashboard/.vite/
 web-dashboard/dist/data/daily_export.json
 web-dashboard/public/data/daily_export.json
 data/daily_export.json
+
+# Generated daily export candidates
+data/candidates/
