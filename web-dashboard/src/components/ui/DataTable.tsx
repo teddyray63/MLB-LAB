@@ -88,16 +88,7 @@ export function DataTable<T>({
                   {sortable ? (
                     <button
                       type="button"
-                      onClick={(event) => {
-                        if (event.detail === 0) return
-                        toggleSort(col.key)
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault()
-                          toggleSort(col.key)
-                        }
-                      }}
+                      onClick={() => toggleSort(col.key)}
                       className={`inline-flex w-full cursor-pointer select-none items-center gap-0.5 hover:text-[#F0F6FC] ${
                         col.align === 'right' ? 'justify-end' : 'justify-start'
                       }`}
