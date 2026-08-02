@@ -15,8 +15,44 @@ const TABS = [
 
 export type TodayTabKey = (typeof TABS)[number]['key']
 
+function TabPanel({ tab }: { tab: TodayTabKey }) {
+  switch (tab) {
+    case 'overview':
+      return <TodayOverviewTab />
+    case 'pitchers':
+      return <TodayPitchersTab />
+    case 'lineups':
+      return <TodayLineupsTab />
+    case 'splits':
+      return <TodayTeamSplitsTab />
+    case 'matchups':
+      return <TodayMatchupsTab />
+  }
+}
+
 export function TodayTabPanels() {
   const [tab, setTab] = useState<TodayTabKey>('overview')
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
+    const tablist = event.currentTarget.closest('[role="tablist"]')
+    if (!tablist) return
+
+    const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'))
+    const currentIndex = tabs.indexOf(event.currentTarget)
+    if (currentIndex === -1) return
+
+    let nextIndex: number | null = null
+    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length
+    if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length
+    if (event.key === 'Home') nextIndex = 0
+    if (event.key === 'End') nextIndex = tabs.length - 1
+    if (nextIndex == null) return
+
+    event.preventDefault()
+    const nextTab = tabs[nextIndex]
+    nextTab.focus()
+    nextTab.click()
+  }
 
   return (
     <div className="space-y-4">
@@ -30,8 +66,12 @@ export function TodayTabPanels() {
             key={key}
             type="button"
             role="tab"
+            id={`today-tab-${key}`}
             aria-selected={tab === key}
+            aria-controls={`today-panel-${key}`}
+            tabIndex={tab === key ? 0 : -1}
             onClick={() => setTab(key)}
+            onKeyDown={handleKeyDown}
             className={`rounded-md px-3 py-1.5 text-[11px] font-medium transition-colors ${
               tab === key
                 ? 'bg-[#1F6FEB33] text-[#58A6FF]'
@@ -43,13 +83,18 @@ export function TodayTabPanels() {
         ))}
       </div>
 
-      <div role="tabpanel">
-        {tab === 'overview' && <TodayOverviewTab />}
-        {tab === 'pitchers' && <TodayPitchersTab />}
-        {tab === 'lineups' && <TodayLineupsTab />}
-        {tab === 'splits' && <TodayTeamSplitsTab />}
-        {tab === 'matchups' && <TodayMatchupsTab />}
-      </div>
+      {TABS.map(({ key }) => (
+        <div
+          key={key}
+          role="tabpanel"
+          id={`today-panel-${key}`}
+          aria-labelledby={`today-tab-${key}`}
+          tabIndex={0}
+          hidden={tab !== key}
+        >
+          <TabPanel tab={key} />
+        </div>
+      ))}
     </div>
   )
 }
