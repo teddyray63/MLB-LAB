@@ -1,0 +1,10 @@
+{
+  "pitcher_id": 702056,
+  "game_pk": 822786,
+  "entries": [
+    {"pitch_code": "FF", "pitch_name": "Four-Seam Fastball", "pitch_count": 40, "usage_pct": 0.45, "avg_velocity": 94.2},
+    {"pitch_code": "SL", "pitch_name": "Slider", "pitch_count": 25, "usage_pct": 0.28, "avg_velocity": 84.1},
+    {"pitch_code": "CH", "pitch_name": "Changeup", "pitch_count": 15, "usage_pct": 0.17, "avg_velocity": 86.3},
+    {"pitch_code": "XX", "pitch_name": "Unknown Pitch (XX)", "pitch_count": 9, "usage_pct": 0.10, "avg_velocity": 90.0}
+  ]
+}

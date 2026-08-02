@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from backend.export.build_matchup_layer import build_matchup_layer  # noqa: E402
 from backend.export.build_identity_layer import build_identity_layer  # noqa: E402
 from backend.export.builders.game_details import build_game_details_shell  # noqa: E402
 from backend.export.builders.games import build_games_from_schedule_json  # noqa: E402
@@ -233,6 +234,90 @@ def _run_build_lineups(
     return 0 if validation.valid else 1
 
 
+def _run_build_matchups(
+    slate_date: str,
+    *,
+    schedule_fixture: Path | None = None,
+    game_feed_fixtures: Path | None = None,
+    statcast_fixture: Path | None = None,
+) -> int:
+    if schedule_fixture is not None:
+        schedule_json = _load_json(schedule_fixture)
+        source_label = str(schedule_fixture.resolve())
+    else:
+        schedule_json = fetch_schedule_json(slate_date)
+        source_label = f"MLB schedule API ({slate_date})"
+
+    if game_feed_fixtures is not None:
+        feeds_by_pk = _load_game_feed_fixtures(game_feed_fixtures)
+        feed_source = str(game_feed_fixtures.resolve())
+    elif schedule_fixture is not None:
+        feeds_by_pk = {}
+        feed_source = "none (offline schedule without game feeds)"
+    else:
+        feeds_by_pk = _fetch_feeds_for_schedule(schedule_json, slate_date)
+        feed_source = f"MLB game feed API ({slate_date})"
+
+    statcast_source = (
+        str(statcast_fixture.resolve())
+        if statcast_fixture is not None
+        else f"pybaseball Statcast ({slate_date})"
+    )
+
+    result = build_matchup_layer(
+        schedule_json,
+        slate_date=slate_date,
+        feeds_by_pk=feeds_by_pk,
+        statcast_fixture=str(statcast_fixture) if statcast_fixture else None,
+    )
+    validation = result.validation
+    if validation is None:
+        raise SystemExit("Enrichment validation did not run")
+
+    print(f"Built matchup layer from: {source_label}")
+    print(f"Game feeds: {feed_source}")
+    print(f"Statcast source: {statcast_source}")
+    print(f"Slate date: {slate_date}")
+    print(f"Status: {'OK' if validation.valid else 'FAILED'}")
+    print("")
+    print("Counts:")
+    for key in (
+        "games",
+        "lineups",
+        "players",
+        "matchups",
+        "hitters_enriched",
+        "starters_enriched",
+        "pitch_types_found",
+        "missing_stat_blocks",
+        "missing_starters",
+        "missing_pitch_mix",
+        "orphan_references",
+        "duplicate_matchups",
+    ):
+        print(f"  {key}: {validation.counts.get(key, 0)}")
+
+    print("")
+    print("Coverage:")
+    for key, value in sorted(validation.coverage.items()):
+        print(f"  {key}: {value}")
+
+    if validation.errors:
+        print("")
+        print("Errors:")
+        for message in validation.errors:
+            print(f"  - {message}")
+
+    combined_warnings = list(dict.fromkeys(result.warnings + validation.warnings))
+    if combined_warnings:
+        print("")
+        print(f"Warnings ({len(combined_warnings)}):")
+        for message in combined_warnings:
+            print(f"  - {message}")
+
+    return 0 if validation.valid else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Validate or build daily export JSON against the G0b schema.",
@@ -274,10 +359,24 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--build-matchups",
+        action="store_true",
+        help=(
+            "Build and validate games, identity, enrichment, and matchups "
+            "for --date (no writes)."
+        ),
+    )
+    parser.add_argument(
+        "--statcast-fixture",
+        type=Path,
+        metavar="PATH",
+        help="Offline Statcast events JSON fixture for --build-matchups.",
+    )
+    parser.add_argument(
         "--game-feed-fixtures",
         type=Path,
         metavar="DIR",
-        help="Directory of {game_pk}.json game feed fixtures for offline --build-lineups.",
+        help="Directory of {game_pk}.json game feed fixtures for offline --build-lineups / --build-matchups.",
     )
     return parser
 
@@ -290,6 +389,16 @@ def main(argv: list[str] | None = None) -> int:
         if not args.date:
             parser.error("--build-games requires --date YYYY-MM-DD")
         return _run_build_games(args.date, schedule_fixture=args.schedule_fixture)
+
+    if args.build_matchups:
+        if not args.date:
+            parser.error("--build-matchups requires --date YYYY-MM-DD")
+        return _run_build_matchups(
+            args.date,
+            schedule_fixture=args.schedule_fixture,
+            game_feed_fixtures=args.game_feed_fixtures,
+            statcast_fixture=args.statcast_fixture,
+        )
 
     if args.build_lineups:
         if not args.date:
@@ -307,7 +416,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         parser.error(
             "Specify --validate-existing PATH, --dry-run, --build-games --date YYYY-MM-DD, "
-            "or --build-lineups --date YYYY-MM-DD"
+            "--build-lineups --date YYYY-MM-DD, or --build-matchups --date YYYY-MM-DD"
         )
 
     target = target.resolve()
