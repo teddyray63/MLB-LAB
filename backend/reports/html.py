@@ -80,7 +80,7 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
         })
 
     cards_rows = ''.join(f'<tr><td>{card["name"]}</td><td>{card["leg_count"]}</td><td style="color:{_color_for_confidence(card["confidence"])}">{card["confidence"]:.1f}%</td><td>{card["risk"]}</td><td>{_grade_badge(card["grade"])}</td></tr>' for card in cards_payload)
-    betting_rows = ''.join(f'<tr><td>{row["player"]}</td><td>{row["market"]}</td><td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td><td>{_grade_badge(row["grade"])}</td></tr>' for row in betting_payload)
+    betting_rows = ''.join(f'<tr><td>{row["player"]}</td><td>{row["market"]}</td><td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td><td>{row["risk"]}</td><td>{_grade_badge(row["grade"])}</td></tr>' for row in betting_payload)
     lotto_rows = ''.join(f'<tr><td>{row["player"]}</td><td>{row["team"]}</td><td>{row["market"]}</td><td style="color:{_color_for_confidence(row["confidence"])}">{row["confidence"]:.1f}%</td><td>{row["risk"]}</td><td>{_grade_badge(row["grade"])}</td></tr>' for row in lotto_payload)
     games_rows = ''.join(f'<div class="card"><strong>{game["game_name"]}</strong><div class="summary">{game["away"]} vs {game["home"]}</div></div>' for game in games_payload)
 
@@ -161,7 +161,7 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
       <div class=\"card\">
         <h3 style=\"margin-top:0\">Player Search</h3>
         <table id=\"bettingTable\">
-          <thead><tr><th>Player</th><th>Market</th><th>Confidence</th><th>Grade</th></tr></thead>
+          <thead><tr><th>Player</th><th>Market</th><th>Confidence</th><th>Risk</th><th>Grade</th></tr></thead>
           <tbody>{betting_rows}</tbody>
         </table>
       </div>
@@ -188,16 +188,22 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
       const q = searchInput.value.toLowerCase();
       const market = marketFilter.value;
       const risk = riskFilter.value;
-      const apply = (rows) => {{
+      const applySearch = (rows) => {{
+        rows.forEach((row) => {{
+          const text = row.textContent.toLowerCase();
+          row.classList.toggle('hidden', !text.includes(q));
+        }});
+      }};
+      const applyMarketRisk = (rows) => {{
         rows.forEach((row) => {{
           const text = row.textContent.toLowerCase();
           const visible = text.includes(q) && (!market || text.includes(market)) && (!risk || text.includes(risk));
           row.classList.toggle('hidden', !visible);
         }});
       }};
-      apply(bettingRows);
-      apply(cardsRows);
-      apply(lottoRows);
+      applySearch(cardsRows);
+      applyMarketRisk(bettingRows);
+      applyMarketRisk(lottoRows);
     }}
 
     searchInput.addEventListener('input', filterRows);
@@ -211,9 +217,9 @@ def build_dashboard_html(cards_df: pd.DataFrame, betting_df: pd.DataFrame, lotto
 
     function exportTable(type) {{
       let rows = [];
-      if (type === 'cards') rows = Array.from(document.querySelectorAll('#cardsTable tbody tr')).map((row) => row.innerText.replace(/\n/g, ' | '));
-      if (type === 'betting') rows = Array.from(document.querySelectorAll('#bettingTable tbody tr')).map((row) => row.innerText.replace(/\n/g, ' | '));
-      const blob = new Blob([rows.join('\n')], {{ type: 'text/plain;charset=utf-8' }});
+      if (type === 'cards') rows = Array.from(document.querySelectorAll('#cardsTable tbody tr')).map((row) => row.innerText.replace(/\\n/g, ' | '));
+      if (type === 'betting') rows = Array.from(document.querySelectorAll('#bettingTable tbody tr')).map((row) => row.innerText.replace(/\\n/g, ' | '));
+      const blob = new Blob([rows.join('\\n')], {{ type: 'text/plain;charset=utf-8' }});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
