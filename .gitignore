@@ -46,3 +46,4 @@ web-dashboard/.vite/
 # Generated dashboard data
 web-dashboard/dist/data/daily_export.json
 web-dashboard/public/data/daily_export.json
+data/daily_export.json
