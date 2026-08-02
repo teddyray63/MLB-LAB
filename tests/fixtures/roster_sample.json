@@ -1,0 +1,16 @@
+{
+  "copyright": "fixture",
+  "roster": [
+    {
+      "person": {
+        "id": 7000999,
+        "fullName": "Roster Only Player",
+        "nickName": "RosterOnly",
+        "batSide": { "code": "S" },
+        "pitchHand": { "code": "R" }
+      },
+      "position": { "abbreviation": "OF" },
+      "status": { "description": "Active" }
+    }
+  ]
+}
