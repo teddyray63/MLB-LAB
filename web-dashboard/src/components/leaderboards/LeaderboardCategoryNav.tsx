@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   LEADERBOARD_CATEGORY_GROUPS,
   type LeaderboardCategory,
@@ -19,6 +19,21 @@ export function LeaderboardCategoryNav({
   category,
   onCategoryChange,
 }: LeaderboardCategoryNavProps) {
+  const [focusedCategory, setFocusedCategory] = useState<LeaderboardCategory>(category)
+
+  useEffect(() => {
+    setFocusedCategory(category)
+  }, [category])
+
+  const activateTab = useCallback(
+    (next: LeaderboardCategory, tab?: HTMLButtonElement | null) => {
+      setFocusedCategory(next)
+      onCategoryChange(next)
+      tab?.focus()
+    },
+    [onCategoryChange],
+  )
+
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
       const tablist = event.currentTarget.closest('[role="tablist"]')
@@ -31,9 +46,9 @@ export function LeaderboardCategoryNav({
       if (currentIndex === -1) return
 
       let nextIndex: number | null = null
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      if (event.key === 'ArrowRight') {
         nextIndex = (currentIndex + 1) % tabs.length
-      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      } else if (event.key === 'ArrowLeft') {
         nextIndex = (currentIndex - 1 + tabs.length) % tabs.length
       } else if (event.key === 'Home') {
         nextIndex = 0
@@ -44,11 +59,10 @@ export function LeaderboardCategoryNav({
 
       event.preventDefault()
       const nextTab = tabs[nextIndex]
-      nextTab.focus()
       const nextCategory = categoryFromTabId(nextTab.id)
-      if (nextCategory) onCategoryChange(nextCategory)
+      if (nextCategory) activateTab(nextCategory, nextTab)
     },
-    [onCategoryChange],
+    [activateTab],
   )
 
   return (
@@ -76,8 +90,9 @@ export function LeaderboardCategoryNav({
                   role="tab"
                   id={`leaderboard-tab-${key}`}
                   aria-selected={selected}
-                  tabIndex={selected ? 0 : -1}
+                  tabIndex={focusedCategory === key ? 0 : -1}
                   onClick={() => onCategoryChange(key)}
+                  onFocus={() => setFocusedCategory(key)}
                   onKeyDown={handleKeyDown}
                   className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
                     selected
