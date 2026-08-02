@@ -27,6 +27,13 @@ from backend.export.daily_export_validation import (  # noqa: E402
 )
 from backend.export.mlb_game_feed import fetch_game_feed_json  # noqa: E402
 from backend.export.mlb_schedule import fetch_schedule_json, parse_schedule_rows  # noqa: E402
+from backend.export.promote_daily_export import (  # noqa: E402
+    DEFAULT_BACKUP_DIR,
+    DEFAULT_RETENTION_COUNT,
+    PromotionStatus,
+    promote_candidate,
+    rollback_from_backup,
+)
 
 DEFAULT_REFERENCE = ROOT / "data" / "daily_export.json"
 
@@ -489,6 +496,97 @@ def _run_build_full_candidate(
     return 0 if write_result.valid else 1
 
 
+def _print_promotion_result(result, *, json_result: bool = False) -> None:
+    if json_result:
+        print(json.dumps(result.to_dict(), indent=2))
+        return
+
+    print(f"Mode: {result.mode}")
+    print(f"Dry run: {result.dry_run}")
+    print(f"Status: {result.status}")
+    if result.candidate_path:
+        print(f"Candidate: {result.candidate_path}")
+    if result.candidate_sha256_expected:
+        print(f"Expected SHA256: {result.candidate_sha256_expected}")
+    if result.candidate_sha256_actual:
+        print(f"Actual SHA256: {result.candidate_sha256_actual}")
+    if result.live_path:
+        print(f"Live path: {result.live_path}")
+    if result.original_live_sha256:
+        print(f"Original live SHA256: {result.original_live_sha256}")
+    if result.backup_path:
+        print(f"Backup path: {result.backup_path}")
+    if result.backup_sha256:
+        print(f"Backup SHA256: {result.backup_sha256}")
+    if result.promoted_live_sha256:
+        print(f"Promoted live SHA256: {result.promoted_live_sha256}")
+    print(f"Rollback attempted: {result.rollback_attempted}")
+    print(f"Rollback succeeded: {result.rollback_succeeded}")
+    print(f"Retention count: {result.retention_count}")
+    if result.pruned_backups:
+        print(f"Pruned backups ({len(result.pruned_backups)}):")
+        for path in result.pruned_backups:
+            print(f"  - {path}")
+    if result.planned_actions:
+        print("")
+        print("Planned actions:")
+        for action in result.planned_actions:
+            print(f"  - {action}")
+    if result.error:
+        print("")
+        print(f"Error: {result.error}")
+    if result.warnings:
+        print("")
+        print(f"Warnings ({len(result.warnings)}):")
+        for message in result.warnings:
+            print(f"  - {message}")
+
+
+def _run_promotion(args: argparse.Namespace) -> int:
+    if args.promote and args.rollback_backup:
+        raise SystemExit("--promote and --rollback-backup are mutually exclusive")
+
+    if args.rollback_backup:
+        if not args.yes_promote:
+            raise SystemExit("Manual rollback requires --yes-promote")
+        result = rollback_from_backup(
+            backup_path=args.rollback_backup,
+            backup_dir=args.backup_dir or DEFAULT_BACKUP_DIR,
+        )
+        _print_promotion_result(result, json_result=args.json_result)
+        if result.status == PromotionStatus.CRITICAL.value:
+            return 2
+        return 0 if result.rollback_succeeded or result.status == PromotionStatus.PROMOTION_SUCCEEDED.value else 1
+
+    if not args.promote:
+        return -1
+
+    if not args.candidate:
+        raise SystemExit("--promote requires --candidate PATH")
+    if not args.candidate_sha256:
+        raise SystemExit("--promote requires --candidate-sha256 DIGEST")
+
+    dry_run = args.promotion_dry_run
+    if not dry_run and not args.yes_promote:
+        raise SystemExit("Real promotion requires --yes-promote (or use --promotion-dry-run)")
+
+    result = promote_candidate(
+        candidate_path=args.candidate,
+        expected_sha256=args.candidate_sha256,
+        backup_dir=args.backup_dir or DEFAULT_BACKUP_DIR,
+        retention_count=args.backup_retention_count or DEFAULT_RETENTION_COUNT,
+        dry_run=dry_run,
+        prune=not args.no_prune_backups,
+    )
+    _print_promotion_result(result, json_result=args.json_result)
+
+    if result.status == PromotionStatus.CRITICAL.value:
+        return 2
+    if dry_run:
+        return 0 if result.status == PromotionStatus.DRY_RUN_READY.value else 1
+    return 0 if result.status == PromotionStatus.PROMOTION_SUCCEEDED.value else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Validate or build daily export JSON against the G0b schema.",
@@ -576,12 +674,70 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="DIR",
         help="Directory of {game_pk}.json game feed fixtures for offline --build-lineups / --build-matchups.",
     )
+    parser.add_argument(
+        "--promote",
+        action="store_true",
+        help="Promote a validated candidate export to the live export path.",
+    )
+    parser.add_argument(
+        "--promotion-dry-run",
+        action="store_true",
+        help="Run promotion preflight without modifying live export or backups.",
+    )
+    parser.add_argument(
+        "--candidate",
+        type=Path,
+        metavar="PATH",
+        help="Candidate export path for --promote.",
+    )
+    parser.add_argument(
+        "--candidate-sha256",
+        type=str,
+        metavar="DIGEST",
+        help="Expected SHA256 digest of --candidate (64 hex chars).",
+    )
+    parser.add_argument(
+        "--yes-promote",
+        action="store_true",
+        help="Confirm real promotion or manual rollback.",
+    )
+    parser.add_argument(
+        "--backup-dir",
+        type=Path,
+        metavar="DIR",
+        help=f"Backup directory (default: {DEFAULT_BACKUP_DIR}).",
+    )
+    parser.add_argument(
+        "--backup-retention-count",
+        type=int,
+        metavar="N",
+        help=f"Number of validated backups to retain (default: {DEFAULT_RETENTION_COUNT}).",
+    )
+    parser.add_argument(
+        "--rollback-backup",
+        type=Path,
+        metavar="PATH",
+        help="Explicit manual rollback from a backup file.",
+    )
+    parser.add_argument(
+        "--no-prune-backups",
+        action="store_true",
+        help="Skip backup pruning after successful promotion.",
+    )
+    parser.add_argument(
+        "--json-result",
+        action="store_true",
+        help="Emit structured promotion result as JSON.",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.promote or args.rollback_backup:
+        return _run_promotion(args)
 
     if args.build_full_candidate or args.validate_only:
         if not args.output:

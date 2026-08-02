@@ -50,3 +50,6 @@ data/daily_export.json
 
 # Generated daily export candidates
 data/candidates/
+
+# Generated daily export backups
+data/backups/
