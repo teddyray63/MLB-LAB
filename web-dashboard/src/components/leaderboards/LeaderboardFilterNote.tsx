@@ -34,6 +34,8 @@ export function LeaderboardFilterNote({
   if (!notes.length) return null
 
   return (
-    <p className="mb-3 text-[10px] text-[#D29922]">{notes.join(' · ')}</p>
+    <p className="text-[10px] text-[#D29922]" role="status">
+      {notes.join(' · ')}
+    </p>
   )
 }

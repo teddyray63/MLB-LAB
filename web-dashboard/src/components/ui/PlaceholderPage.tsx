@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from './Card'
+import { PageHeader } from './PageHeader'
+import { WorkspacePage } from './WorkspacePage'
 
 export interface LegacyLink {
   to: string
@@ -33,21 +35,19 @@ export function PlaceholderPage({
   children,
 }: PlaceholderPageProps) {
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.12em] text-[#8B949E]">
-            {kicker}
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-          {description && <p className="mt-1 text-sm text-[#8B949E]">{description}</p>}
-        </div>
-        {phase && (
-          <span className="rounded-full border border-[#30363D] bg-[#161B22] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8B949E]">
-            {phase}
-          </span>
-        )}
-      </div>
+    <WorkspacePage>
+      <PageHeader
+        kicker={kicker}
+        title={title}
+        description={description}
+        action={
+          phase ? (
+            <span className="shrink-0 rounded-full border border-[#30363D] bg-[#161B22] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8B949E]">
+              {phase}
+            </span>
+          ) : undefined
+        }
+      />
 
       <Card
         title="Placeholder — Phase 1 scaffold"
@@ -80,6 +80,6 @@ export function PlaceholderPage({
       </Card>
 
       {children}
-    </div>
+    </WorkspacePage>
   )
 }

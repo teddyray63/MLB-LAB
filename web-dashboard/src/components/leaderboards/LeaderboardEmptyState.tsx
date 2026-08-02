@@ -1,4 +1,5 @@
 import type { LeaderboardScope } from '../../types/leaderboard'
+import { EmptyState } from '../ui/EmptyState'
 
 interface LeaderboardEmptyStateProps {
   scope: LeaderboardScope
@@ -21,9 +22,5 @@ export function LeaderboardEmptyState({
     message = `No ${categoryLabel} rows match the active pitch filter in this scope.`
   }
 
-  return (
-    <div className="rounded-md border border-[#30363D] bg-[#161B22] px-4 py-8 text-center">
-      <p className="text-sm text-[#8B949E]">{message}</p>
-    </div>
-  )
+  return <EmptyState>{message}</EmptyState>
 }

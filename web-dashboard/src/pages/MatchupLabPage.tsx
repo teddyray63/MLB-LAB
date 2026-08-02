@@ -7,7 +7,7 @@ export function MatchupLabPage() {
 
   if (gameId && playerId) {
     return (
-      <div className="space-y-5">
+      <div className="space-y-6">
         <ResearchWorkspace />
         <p className="text-[10px] text-[#6E7681]">
           Deep link: {decodeURIComponent(playerId)} · {decodeURIComponent(gameId)} — use header

@@ -8,6 +8,17 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /*
+   * Measured at runtime (Phase F2 sticky chrome).
+   *
+   * --app-header-height: consumed by ResearchChrome sticky top offset.
+   * --research-chrome-height: measured when chrome is visible; intentionally
+   *   unconsumed until a demonstrated viewport-level overlap requires it (e.g.
+   *   page-scoped sticky table headers). Resets to 0px when chrome is hidden.
+   */
+  --app-header-height: 0px;
+  --research-chrome-height: 0px;
 }
 
 * {

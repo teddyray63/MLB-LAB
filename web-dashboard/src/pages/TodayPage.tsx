@@ -1,31 +1,28 @@
 import { GameCardGrid } from '../components/today/GameCardGrid'
 import { TodayTabPanels } from '../components/today/TodayTabPanels'
+import { PageHeader } from '../components/ui/PageHeader'
+import { SectionLabel } from '../components/ui/SectionLabel'
+import { WorkspacePage } from '../components/ui/WorkspacePage'
 import { useGameContext } from '../context/ResearchContext'
 
 export function TodayPage() {
   const { selection, matchupLabel } = useGameContext()
 
   return (
-    <div className="space-y-5">
-      <div>
-        <p className="text-xs font-medium uppercase tracking-[0.12em] text-[#8B949E]">Today</p>
-        <h2 className="text-2xl font-bold tracking-tight">{selection.date}</h2>
-        {matchupLabel && (
-          <p className="mt-1 text-sm text-[#58A6FF]">{matchupLabel}</p>
-        )}
-        <p className="mt-1 text-sm text-[#8B949E]">
-          Game-first workspace · use the header for date, game, and filters
-        </p>
-      </div>
+    <WorkspacePage>
+      <PageHeader
+        kicker="Today"
+        title={selection.date}
+        accent={matchupLabel ?? undefined}
+        description="Game-first workspace · use the header for date, game, and filters"
+      />
 
-      <section aria-label="Slate games">
-        <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8B949E]">
-          Slate
-        </h3>
+      <section aria-labelledby="today-slate-label" className="space-y-3">
+        <SectionLabel id="today-slate-label">Slate</SectionLabel>
         <GameCardGrid />
       </section>
 
       <TodayTabPanels />
-    </div>
+    </WorkspacePage>
   )
 }

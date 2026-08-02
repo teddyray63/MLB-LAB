@@ -5,6 +5,8 @@ import { LeaderboardEmptyState } from '../components/leaderboards/LeaderboardEmp
 import { LeaderboardFilterNote } from '../components/leaderboards/LeaderboardFilterNote'
 import { LeaderboardResults } from '../components/leaderboards/LeaderboardTable'
 import { LeaderboardScopeControl } from '../components/leaderboards/LeaderboardScopeControl'
+import { PageHeader } from '../components/ui/PageHeader'
+import { WorkspacePage } from '../components/ui/WorkspacePage'
 import { useLeaderboardCategory } from '../hooks/useLeaderboardCategory'
 import { useLeaderboardData } from '../hooks/useLeaderboardData'
 import { useLeaderboardScope } from '../hooks/useLeaderboardScope'
@@ -18,32 +20,30 @@ export function LeaderboardsPage() {
   const schemaWarning = selection.warnings.find((w) => w.includes('schema v'))
 
   return (
-    <div className="space-y-5">
-      <div>
-        <p className="text-xs font-medium uppercase tracking-[0.12em] text-[#8B949E]">
-          Leaderboards
-        </p>
-        <h2 className="text-2xl font-bold tracking-tight">{selection.date}</h2>
-        <p className="mt-1 text-sm text-[#8B949E]">
-          Top Plays and Category Boards · use the header for date, game, and filters
-        </p>
-        {schemaWarning && (
-          <p className="mt-2 text-[10px] text-[#D29922]">
-            {schemaWarning} — app expects v{RESEARCH_SCHEMA_VERSION}.
-          </p>
-        )}
-      </div>
-
-      <LeaderboardScopeControl
-        scope={scope}
-        onScopeChange={setScope}
-        hasValidGame={hasValidGame}
-        dataWindow={data.dataWindow}
+    <WorkspacePage>
+      <PageHeader
+        kicker="Leaderboards"
+        title={selection.date}
+        description="Top Plays and Category Boards · use the header for date, game, and filters"
+        warning={
+          schemaWarning
+            ? `${schemaWarning} — app expects v${RESEARCH_SCHEMA_VERSION}.`
+            : undefined
+        }
       />
 
-      <LeaderboardCategoryNav category={category} onCategoryChange={setCategory} />
+      <div className="space-y-4">
+        <LeaderboardScopeControl
+          scope={scope}
+          onScopeChange={setScope}
+          hasValidGame={hasValidGame}
+          dataWindow={data.dataWindow}
+        />
 
-      <LeaderboardFilterNote pitchFilterApplied={data.pitchFilterApplied} />
+        <LeaderboardCategoryNav category={category} onCategoryChange={setCategory} />
+
+        <LeaderboardFilterNote pitchFilterApplied={data.pitchFilterApplied} />
+      </div>
 
       {data.rowCount === 0 ? (
         <LeaderboardEmptyState
@@ -60,6 +60,6 @@ export function LeaderboardsPage() {
           categoryLabel={data.categoryLabel}
         />
       )}
-    </div>
+    </WorkspacePage>
   )
 }

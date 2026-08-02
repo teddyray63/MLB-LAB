@@ -62,7 +62,7 @@ export function DataTable<T>({
   const cellPad = compact ? 'px-2 py-1.5' : 'px-3 py-2'
 
   return (
-    <div className="overflow-auto rounded-md border border-[#21262D]">
+    <div className="max-w-full overflow-x-auto rounded-md border border-[#21262D]">
       <table className="w-full min-w-max border-collapse text-left">
         <thead className={stickyHeader ? 'sticky top-0 z-10 bg-[#161B22]' : ''}>
           <tr className="border-b border-[#30363D]">
@@ -109,7 +109,7 @@ export function DataTable<T>({
             <tr>
               <td
                 colSpan={columns.length}
-                className={`${cellPad} text-center text-xs text-[#6E7681]`}
+                className={`${cellPad} py-8 text-center text-sm text-[#8B949E]`}
               >
                 {emptyMessage}
               </td>

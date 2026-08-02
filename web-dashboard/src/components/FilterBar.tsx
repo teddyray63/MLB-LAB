@@ -22,7 +22,7 @@ export function FilterBar() {
   }, [exportData.game_details, selection.gamePk])
 
   return (
-    <div className="mb-5 flex flex-wrap items-end gap-4 rounded-lg border border-[#30363D] bg-[#0D1117] px-4 py-3">
+    <div className="flex flex-wrap items-end gap-4 rounded-lg border border-[#30363D] bg-[#0D1117] px-4 py-3">
       <fieldset className="flex flex-wrap items-center gap-2">
         <legend className="sr-only">Timeframe</legend>
         <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8B949E]">

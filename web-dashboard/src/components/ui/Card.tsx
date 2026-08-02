@@ -11,7 +11,7 @@ interface CardProps {
 export function Card({ title, subtitle, action, children, className = '' }: CardProps) {
   return (
     <section
-      className={`rounded-lg border border-[#30363D] bg-[#161B22] shadow-lg shadow-black/20 ${className}`}
+      className={`overflow-hidden rounded-lg border border-[#30363D] bg-[#161B22] shadow-lg shadow-black/20 ${className}`}
     >
       {(title || action) && (
         <header className="flex items-start justify-between gap-3 border-b border-[#21262D] px-4 py-3">

@@ -29,7 +29,7 @@ export function ResearchContextHeader() {
   const preserveSearch = location.search
 
   return (
-    <div className="mb-5 space-y-3 rounded-lg border border-[#30363D] bg-[#161B22] p-4">
+    <div className="space-y-3 rounded-lg border border-[#30363D] bg-[#161B22] p-4">
       {/* Row 1: primary context controls */}
       <div className="flex flex-wrap items-end gap-4">
         <div>
@@ -137,7 +137,10 @@ export function ResearchContextHeader() {
       </div>
 
       {/* Breadcrumb */}
-      <nav className="flex flex-wrap items-center gap-1 text-xs text-[#8B949E]" aria-label="Breadcrumb">
+      <nav
+        className="flex flex-wrap items-center gap-1 pt-1 text-xs text-[#8B949E]"
+        aria-label="Breadcrumb"
+      >
         <Link to={{ pathname: '/today', search: preserveSearch }} className="hover:text-[#58A6FF]">
           Today
         </Link>

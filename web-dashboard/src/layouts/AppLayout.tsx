@@ -1,5 +1,7 @@
+import { useRef } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { ResearchChrome } from '../components/ResearchChrome'
+import { useLayoutHeightVar } from '../hooks/useLayoutHeightVar'
 
 interface NavItem {
   to: string
@@ -29,10 +31,15 @@ function isActive(pathname: string, item: NavItem): boolean {
 
 export function AppLayout({ exportDate, onReload }: AppLayoutProps) {
   const { pathname } = useLocation()
+  const headerRef = useRef<HTMLElement>(null)
+  useLayoutHeightVar(headerRef, '--app-header-height')
 
   return (
     <div className="min-h-screen bg-[#0D1117] text-[#F0F6FC]">
-      <header className="sticky top-0 z-20 border-b border-[#30363D] bg-[#0D1117]/95 backdrop-blur">
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-20 border-b border-[#30363D] bg-[#0D1117]/95 backdrop-blur"
+      >
         <div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-3">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#58A6FF]">

@@ -40,7 +40,7 @@ export function TopPlaysTable({
   ]
 
   return (
-    <div className="overflow-auto rounded-md border border-[#21262D]">
+    <div className="max-w-full overflow-x-auto rounded-md border border-[#21262D]">
       <table className="w-full min-w-[960px] border-collapse text-left">
         <thead className="sticky top-0 z-10 bg-[#161B22]">
           <tr className="border-b border-[#30363D]">
@@ -57,7 +57,7 @@ export function TopPlaysTable({
         <tbody>
           {plays.length === 0 ? (
             <tr>
-              <td colSpan={headers.length} className="px-2 py-4 text-center text-xs text-[#6E7681]">
+              <td colSpan={headers.length} className="px-2 py-8 text-center text-sm text-[#8B949E]">
                 {emptyMessage}
               </td>
             </tr>
