@@ -47,15 +47,15 @@ export function buildResearchRedirectSearch(
     next.set(URL_KEYS.player, legacyName)
   }
 
-  if (pathCtx.playerId && !next.get(URL_KEYS.player)) {
-    next.set(URL_KEYS.player, decodeURIComponent(pathCtx.playerId))
+  // useParams() values are already decoded — do not decode again.
+  const playerFromPath = pathCtx.playerId?.trim()
+  if (playerFromPath && !next.get(URL_KEYS.player)) {
+    next.set(URL_KEYS.player, playerFromPath)
   }
 
-  if (pathCtx.gameId && !next.get(URL_KEYS.game)) {
-    const decoded = decodeURIComponent(pathCtx.gameId)
-    if (/^\d+$/.test(decoded)) {
-      next.set(URL_KEYS.game, decoded)
-    }
+  const gameFromPath = pathCtx.gameId?.trim()
+  if (gameFromPath && !next.get(URL_KEYS.game) && /^\d+$/.test(gameFromPath)) {
+    next.set(URL_KEYS.game, gameFromPath)
   }
 
   const qs = next.toString()
