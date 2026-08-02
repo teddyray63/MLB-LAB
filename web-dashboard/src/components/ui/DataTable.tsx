@@ -66,18 +66,42 @@ export function DataTable<T>({
       <table className="w-full min-w-max border-collapse text-left">
         <thead className={stickyHeader ? 'sticky top-0 z-10 bg-[#161B22]' : ''}>
           <tr className="border-b border-[#30363D]">
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                className={`${cellPad} text-[10px] font-semibold uppercase tracking-wider text-[#8B949E] ${
-                  col.align === 'right' ? 'text-right' : 'text-left'
-                } ${col.sortable !== false ? 'cursor-pointer select-none hover:text-[#F0F6FC]' : ''}`}
-                onClick={() => col.sortable !== false && toggleSort(col.key)}
-              >
-                {col.label}
-                {sortKey === col.key && (sortDir === 'asc' ? ' ↑' : ' ↓')}
-              </th>
-            ))}
+            {columns.map((col) => {
+              const sortable = col.sortable !== false
+              const ariaSort =
+                !sortable
+                  ? undefined
+                  : sortKey === col.key
+                    ? sortDir === 'asc'
+                      ? 'ascending'
+                      : 'descending'
+                    : 'none'
+
+              return (
+                <th
+                  key={col.key}
+                  aria-sort={ariaSort}
+                  className={`${cellPad} text-[10px] font-semibold uppercase tracking-wider text-[#8B949E] ${
+                    col.align === 'right' ? 'text-right' : 'text-left'
+                  }`}
+                >
+                  {sortable ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleSort(col.key)}
+                      className={`inline-flex w-full cursor-pointer select-none items-center gap-0.5 hover:text-[#F0F6FC] ${
+                        col.align === 'right' ? 'justify-end' : 'justify-start'
+                      }`}
+                    >
+                      {col.label}
+                      {sortKey === col.key && (sortDir === 'asc' ? ' ↑' : ' ↓')}
+                    </button>
+                  ) : (
+                    col.label
+                  )}
+                </th>
+              )
+            })}
           </tr>
         </thead>
         <tbody>

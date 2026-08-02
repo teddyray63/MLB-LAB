@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import {
   LEADERBOARD_CATEGORY_GROUPS,
-  LEADERBOARD_CATEGORIES,
   type LeaderboardCategory,
 } from '../../types/leaderboard'
 
@@ -10,43 +9,47 @@ interface LeaderboardCategoryNavProps {
   onCategoryChange: (category: LeaderboardCategory) => void
 }
 
-const ALL_CATEGORIES = LEADERBOARD_CATEGORIES
+function categoryFromTabId(tabId: string): LeaderboardCategory | null {
+  const prefix = 'leaderboard-tab-'
+  if (!tabId.startsWith(prefix)) return null
+  return tabId.slice(prefix.length) as LeaderboardCategory
+}
 
 export function LeaderboardCategoryNav({
   category,
   onCategoryChange,
 }: LeaderboardCategoryNavProps) {
-  const focusCategory = useCallback(
-    (index: number) => {
-      const next = ALL_CATEGORIES[index]
-      if (next) onCategoryChange(next)
-    },
-    [onCategoryChange],
-  )
-
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
+    (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      const tablist = event.currentTarget.closest('[role="tablist"]')
+      if (!tablist) return
+
+      const tabs = Array.from(
+        tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
+      )
+      const currentIndex = tabs.indexOf(event.currentTarget)
+      if (currentIndex === -1) return
+
       let nextIndex: number | null = null
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        nextIndex = (index + 1) % ALL_CATEGORIES.length
+        nextIndex = (currentIndex + 1) % tabs.length
       } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        nextIndex = (index - 1 + ALL_CATEGORIES.length) % ALL_CATEGORIES.length
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length
       } else if (event.key === 'Home') {
         nextIndex = 0
       } else if (event.key === 'End') {
-        nextIndex = ALL_CATEGORIES.length - 1
+        nextIndex = tabs.length - 1
       }
       if (nextIndex == null) return
-      event.preventDefault()
-      focusCategory(nextIndex)
-      const tablist = event.currentTarget.closest('[role="tablist"]')
-      const buttons = tablist?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
-      buttons?.[nextIndex]?.focus()
-    },
-    [focusCategory],
-  )
 
-  let tabIndex = 0
+      event.preventDefault()
+      const nextTab = tabs[nextIndex]
+      nextTab.focus()
+      const nextCategory = categoryFromTabId(nextTab.id)
+      if (nextCategory) onCategoryChange(nextCategory)
+    },
+    [onCategoryChange],
+  )
 
   return (
     <div className="space-y-3">
@@ -65,7 +68,6 @@ export function LeaderboardCategoryNav({
           <div key={group.label} className="flex flex-wrap items-center gap-1">
             <span className="mr-1 text-[10px] text-[#484F58]">{group.label}:</span>
             {group.categories.map(({ key, label }) => {
-              const index = tabIndex++
               const selected = category === key
               return (
                 <button
@@ -76,7 +78,7 @@ export function LeaderboardCategoryNav({
                   aria-selected={selected}
                   tabIndex={selected ? 0 : -1}
                   onClick={() => onCategoryChange(key)}
-                  onKeyDown={(event) => handleKeyDown(event, index)}
+                  onKeyDown={handleKeyDown}
                   className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
                     selected
                       ? 'bg-[#1F6FEB33] text-[#58A6FF]'
