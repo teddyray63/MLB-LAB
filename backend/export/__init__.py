@@ -12,6 +12,8 @@ from backend.export.daily_export_validation import (
     ValidationReport,
     validate_export,
     validate_export_dict,
+    validate_games_shell,
+    validate_games_shell_dict,
 )
 
 __all__ = [
@@ -24,4 +26,6 @@ __all__ = [
     "parse_daily_export",
     "validate_export",
     "validate_export_dict",
+    "validate_games_shell",
+    "validate_games_shell_dict",
 ]
