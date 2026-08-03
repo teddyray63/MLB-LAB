@@ -1,6 +1,6 @@
 # MLB-LAB Project State
 
-Last Updated: 2026-08-02
+Last Updated: 2026-08-03
 
 ## Stable Milestone
 
@@ -68,3 +68,58 @@ Read these first:
 3. docs/LEGACY_PARITY_MATRIX.md (legacy retirement gate)
 
 Do not modify export logic or shared context without understanding the architecture.
+
+## First Production Promotion
+
+Decision date:
+2026-08-03
+
+Branch:
+cursor/phase-g
+
+Promotion commit baseline:
+c2d1867
+
+Promoted slate date:
+2026-08-01
+
+Promoted live SHA256:
+a87d894fc905f88dd9f4141370fd6342bc94037dddedd6192863e707445e36d6
+
+Prior live SHA256:
+6ccd284c812ddd2c40b2a208db86277ee0ed1410c73b16248068ff767592a404
+
+Backup file:
+data/backups/daily_export.20260803T100738Z.6ccd284c812d.json
+
+Backup SHA256:
+6ccd284c812ddd2c40b2a208db86277ee0ed1410c73b16248068ff767592a404
+
+Promotion result:
+SUCCESS
+
+Rollback required:
+No
+
+Promotion Policy (v1)
+- promote only the most recent slate where every scheduled game has reached a recognized terminal status
+- walk backward mechanically from the current date until a fully terminal slate is found
+- in-progress, warmup, scheduled, postponed, suspended, or otherwise non-terminal slates are ineligible
+- rolling/intraday promotion remains out of scope
+
+Known product regressions accepted:
+- Known regression: Leaderboards Top Plays and Category Boards render empty states on /leaderboards, /legacy/top-plays, /legacy/boards, and /legacy/command-center.
+- top_plays is empty
+- category_boards is empty
+- original formulas are unavailable
+- no fabricated replacement rankings or scores were introduced
+
+Known follow-up:
+- legacy Top Plays and Boards subtitles remain misleading when arrays are empty
+- examples include "5 per category" or "Top 20 per category" while zero rows render
+- track this as a UI-copy cleanup item
+
+Post-promotion test finding:
+- five tests were coupled to the mutable live export
+- tests were migrated to frozen fixtures
+- production exports are no longer used as immutable reference fixtures
