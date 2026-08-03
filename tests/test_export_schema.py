@@ -23,8 +23,17 @@ from backend.export.daily_export_validation import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-REFERENCE_EXPORT = ROOT / "data" / "daily_export.json"
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+LIVE_EXPORT = ROOT / "data" / "daily_export.json"
+REFERENCE_EXPORT = LIVE_EXPORT
+PRE_PROMOTION_REFERENCE = FIXTURES / "reference_export_pre_promotion.json"
 SLATE_TS = ROOT / "web-dashboard" / "src" / "types" / "slate.ts"
+
+
+def _load_pre_promotion_reference() -> dict:
+    if not PRE_PROMOTION_REFERENCE.exists():
+        pytest.skip(f"Frozen pre-promotion reference missing: {PRE_PROMOTION_REFERENCE}")
+    return json.loads(PRE_PROMOTION_REFERENCE.read_text(encoding="utf-8"))
 
 
 @pytest.fixture(scope="module")
@@ -100,14 +109,16 @@ def test_invalid_date_fails(reference_export: dict) -> None:
         parse_daily_export(broken)
 
 
-def test_duplicate_game_pk_is_warning_not_error(reference_export: dict) -> None:
+def test_duplicate_game_pk_is_warning_not_error() -> None:
+    reference_export = _load_pre_promotion_reference()
     export = parse_daily_export(reference_export)
     report = validate_export(export)
     assert report.valid
-    assert any("Duplicate game_pk" in warning for warning in report.warnings)
+    assert any("Duplicate game_pk 823523" in warning for warning in report.warnings)
 
 
-def test_schema_version_warning_when_missing(reference_export: dict) -> None:
+def test_schema_version_warning_when_missing() -> None:
+    reference_export = _load_pre_promotion_reference()
     export = parse_daily_export(reference_export)
     report = validate_export(export)
     assert any("schema_version missing" in warning for warning in report.warnings)
@@ -117,7 +128,8 @@ def test_new_schema_version_constant() -> None:
     assert DAILY_EXPORT_SCHEMA_VERSION == 1
 
 
-def test_category_board_max_rows_enforced(reference_export: dict) -> None:
+def test_category_board_max_rows_enforced() -> None:
+    reference_export = _load_pre_promotion_reference()
     export = parse_daily_export(reference_export)
     broken = export.model_copy(deep=True)
     category = PLAY_CATEGORIES[0]

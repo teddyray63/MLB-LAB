@@ -23,7 +23,7 @@ from backend.export.daily_export_validation import ValidationReport, validate_ex
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 ROOT = Path(__file__).resolve().parents[1]
 LIVE_EXPORT = ROOT / "data" / "daily_export.json"
-REFERENCE_EXPORT = LIVE_EXPORT
+REFERENCE_EXPORT = FIXTURES / "reference_export_pre_promotion.json"
 
 
 def _schedule():
@@ -145,6 +145,16 @@ def test_matchup_cardinality_reporting() -> None:
     assert analysis["reference_matchup_rows"] == 894
     assert analysis["rows_for_pool_only_hitters"] > 0
     assert analysis["unique_hitter_game_pitch_keys"] == 894
+
+
+def test_reference_behavior_tests_use_frozen_fixtures_not_live_export() -> None:
+    """Production live export may change without invalidating reference-behavior tests."""
+    from tests import test_export_schema as export_schema_tests
+
+    assert REFERENCE_EXPORT.resolve() != LIVE_EXPORT.resolve()
+    assert REFERENCE_EXPORT.name == "reference_export_pre_promotion.json"
+    assert export_schema_tests.PRE_PROMOTION_REFERENCE.resolve() == REFERENCE_EXPORT.resolve()
+    assert export_schema_tests.PRE_PROMOTION_REFERENCE.resolve() != LIVE_EXPORT.resolve()
 
 
 def test_no_live_export_modification(tmp_path: Path) -> None:
