@@ -16,7 +16,14 @@ function CategorySection({
   plays: DailyExport['top_plays'][PlayCategory]
 }) {
   return (
-    <Card title={CATEGORY_LABELS[category]} subtitle={`Top ${plays.length} · ${category}`}>
+    <Card
+      title={CATEGORY_LABELS[category]}
+      subtitle={
+        plays.length > 0
+          ? `Top ${plays.length} · ${category}`
+          : 'No ranked rows in the current export'
+      }
+    >
       <TopPlaysTable plays={plays} />
     </Card>
   )

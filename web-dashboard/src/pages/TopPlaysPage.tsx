@@ -24,7 +24,9 @@ export function TopPlaysPage() {
         <p className="text-xs font-medium uppercase tracking-[0.12em] text-[#8B949E]">Top Plays</p>
         <h2 className="text-2xl font-bold tracking-tight">{data.date}</h2>
         <p className="mt-1 text-sm text-[#8B949E]">
-          {allPlays.length} plays · 5 per category · matches Excel Top Plays tab
+          {allPlays.length > 0
+            ? `${allPlays.length} plays · 5 per category · matches Excel Top Plays tab`
+            : 'No ranked rows are available in the current export'}
         </p>
       </div>
 
@@ -36,7 +38,15 @@ export function TopPlaysPage() {
       <SectionBanner label="By Category" />
       <div className="space-y-4">
         {PLAY_CATEGORIES.map((category) => (
-          <Card key={category} title={CATEGORY_LABELS[category]} subtitle="Top 5">
+          <Card
+            key={category}
+            title={CATEGORY_LABELS[category]}
+            subtitle={
+              data.top_plays[category].length > 0
+                ? 'Top 5'
+                : 'No ranked rows in the current export'
+            }
+          >
             <TopPlaysTable
               plays={data.top_plays[category].map((play) => ({
                 ...play,

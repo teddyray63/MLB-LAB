@@ -33,7 +33,9 @@ export function CategoryBoardsPage() {
           </p>
           <h2 className="text-2xl font-bold tracking-tight">{data.date}</h2>
           <p className="mt-1 text-sm text-[#8B949E]">
-            Top 20 per category · full stat columns · sortable tables
+            {totalRows > 0
+              ? 'Top 20 per category · full stat columns · sortable tables'
+              : 'No ranked rows are available in the current export'}
           </p>
         </div>
         <label className="flex items-center gap-2 text-xs text-[#8B949E]">
@@ -79,7 +81,14 @@ function CategoryBoardSection({
   const rows = data.category_boards[category]
 
   return (
-    <Card title={CATEGORY_LABELS[category]} subtitle={`Top ${rows.length} · ${category}`}>
+    <Card
+      title={CATEGORY_LABELS[category]}
+      subtitle={
+        rows.length > 0
+          ? `Top ${rows.length} · ${category}`
+          : 'No ranked rows in the current export'
+      }
+    >
       <CategoryBoardTable rows={rows} teamFilter={teamFilter} />
     </Card>
   )
