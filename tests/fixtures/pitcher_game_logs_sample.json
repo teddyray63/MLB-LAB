@@ -1,0 +1,135 @@
+{
+  "game_pk": 822786,
+  "game_date": "2026-07-19",
+  "feed": {
+    "gamePk": 822786,
+    "gameData": {
+      "datetime": { "officialDate": "2026-07-19" },
+      "status": { "detailedState": "Final" },
+      "teams": {
+        "away": { "id": 145, "name": "Chicago White Sox" },
+        "home": { "id": 141, "name": "Toronto Blue Jays" }
+      }
+    },
+    "liveData": {
+      "boxscore": {
+        "teams": {
+          "away": {
+            "pitchers": [680732, 7000101],
+            "players": {
+              "ID680732": {
+                "person": { "id": 680732, "fullName": "Sean Burke" },
+                "stats": {
+                  "pitching": {
+                    "inningsPitched": "5.2",
+                    "hits": 4,
+                    "runs": 2,
+                    "earnedRuns": 2,
+                    "baseOnBalls": 1,
+                    "strikeOuts": 6,
+                    "homeRuns": 1,
+                    "numberOfPitches": 87,
+                    "strikes": 58,
+                    "battersFaced": 24,
+                    "note": "W, 5-2"
+                  }
+                }
+              },
+              "ID7000101": {
+                "person": { "id": 7000101, "fullName": "Reliever One" },
+                "stats": {
+                  "pitching": {
+                    "inningsPitched": "1.0",
+                    "hits": 0,
+                    "runs": 0,
+                    "earnedRuns": 0,
+                    "baseOnBalls": 0,
+                    "strikeOuts": 2,
+                    "homeRuns": 0,
+                    "numberOfPitches": 12,
+                    "strikes": 9,
+                    "battersFaced": 4,
+                    "note": "H, 4-2"
+                  }
+                }
+              }
+            }
+          },
+          "home": {
+            "pitchers": [702056],
+            "players": {
+              "ID702056": {
+                "person": { "id": 702056, "fullName": "Trey Yesavage" },
+                "stats": {
+                  "pitching": {
+                    "inningsPitched": "6.0",
+                    "hits": 3,
+                    "runs": 1,
+                    "earnedRuns": 1,
+                    "baseOnBalls": 2,
+                    "strikeOuts": 8,
+                    "homeRuns": 0,
+                    "numberOfPitches": 95,
+                    "strikes": 63,
+                    "battersFaced": 25,
+                    "note": "L, 2-5"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "appearances": [
+    {
+      "player_id": 680732,
+      "game_pk": 822786,
+      "game_date": "2026-07-19",
+      "team_id": 145,
+      "opponent_team_id": 141,
+      "home_away": "away",
+      "appearance_type": "start",
+      "is_start": true,
+      "is_relief": false,
+      "innings_pitched": "5.2",
+      "innings_pitched_decimal": 5.666666666666667,
+      "batters_faced": 24,
+      "hits": 4,
+      "runs": 2,
+      "earned_runs": 2,
+      "walks": 1,
+      "strikeouts": 6,
+      "home_runs": 1,
+      "pitches": 87,
+      "strikes": 58,
+      "decision": "W",
+      "game_status": "Final"
+    },
+    {
+      "player_id": 7000101,
+      "game_pk": 822786,
+      "game_date": "2026-07-19",
+      "team_id": 145,
+      "opponent_team_id": 141,
+      "home_away": "away",
+      "appearance_type": "relief",
+      "is_start": false,
+      "is_relief": true,
+      "innings_pitched": "1.0",
+      "innings_pitched_decimal": 1.0,
+      "batters_faced": 4,
+      "hits": 0,
+      "runs": 0,
+      "earned_runs": 0,
+      "walks": 0,
+      "strikeouts": 2,
+      "home_runs": 0,
+      "pitches": 12,
+      "strikes": 9,
+      "decision": "H",
+      "game_status": "Final"
+    }
+  ]
+}

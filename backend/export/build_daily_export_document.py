@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from backend.export.build_matchup_layer import MatchupLayerResult, build_matchup_layer
+from backend.export.build_player_logs import PlayerLogsLayerResult, build_player_logs_layer
 from backend.export.daily_export_models import (
     DAILY_EXPORT_SCHEMA_VERSION,
     EXPORT_RUNNER_VERSION,
@@ -33,7 +34,7 @@ LIVE_EXPORT_RELATIVE = Path("data/daily_export.json")
 UNSUPPORTED_SECTION_WARNINGS = (
     "top_plays: empty — scoring formulas not reproducible in G0b.5a",
     "category_boards: empty — board ranking formulas not reproducible in G0b.5a",
-    "player_logs: absent — not built in G0b.5a",
+    "player_logs: absent — pass build_player_logs=True to assemble",
     "batted_balls: absent — not built in G0b.5a",
     "batted_ball_profiles: absent — not built in G0b.5a",
     "player_day_night_splits: absent — not built in G0b.5a",
@@ -53,6 +54,10 @@ class DocumentCounts:
     enrichment_matchups: int = 0
     top_plays: int = 0
     category_boards: int = 0
+    player_logs: int = 0
+    player_log_rows: int = 0
+    hitter_logs: int = 0
+    pitcher_logs: int = 0
 
 
 @dataclass
@@ -63,6 +68,7 @@ class DailyExportDocumentResult:
     warnings: list[str] = field(default_factory=list)
     statcast_window_start: str | None = None
     statcast_window_end: str | None = None
+    player_logs_layer: PlayerLogsLayerResult | None = None
 
 
 @dataclass
@@ -123,6 +129,8 @@ def build_daily_export_document(
     statcast_fixture: str | None = None,
     lookback_days: int = 120,
     extra_warnings: list[str] | None = None,
+    build_player_logs: bool = False,
+    max_games_per_player: int = 20,
 ) -> DailyExportDocumentResult:
     matchup_layer = build_matchup_layer(
         schedule_json,
@@ -136,11 +144,44 @@ def build_daily_export_document(
     window_end = slate_date
     window_start = (date.fromisoformat(slate_date) - timedelta(days=lookback_days)).isoformat()
 
+    unsupported_warnings = [
+        item for item in UNSUPPORTED_SECTION_WARNINGS if not (build_player_logs and item.startswith("player_logs:"))
+    ]
     warnings = _dedupe(
-        list(UNSUPPORTED_SECTION_WARNINGS)
+        list(unsupported_warnings)
         + list(matchup_layer.warnings)
         + list(extra_warnings or [])
     )
+
+    player_logs_layer: PlayerLogsLayerResult | None = None
+    export_player_logs = None
+    if build_player_logs:
+        events = statcast_events
+        if events is None and statcast_fixture:
+            from pathlib import Path
+
+            from backend.export.enrichment.statcast_source import events_from_fixture
+
+            events = events_from_fixture(Path(statcast_fixture))
+        if events is None:
+            from backend.export.enrichment.statcast_source import fetch_statcast_events
+
+            events = fetch_statcast_events(slate_date, lookback_days=lookback_days)
+
+        player_logs_layer = build_player_logs_layer(
+            events=events,
+            players=matchup_layer.identity.players,
+            teams=matchup_layer.identity.teams,
+            games=matchup_layer.identity.games,
+            matchups=matchup_layer.export_matchup_rows,
+            feeds_by_pk=feeds_by_pk,
+            feed_dates_by_pk={game.game_pk: slate_date for game in matchup_layer.identity.games if game.game_pk},
+            max_games_per_player=max_games_per_player,
+        )
+        export_player_logs = player_logs_layer.export_player_logs
+        warnings = _dedupe(warnings + player_logs_layer.warnings)
+        if player_logs_layer.validation and not player_logs_layer.validation.valid:
+            warnings.append("player_logs validation reported relationship errors")
 
     if matchup_layer.validation and not matchup_layer.validation.valid:
         warnings.append("enrichment validation reported relationship errors")
@@ -163,12 +204,15 @@ def build_daily_export_document(
         top_plays=empty_top_plays_board(),
         category_boards=empty_category_boards(),
         export_meta=meta,
-        player_logs=None,
+        player_logs=export_player_logs,
         batted_balls=None,
         batted_ball_profiles=None,
         player_day_night_splits=None,
         player_zone_heatmaps=None,
     )
+
+    player_log_hitter_count = len(export_player_logs or {})
+    player_log_row_count = sum(len(rows) for rows in (export_player_logs or {}).values())
 
     counts = DocumentCounts(
         games=len(export.games),
@@ -181,6 +225,10 @@ def build_daily_export_document(
         enrichment_matchups=len(matchup_layer.matchups),
         top_plays=sum(len(getattr(export.top_plays, cat)) for cat in PLAY_CATEGORIES),
         category_boards=sum(len(getattr(export.category_boards, cat)) for cat in PLAY_CATEGORIES),
+        player_logs=player_log_hitter_count,
+        player_log_rows=player_log_row_count,
+        hitter_logs=len(player_logs_layer.hitter_logs) if player_logs_layer else 0,
+        pitcher_logs=len(player_logs_layer.pitcher_logs) if player_logs_layer else 0,
     )
 
     return DailyExportDocumentResult(
@@ -190,6 +238,7 @@ def build_daily_export_document(
         warnings=warnings,
         statcast_window_start=window_start,
         statcast_window_end=window_end,
+        player_logs_layer=player_logs_layer,
     )
 
 
@@ -352,6 +401,11 @@ def compare_to_reference(
     missing = REQUIRED_TOP_LEVEL_KEYS - cand_keys
     extra = cand_keys - KNOWN_TOP_LEVEL_KEYS
 
+    ref_player_logs = reference.get("player_logs") or {}
+    cand_player_logs = candidate.get("player_logs") or {}
+    ref_log_rows = sum(len(v) for v in ref_player_logs.values()) if isinstance(ref_player_logs, dict) else 0
+    cand_log_rows = sum(len(v) for v in cand_player_logs.values()) if isinstance(cand_player_logs, dict) else 0
+
     counts: dict[str, int | str | None] = {
         "reference_games": len(reference.get("games") or []),
         "candidate_games": len(candidate.get("games") or []),
@@ -359,6 +413,10 @@ def compare_to_reference(
         "candidate_game_details": len(candidate.get("game_details") or []),
         "reference_matchups": len(reference.get("matchups") or []),
         "candidate_matchups": len(candidate.get("matchups") or []),
+        "reference_player_logs": len(ref_player_logs) if isinstance(ref_player_logs, dict) else 0,
+        "candidate_player_logs": len(cand_player_logs) if isinstance(cand_player_logs, dict) else 0,
+        "reference_player_log_rows": ref_log_rows,
+        "candidate_player_log_rows": cand_log_rows,
     }
 
     cardinality_deltas = {

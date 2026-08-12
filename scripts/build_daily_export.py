@@ -101,6 +101,119 @@ def _print_coverage(coverage: dict[str, int | str | None]) -> None:
         print(f"  {key}: {coverage[key]}")
 
 
+def _print_player_logs_coverage(layer) -> None:
+    if layer is None:
+        return
+    print("")
+    print("Player logs coverage:")
+    for key in sorted(layer.counts):
+        print(f"  {key}: {layer.counts[key]}")
+    if layer.validation is not None:
+        print(f"  validation.valid: {layer.validation.valid}")
+        if layer.validation.errors:
+            print("  relationship errors:")
+            for message in layer.validation.errors[:10]:
+                print(f"    - {message}")
+
+
+def _run_build_player_logs(
+    slate_date: str,
+    *,
+    schedule_fixture: Path | None = None,
+    game_feed_fixtures: Path | None = None,
+    statcast_fixture: Path | None = None,
+    output: Path | None = None,
+    force_candidate: bool = False,
+) -> int:
+    if schedule_fixture is not None:
+        schedule_json = _load_json(schedule_fixture)
+        source_label = str(schedule_fixture.resolve())
+    else:
+        schedule_json = fetch_schedule_json(slate_date)
+        source_label = f"MLB schedule API ({slate_date})"
+
+    if game_feed_fixtures is not None:
+        feeds_by_pk = _load_game_feed_fixtures(game_feed_fixtures)
+        feed_source = str(game_feed_fixtures.resolve())
+    elif schedule_fixture is not None:
+        feeds_by_pk = {}
+        feed_source = "none (offline schedule without game feeds)"
+    else:
+        feeds_by_pk = _fetch_feeds_for_schedule(schedule_json, slate_date)
+        feed_source = f"MLB game feed API ({slate_date})"
+
+    statcast_source = (
+        str(statcast_fixture.resolve())
+        if statcast_fixture is not None
+        else f"pybaseball Statcast ({slate_date})"
+    )
+
+    document = build_daily_export_document(
+        schedule_json,
+        slate_date=slate_date,
+        feeds_by_pk=feeds_by_pk,
+        statcast_fixture=str(statcast_fixture) if statcast_fixture else None,
+        build_player_logs=True,
+    )
+
+    layer = document.player_logs_layer
+    validation = layer.validation if layer is not None else None
+    matchup_validation = document.matchup_layer.validation
+
+    print(f"Built player_logs layer from: {source_label}")
+    print(f"Game feeds: {feed_source}")
+    print(f"Statcast source: {statcast_source}")
+    print(f"Slate date: {slate_date}")
+    ok = (
+        (matchup_validation.valid if matchup_validation else False)
+        and (validation.valid if validation else False)
+    )
+    print(f"Status: {'OK' if ok else 'FAILED'}")
+    _print_player_logs_coverage(layer)
+
+    if layer is not None:
+        print("")
+        print("Summary:")
+        print(f"  hitter-log count: {len(layer.hitter_logs)}")
+        print(f"  pitcher-log count: {len(layer.pitcher_logs)}")
+        print(f"  unique hitters: {layer.counts.get('unique_hitter_log_players', 0)}")
+        print(f"  unique pitchers: {layer.counts.get('unique_pitcher_log_players', 0)}")
+        print(f"  export player_logs hitters: {layer.counts.get('export_player_log_hitters', 0)}")
+        print(f"  export player_logs rows: {layer.counts.get('export_player_log_rows', 0)}")
+        print(f"  games covered (hitter): {layer.counts.get('games_covered_hitter', 0)}")
+        print(f"  games covered (pitcher): {layer.counts.get('games_covered_pitcher', 0)}")
+
+    if document.warnings:
+        print("")
+        print(f"Warnings ({len(document.warnings)}):")
+        for message in document.warnings:
+            print(f"  - {message}")
+
+    if output is not None:
+        live_export = (ROOT / "data" / "daily_export.json").resolve()
+        if output.resolve() == live_export:
+            raise SystemExit(f"Refusing to write live export path: {live_export}")
+        write_result = write_candidate_export(
+            document.export,
+            output,
+            force=force_candidate,
+            counts=document.counts,
+            warnings=document.warnings,
+        )
+        print("")
+        _print_candidate_write(write_result)
+
+    if validation and validation.errors:
+        print("")
+        print("Errors:")
+        for message in validation.errors:
+            print(f"  - {message}")
+        return 1
+    if matchup_validation and matchup_validation.errors:
+        return 1
+    return 0
+
+
 def _run_build_games(
     slate_date: str,
     *,
@@ -347,6 +460,10 @@ def _print_candidate_write(result) -> None:
         "enrichment_matchups",
         "top_plays",
         "category_boards",
+        "player_logs",
+        "player_log_rows",
+        "hitter_logs",
+        "pitcher_logs",
     ):
         print(f"  {key}: {getattr(result.counts, key, 0)}")
     if result.warnings:
@@ -413,6 +530,7 @@ def _run_build_full_candidate(
     force_candidate: bool = False,
     compare_reference: Path | None = None,
     validate_only: bool = False,
+    build_player_logs: bool = False,
 ) -> int:
     live_export = (ROOT / "data" / "daily_export.json").resolve()
     if output.resolve() == live_export:
@@ -454,6 +572,7 @@ def _run_build_full_candidate(
         slate_date=slate_date,
         feeds_by_pk=feeds_by_pk,
         statcast_fixture=str(statcast_fixture) if statcast_fixture else None,
+        build_player_logs=build_player_logs,
     )
 
     validation = document.matchup_layer.validation
@@ -474,6 +593,7 @@ def _run_build_full_candidate(
     print(f"Slate date: {slate_date}")
     print(f"Status: {'OK' if validation.valid and write_result.valid else 'FAILED'}")
     _print_candidate_write(write_result)
+    _print_player_logs_coverage(document.player_logs_layer)
 
     if compare_reference is not None:
         reference_payload = _load_json(compare_reference)
@@ -601,6 +721,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run",
         action="store_true",
         help="Alias for validating the reference export at data/daily_export.json.",
+    )
+    parser.add_argument(
+        "--build-player-logs",
+        action="store_true",
+        help="Include player_logs in --build-full-candidate assembly (Statcast + optional feeds).",
     )
     parser.add_argument(
         "--build-games",
@@ -753,6 +878,19 @@ def main(argv: list[str] | None = None) -> int:
             force_candidate=args.force_candidate,
             compare_reference=args.compare_reference,
             validate_only=args.validate_only,
+            build_player_logs=args.build_player_logs,
+        )
+
+    if args.build_player_logs:
+        if not args.date:
+            parser.error("--build-player-logs requires --date YYYY-MM-DD")
+        return _run_build_player_logs(
+            args.date,
+            schedule_fixture=args.schedule_fixture,
+            game_feed_fixtures=args.game_feed_fixtures,
+            statcast_fixture=args.statcast_fixture,
+            output=args.output,
+            force_candidate=args.force_candidate,
         )
 
     if args.build_games:
@@ -787,6 +925,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(
             "Specify --validate-existing PATH, --dry-run, --build-games --date YYYY-MM-DD, "
             "--build-lineups --date YYYY-MM-DD, --build-matchups --date YYYY-MM-DD, "
+            "--build-player-logs --date YYYY-MM-DD, "
             "or --build-full-candidate --date YYYY-MM-DD --output PATH"
         )
 
