@@ -53,3 +53,11 @@ data/candidates/
 
 # Generated daily export backups
 data/backups/
+
+# Aider local agent session state
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v4/
+
+# Evidence raw external captures (metadata files remain trackable)
+evidence/**/*.raw.json

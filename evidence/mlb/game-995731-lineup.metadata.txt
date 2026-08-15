@@ -1,0 +1,10 @@
+CAPTURED_AT: 2026-08-15T00:02:08Z
+REQUEST_METHOD: GET
+REQUEST_URL: https://statsapi.mlb.com/api/v1/game/995731/lineup
+FINAL_URL: https://statsapi.mlb.com/api/v1/game/995731/lineup
+HTTP_STATUS: 404
+CONTENT_TYPE: text/plain;charset=UTF-8
+BODY_PATH: evidence/mlb/game-995731-lineup.raw.json
+BYTE_COUNT: 114
+SHA256: 1585731e216a1bf25e9cefd13ae5d38d6f8bbdb46ab57f78799689b8149af38c
+VALID_JSON: YES

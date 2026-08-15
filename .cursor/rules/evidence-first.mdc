@@ -1,0 +1,50 @@
+---
+description: Evidence-first investigation and anti-loop guardrails
+alwaysApply: true
+---
+
+# Evidence-First Investigation
+
+Reason from observed evidence. Do not enter speculative investigation loops.
+
+## Evidence rules
+
+- Use deterministic tools (rg, git, Python, jq, AST inspection, `scripts/evidence.py`) before LLM interpretation.
+- Never invent JSON paths, fields, values, schemas, endpoints, or examples and treat them as facts.
+- Generated examples are never evidence. Historical behavior is not current behavior unless re-verified.
+- Label only directly observed information as **FACT**. Separate **INTERPRETATION** and **HYPOTHESIS**.
+- Contradicting evidence invalidates prior unsupported claims immediately.
+- Do not implement production behavior from unproven semantics.
+
+## Anti-loop guardrails
+
+- One unresolved question at a time.
+- Before another step, ask: what unknown remains, what single observation resolves it, and was that observation already made?
+- Do not repeat investigation of already-observed facts.
+- Exhaust local evidence before external requests.
+- No recursive or numbered forensic phases to reconcile unsupported narratives.
+
+## Evidence ledger (nontrivial investigations)
+
+```
+PROVEN:
+NOT PROVEN:
+DISPROVEN:
+NEXT UNKNOWN:
+```
+
+## Investigation budget (per unresolved question)
+
+1. repository inspection
+2. deterministic artifact inspection
+3. one explicitly authorized external observation (only if local evidence cannot resolve)
+
+Then **STOP** and report uncertainty.
+
+## Investigation completion
+
+```
+CURRENT VERIFIED STATE:
+ONE UNRESOLVED QUESTION:
+NEXT ACTION:
+```
