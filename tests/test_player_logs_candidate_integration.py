@@ -58,9 +58,44 @@ def test_empty_logs_handled_when_not_built() -> None:
 def test_built_player_logs_omit_absent_warning() -> None:
     document = _document(build_player_logs=True)
     assert document.export.player_logs is not None
-    assert not any("player_logs: absent" in warning for warning in document.warnings)
+    absent_warnings = [
+        warning
+        for warning in document.warnings
+        if warning.startswith("player_logs: absent")
+        or warning.startswith("player_logs: build requested but no player logs were produced")
+    ]
+    assert not absent_warnings
     meta_warnings = document.export.export_meta.warnings if document.export.export_meta else []
-    assert not any("player_logs: absent" in warning for warning in meta_warnings)
+    meta_absent_warnings = [
+        warning
+        for warning in meta_warnings
+        if warning.startswith("player_logs: absent")
+        or warning.startswith("player_logs: build requested but no player logs were produced")
+    ]
+    assert not meta_absent_warnings
+
+
+def test_build_requested_without_produced_logs_warns() -> None:
+    document = build_daily_export_document(
+        _schedule(),
+        slate_date="2026-07-19",
+        statcast_fixture=str(FIXTURES / "statcast_hitter_sample.json"),
+        build_player_logs=True,
+    )
+    assert document.export.player_logs is None
+    assert any(
+        warning == "player_logs: build requested but no player logs were produced"
+        for warning in document.warnings
+    )
+    assert not any(
+        warning == "player_logs: absent — pass build_player_logs=True to assemble"
+        for warning in document.warnings
+    )
+    meta_warnings = document.export.export_meta.warnings if document.export.export_meta else []
+    assert any(
+        warning == "player_logs: build requested but no player logs were produced"
+        for warning in meta_warnings
+    )
 
 
 def test_full_candidate_orchestration_defaults_to_player_logs() -> None:

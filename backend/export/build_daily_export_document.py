@@ -41,6 +41,11 @@ UNSUPPORTED_SECTION_WARNINGS = (
     "player_zone_heatmaps: absent — not built in G0b.5a",
 )
 
+PLAYER_LOGS_ABSENT_WARNING = "player_logs: absent — pass build_player_logs=True to assemble"
+PLAYER_LOGS_NOT_PRODUCED_WARNING = (
+    "player_logs: build requested but no player logs were produced"
+)
+
 
 @dataclass
 class DocumentCounts:
@@ -120,6 +125,12 @@ def empty_category_boards() -> CategoryBoards:
     )
 
 
+def _export_player_logs_effective(logs: dict[str, list] | None) -> bool:
+    if not logs:
+        return False
+    return any(rows for rows in logs.values())
+
+
 def build_daily_export_document(
     schedule_json: dict[str, Any],
     *,
@@ -145,7 +156,7 @@ def build_daily_export_document(
     window_start = (date.fromisoformat(slate_date) - timedelta(days=lookback_days)).isoformat()
 
     unsupported_warnings = [
-        item for item in UNSUPPORTED_SECTION_WARNINGS if not (build_player_logs and item.startswith("player_logs:"))
+        item for item in UNSUPPORTED_SECTION_WARNINGS if not item.startswith("player_logs:")
     ]
     warnings = _dedupe(
         list(unsupported_warnings)
@@ -186,6 +197,13 @@ def build_daily_export_document(
     if matchup_layer.validation and not matchup_layer.validation.valid:
         warnings.append("enrichment validation reported relationship errors")
 
+    if not _export_player_logs_effective(export_player_logs):
+        if build_player_logs:
+            warnings.append(PLAYER_LOGS_NOT_PRODUCED_WARNING)
+        else:
+            warnings.append(PLAYER_LOGS_ABSENT_WARNING)
+
+    warnings = _dedupe(warnings)
     meta_warnings = list(warnings)
     meta = ExportMeta(
         generated_at=datetime.now(timezone.utc).isoformat(),
