@@ -246,3 +246,57 @@ prove insufficient for verification without the raw capture in git.
 
 **Supersedes:**
 None
+
+---
+
+## DEC-007 — primary_position is not a starting-defensive-position contract
+
+**Status:** Accepted
+
+**Date:** 2026-08-14
+
+**Context:**
+Investigation of lineup identity found that MLB feed `position.abbreviation` was
+being considered as a possible game-specific starting defensive position.
+
+**Decision:**
+Treat `ExportPlayer.primary_position` only as the existing optional
+player-associated position used by internal heuristics.
+
+Do not represent it as guaranteed game-specific starting defensive position.
+
+The current product/export contract does not require starting defensive position,
+so no additional MLB source discovery is required for that purpose.
+
+**Evidence:**
+- `backend/export/identity_models.py` — `ExportPlayer.primary_position`:
+  `str | None = None` (optional)
+- `backend/export/mlb_game_feed.py` — `parse_game_feed_side()` and
+  `merge_roster_players()` read `position.abbreviation` into `primary_position`
+- `backend/export/builders/players.py` — bench role heuristic uses
+  `primary_position` for P/non-P classification
+- `backend/export/player_logs/hitter_logs.py` — excludes `primary_position == "P"`
+  from default hitter set
+- `backend/export/player_logs/pitcher_logs.py` and
+  `backend/export/build_player_logs.py` — include `primary_position == "P"` in
+  pitcher ID set
+- `backend/export/daily_export_models.py` — `LineupBatter` has no position field;
+  `DailyExport` does not serialize `ExportPlayer`
+- `backend/export/identity_validation.py` — does not validate position presence
+- `tests/test_players_builder.py` — `test_missing_position_stays_null` accepts
+  absent position
+
+**Consequences:**
+- Existing runtime behavior remains unchanged.
+- Existing lineup membership semantics remain unchanged.
+- No new MLB endpoint is required.
+- A future feature requiring actual starting defensive positions must establish
+  a separate source-semantic contract rather than reusing `primary_position`
+  without evidence.
+
+**Revisit only if:**
+A future product/schema requirement explicitly requires game-specific starting
+defensive position.
+
+**Supersedes:**
+None

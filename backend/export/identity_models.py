@@ -36,6 +36,9 @@ class ExportPlayer(_ExportModel):
     game_pk: int
     team_id: int
     display_name: str | None = None
+    # Optional player-associated position sourced from MLB boxscore/roster
+    # position.abbreviation. Used internally as a heuristic; it is not guaranteed
+    # to represent the player's game-specific starting defensive position.
     primary_position: str | None = None
     bats: str | None = None
     throws: str | None = None
