@@ -530,7 +530,7 @@ def _run_build_full_candidate(
     force_candidate: bool = False,
     compare_reference: Path | None = None,
     validate_only: bool = False,
-    build_player_logs: bool = False,
+    build_player_logs: bool = True,
 ) -> int:
     live_export = (ROOT / "data" / "daily_export.json").resolve()
     if output.resolve() == live_export:
@@ -725,7 +725,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--build-player-logs",
         action="store_true",
-        help="Include player_logs in --build-full-candidate assembly (Statcast + optional feeds).",
+        help=(
+            "Build and validate the player_logs layer only (standalone; no candidate write unless "
+            "--output is set). Full candidate builds include player_logs by default."
+        ),
+    )
+    parser.add_argument(
+        "--no-player-logs",
+        action="store_true",
+        help="Skip player_logs when using --build-full-candidate.",
     )
     parser.add_argument(
         "--build-games",
@@ -878,7 +886,7 @@ def main(argv: list[str] | None = None) -> int:
             force_candidate=args.force_candidate,
             compare_reference=args.compare_reference,
             validate_only=args.validate_only,
-            build_player_logs=args.build_player_logs,
+            build_player_logs=not args.no_player_logs,
         )
 
     if args.build_player_logs:

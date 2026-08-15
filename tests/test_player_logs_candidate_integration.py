@@ -52,6 +52,24 @@ def test_candidate_validates_with_player_logs() -> None:
 def test_empty_logs_handled_when_not_built() -> None:
     document = _document(build_player_logs=False)
     assert document.export.player_logs is None
+    assert any("player_logs: absent" in warning for warning in document.warnings)
+
+
+def test_built_player_logs_omit_absent_warning() -> None:
+    document = _document(build_player_logs=True)
+    assert document.export.player_logs is not None
+    assert not any("player_logs: absent" in warning for warning in document.warnings)
+    meta_warnings = document.export.export_meta.warnings if document.export.export_meta else []
+    assert not any("player_logs: absent" in warning for warning in meta_warnings)
+
+
+def test_full_candidate_orchestration_defaults_to_player_logs() -> None:
+    import inspect
+
+    from scripts.build_daily_export import _run_build_full_candidate
+
+    default = inspect.signature(_run_build_full_candidate).parameters["build_player_logs"].default
+    assert default is True
 
 
 def test_player_logs_count_reported() -> None:
