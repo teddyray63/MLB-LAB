@@ -9,6 +9,7 @@ When applicable, consult:
 - `PROJECT_STATE.md`
 - relevant architecture documentation (for example `web-dashboard/ARCHITECTURE.md`)
 - `docs/DECISIONS.md`
+- `docs/DEPLOYMENT.md` (static dashboard deploy; export injection before build)
 
 ## Decision log
 
