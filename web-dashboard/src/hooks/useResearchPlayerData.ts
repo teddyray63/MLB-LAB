@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useExport } from '../context/ExportContext'
 import { useGameContext, useFilters } from '../context/ResearchContext'
 import { useFilteredMatchupRows } from './useFilteredData'
+import { sliceGameLogByTimeframe } from '../lib/gameLogSlice'
 import { lookupPlayerMap } from '../lib/playerExportLookup'
 import { normalizePitchMixItems } from '../components/PitchMixFilterChips'
 import type { SituationKey } from '../types/research'
@@ -56,13 +57,12 @@ function situationSplitLine(
 
 function recentTrendLabel(log: GameLogEntry[] | undefined): string | null {
   if (!log?.length) return null
-  const slice = log.slice(0, 5)
-  const pa = slice.reduce((n, g) => n + (g.pa ?? 0), 0)
-  const hits = slice.reduce((n, g) => n + (g.hits ?? 0), 0)
-  const hr = slice.reduce((n, g) => n + (g.hr ?? 0), 0)
-  const tb = slice.reduce((n, g) => n + (g.tb ?? 0), 0)
-  if (pa <= 0) return `L${slice.length}: ${hits} H · ${hr} HR · ${tb} TB`
-  return `L${slice.length}: ${(hits / pa).toFixed(3)} AVG · ${hr} HR · ${tb} TB`
+  const pa = log.reduce((n, g) => n + (g.pa ?? 0), 0)
+  const hits = log.reduce((n, g) => n + (g.hits ?? 0), 0)
+  const hr = log.reduce((n, g) => n + (g.hr ?? 0), 0)
+  const tb = log.reduce((n, g) => n + (g.tb ?? 0), 0)
+  if (pa <= 0) return `L${log.length}: ${hits} H · ${hr} HR · ${tb} TB`
+  return `L${log.length}: ${(hits / pa).toFixed(3)} AVG · ${hr} HR · ${tb} TB`
 }
 
 export function useResearchPlayerData() {
@@ -98,6 +98,11 @@ export function useResearchPlayerData() {
   const gameLog = useMemo(
     () => lookupPlayerMap(exportData.player_logs, playerName),
     [exportData.player_logs, playerName],
+  )
+
+  const slicedGameLog = useMemo(
+    () => sliceGameLogByTimeframe(gameLog, filters.timeframe),
+    [gameLog, filters.timeframe],
   )
 
   const dayNightProfile = useMemo(
@@ -162,7 +167,7 @@ export function useResearchPlayerData() {
     [matchupRows],
   )
 
-  const recentTrend = useMemo(() => recentTrendLabel(gameLog), [gameLog])
+  const recentTrend = useMemo(() => recentTrendLabel(slicedGameLog), [slicedGameLog])
 
   const timeframeSupported = filters.support.timeframe[filters.timeframe].supported
 
@@ -176,6 +181,7 @@ export function useResearchPlayerData() {
     matchupRows,
     pitcherMatchupRows,
     gameLog,
+    slicedGameLog,
     dayNightProfile,
     zoneHeatmap,
     battedBalls,

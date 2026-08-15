@@ -109,9 +109,17 @@ export function ResearchRecentGamesTab() {
   const data = useResearchPlayerData()
   if (!data.playerName) return <ResearchPanelShell title="Recent games"><NoPlayer /></ResearchPanelShell>
 
+  const timeframeLabel =
+    TIMEFRAME_OPTIONS.find((o) => o.key === data.filters.timeframe)?.label ?? 'Season'
+  const logForChart = data.slicedGameLog.length > 0 ? data.slicedGameLog : data.gameLog
+
   return (
-    <ResearchPanelShell title="Recent games" subtitle="Statcast game log · L5 / L10 / L20">
-      <GameLogChart hitter={data.playerName} log={data.gameLog} />
+    <ResearchPanelShell title="Recent games" subtitle={`Statcast game log · ${timeframeLabel}`}>
+      <GameLogChart
+        hitter={data.playerName}
+        log={logForChart}
+        window={logForChart?.length ? logForChart.length : undefined}
+      />
     </ResearchPanelShell>
   )
 }

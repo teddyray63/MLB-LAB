@@ -27,21 +27,24 @@ function summarizeWindow(games: GameLogEntry[], window: number): string {
 interface GameLogChartProps {
   hitter: string
   log: GameLogEntry[] | undefined
+  /** When set, window is controlled externally (e.g. shared FilterBar). Hides local window toggles. */
+  window?: number
 }
 
-export function GameLogChart({ hitter, log }: GameLogChartProps) {
+export function GameLogChart({ hitter, log, window: controlledWindow }: GameLogChartProps) {
+  const isControlled = controlledWindow !== undefined
   const [metric, setMetric] = useState<GameLogMetric>('hits')
-  const [window, setWindow] = useState<GameLogWindow>(10)
+  const [localWindow, setLocalWindow] = useState<GameLogWindow>(10)
 
   const available = log?.length ?? 0
+  const window = isControlled ? controlledWindow : localWindow
 
-  // If current window is larger than available games, fall back
+  // If current window is larger than available games, fall back (uncontrolled only)
   useEffect(() => {
-    if (available > 0 && window > available) {
-      if (available >= 10) setWindow(10)
-      else if (available >= 5) setWindow(5)
-    }
-  }, [available, window])
+    if (isControlled || available <= 0 || window <= available) return
+    if (available >= 10) setLocalWindow(10)
+    else if (available >= 5) setLocalWindow(5)
+  }, [available, isControlled, window])
 
   const games = useMemo(() => {
     if (!log?.length) return []
@@ -77,30 +80,32 @@ export function GameLogChart({ hitter, log }: GameLogChartProps) {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex gap-1">
-          {WINDOWS.map((n) => {
-            const disabled = available < n
-            return (
-              <button
-                key={n}
-                type="button"
-                disabled={disabled}
-                title={disabled ? `Only ${available} games in log` : `Last ${n} games`}
-                onClick={() => setWindow(n)}
-                className={`rounded-md border px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                  disabled
-                    ? 'cursor-not-allowed border-[#21262D] text-[#484F58]'
-                    : window === n
-                      ? 'border-[#58A6FF] bg-[#1F6FEB33] text-[#58A6FF]'
-                      : 'border-[#30363D] text-[#8B949E] hover:bg-[#21262D] hover:text-[#F0F6FC]'
-                }`}
-              >
-                L{n}
-              </button>
-            )
-          })}
-        </div>
-        <div className="flex gap-1">
+        {!isControlled && (
+          <div className="flex gap-1">
+            {WINDOWS.map((n) => {
+              const disabled = available < n
+              return (
+                <button
+                  key={n}
+                  type="button"
+                  disabled={disabled}
+                  title={disabled ? `Only ${available} games in log` : `Last ${n} games`}
+                  onClick={() => setLocalWindow(n)}
+                  className={`rounded-md border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                    disabled
+                      ? 'cursor-not-allowed border-[#21262D] text-[#484F58]'
+                      : localWindow === n
+                        ? 'border-[#58A6FF] bg-[#1F6FEB33] text-[#58A6FF]'
+                        : 'border-[#30363D] text-[#8B949E] hover:bg-[#21262D] hover:text-[#F0F6FC]'
+                  }`}
+                >
+                  L{n}
+                </button>
+              )
+            })}
+          </div>
+        )}
+        <div className={`flex gap-1${isControlled ? ' ml-auto' : ''}`}>
           {METRICS.map(({ key, label }) => (
             <button
               key={key}
