@@ -42,6 +42,15 @@ STATUS_HEADINGS = (
     "Active Branch",
 )
 
+HERMES_SCHEMA_VERSION = "0.1"
+
+HERMES_SOURCE_FILES = (
+    "PROJECT_STATE.md",
+    "docs/DECISIONS.md",
+    "AGENTS.md",
+    "git",
+)
+
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -51,6 +60,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--json",
         action="store_true",
         help="Emit the same information as JSON",
+    )
+    parser.add_argument(
+        "--hermes-json",
+        action="store_true",
+        help="Emit Hermes project-context v0.1 JSON (stdout only)",
     )
     return parser.parse_args(argv)
 
@@ -80,6 +94,14 @@ def git_branch(repo_root: Path) -> str:
         return "unknown"
     branch = stdout.strip()
     return branch if branch else "unknown"
+
+
+def git_head(repo_root: Path) -> str | None:
+    code, stdout, _ = run_git(repo_root, "rev-parse", "HEAD")
+    if code != 0:
+        return None
+    head = stdout.strip()
+    return head if head else None
 
 
 def git_status_short(repo_root: Path) -> list[str]:
@@ -118,12 +140,19 @@ def path_exists(repo_root: Path, relative: str) -> bool:
     return (repo_root / relative).exists()
 
 
-def project_state_summary(repo_root: Path) -> str | None:
+def read_project_state_lines(repo_root: Path) -> list[str]:
     path = repo_root / "PROJECT_STATE.md"
     if not path.is_file():
+        raise FileNotFoundError(f"PROJECT_STATE.md not found under {repo_root}")
+    return path.read_text(encoding="utf-8").splitlines()
+
+
+def project_state_summary(repo_root: Path) -> str | None:
+    try:
+        lines = read_project_state_lines(repo_root)
+    except FileNotFoundError:
         return None
 
-    lines = path.read_text(encoding="utf-8").splitlines()
     for heading in STATUS_HEADINGS:
         marker = f"## {heading}"
         for index, line in enumerate(lines):
@@ -137,6 +166,279 @@ def project_state_summary(repo_root: Path) -> str | None:
                     break
                 return f"{heading}: {stripped}"
     return None
+
+
+def _find_heading_index(lines: list[str], heading_text: str) -> int | None:
+    for index, line in enumerate(lines):
+        if line.startswith("## ") and heading_text in line:
+            return index
+    return None
+
+
+def _first_content_line_after_heading(lines: list[str], heading: str) -> str | None:
+    marker = f"## {heading}"
+    for index, line in enumerate(lines):
+        if line.strip() != marker:
+            continue
+        for follow in lines[index + 1 :]:
+            stripped = follow.strip()
+            if not stripped:
+                continue
+            if stripped.startswith("##"):
+                break
+            return stripped
+    return None
+
+
+def _section_body_lines(lines: list[str], heading_substring: str) -> list[str]:
+    start = _find_heading_index(lines, heading_substring)
+    if start is None:
+        return []
+    body: list[str] = []
+    for line in lines[start + 1 :]:
+        if line.startswith("## "):
+            break
+        body.append(line)
+    return body
+
+
+def _strip_markdown_emphasis(text: str) -> str:
+    return text.replace("**", "").replace("`", "").strip()
+
+
+def _parse_markdown_table_rows(lines: list[str], start_index: int) -> list[list[str]]:
+    rows: list[list[str]] = []
+    for line in lines[start_index:]:
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            if rows:
+                break
+            continue
+        if set(stripped.replace("|", "").replace("-", "").replace(":", "").strip()) == set():
+            continue
+        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        rows.append(cells)
+    return rows
+
+
+def _table_after_marker(lines: list[str], marker: str) -> dict[str, str]:
+    for index, line in enumerate(lines):
+        if marker not in line:
+            continue
+        for offset, candidate in enumerate(lines[index: index + 8]):
+            if candidate.strip().startswith("|"):
+                rows = _parse_markdown_table_rows(lines, index + offset)
+                if len(rows) < 2:
+                    return {}
+                result: dict[str, str] = {}
+                for row in rows[1:]:
+                    if len(row) >= 2:
+                        key = _strip_markdown_emphasis(row[0])
+                        value = _strip_markdown_emphasis(row[1])
+                        result[key] = value
+                return result
+    return {}
+
+
+def _paragraph_from_section_body(body: list[str]) -> str | None:
+    parts: list[str] = []
+    for line in body:
+        stripped = line.strip()
+        if not stripped or stripped == "---":
+            continue
+        if stripped.startswith("|") or stripped.startswith("- ") or stripped.startswith("```"):
+            continue
+        if stripped.startswith("Do not start"):
+            continue
+        parts.append(_strip_markdown_emphasis(stripped))
+    if not parts:
+        return None
+    return " ".join(parts)
+
+
+def _parse_numbered_items(body: list[str]) -> list[str]:
+    items: list[str] = []
+    for line in body:
+        stripped = line.strip()
+        if not stripped or not stripped[0].isdigit():
+            continue
+        dot_index = stripped.find(".")
+        if dot_index == -1:
+            continue
+        items.append(_strip_markdown_emphasis(stripped[dot_index + 1 :].strip()))
+    return items
+
+
+def _parse_do_not_change(body: list[str]) -> list[str]:
+    items: list[str] = []
+    prefix = "- Do **not**"
+    for line in body:
+        stripped = line.strip()
+        if not stripped.startswith(prefix):
+            continue
+        text = stripped[len("- Do **not**") :].strip()
+        if text.endswith("."):
+            text = text[:-1]
+        items.append(text.strip())
+    return items
+
+
+def _parse_project_name(lines: list[str]) -> str | None:
+    if not lines:
+        return None
+    first = lines[0].strip()
+    suffix = " Project State"
+    if first.startswith("# ") and first.endswith(suffix):
+        return first[2 : -len(suffix)].strip() or None
+    return None
+
+
+def _parse_last_updated(lines: list[str]) -> str | None:
+    for line in lines[:20]:
+        stripped = line.strip()
+        if stripped.startswith("Last Updated:"):
+            return stripped.split(":", 1)[1].strip() or None
+    return None
+
+
+def _parse_documented_head(section_lines: list[str]) -> str | None:
+    for line in section_lines:
+        stripped = line.strip()
+        if stripped.startswith("**HEAD:**"):
+            remainder = stripped.split("**HEAD:**", 1)[1].strip()
+            if remainder.startswith("`") and "`" in remainder[1:]:
+                return remainder.split("`", 2)[1]
+    return None
+
+
+def _parse_verified_checks(section_lines: list[str]) -> dict[str, str]:
+    for index, line in enumerate(section_lines):
+        if "**Verified on this machine" in line:
+            rows = _parse_markdown_table_rows(section_lines, index + 1)
+            if len(rows) < 2:
+                return {}
+            checks: dict[str, str] = {}
+            for row in rows[1:]:
+                if len(row) >= 2:
+                    checks[_strip_markdown_emphasis(row[0])] = _strip_markdown_emphasis(row[1])
+            return checks
+    return {}
+
+
+def _parse_test_state_table(lines: list[str]) -> dict[str, dict[str, str | None]]:
+    start = _find_heading_index(lines, "TEST / VERIFICATION STATE")
+    if start is None:
+        return {}
+    rows = _parse_markdown_table_rows(lines, start + 1)
+    if len(rows) < 2:
+        return {}
+    result: dict[str, dict[str, str | None]] = {}
+    for row in rows[1:]:
+        if len(row) < 2:
+            continue
+        key = _strip_markdown_emphasis(row[0])
+        entry: dict[str, str | None] = {"result": _strip_markdown_emphasis(row[1])}
+        if len(row) >= 3:
+            when = _strip_markdown_emphasis(row[2])
+            entry["when_verified"] = when if when != "—" else None
+        result[key] = entry
+    return result
+
+
+def _parse_blockers(lines: list[str]) -> list[str]:
+    start = _find_heading_index(lines, "PARTIAL / UNVERIFIED WORK")
+    if start is None:
+        return []
+    rows = _parse_markdown_table_rows(lines, start + 1)
+    if len(rows) < 2:
+        return []
+    return [_strip_markdown_emphasis(row[0]) for row in rows[1:] if row]
+
+
+def _capability_flag(value: str, needle: str) -> bool:
+    return needle.lower() in value.lower()
+
+
+def build_hermes_context(repo_root: Path) -> dict[str, Any]:
+    lines = read_project_state_lines(repo_root)
+    status_lines = git_status_short(repo_root)
+    branch = git_branch(repo_root)
+    head = git_head(repo_root)
+
+    project = _parse_project_name(lines)
+    if project is None:
+        raise ValueError("unable to parse project name from PROJECT_STATE.md")
+
+    verified_section = _section_body_lines(lines, "VERIFIED CURRENT STATE")
+    remote = _table_after_marker(lines, "**Remote deployment")
+    capabilities = _table_after_marker(lines, "**Deployment status:**")
+    promoted_export = _table_after_marker(lines, "**Current local promoted export**")
+
+    manual_verified = any(
+        _capability_flag(value, "IMPLEMENTED — VERIFIED")
+        for value in capabilities.values()
+    )
+    automation_implemented = not any(
+        key.lower() == "deployment automation"
+        and _capability_flag(value, "NOT IMPLEMENTED")
+        for key, value in capabilities.items()
+    )
+
+    objective_body = _section_body_lines(lines, "CURRENT OBJECTIVE")
+    next_action_body = _section_body_lines(lines, "EXACT NEXT ACTION")
+    unresolved_body = _section_body_lines(lines, "UNRESOLVED DECISIONS")
+    constraints_body = _section_body_lines(lines, "DO-NOT-CHANGE CONSTRAINTS")
+
+    untracked_paths = [
+        line[3:].strip() for line in status_lines if is_untracked_status_line(line)
+    ]
+
+    return {
+        "schema_version": HERMES_SCHEMA_VERSION,
+        "project": project,
+        "repository_root": str(repo_root),
+        "branch": branch,
+        "head": head,
+        "stable_milestone": _first_content_line_after_heading(lines, "Stable Milestone"),
+        "active_phase": _first_content_line_after_heading(lines, "Active Phase"),
+        "current_objective": _paragraph_from_section_body(objective_body),
+        "next_action": _paragraph_from_section_body(next_action_body),
+        "verified_state": {
+            "last_updated": _parse_last_updated(lines),
+            "checks": _parse_verified_checks(verified_section),
+            "promoted_export": promoted_export,
+            "head_documented": _parse_documented_head(verified_section),
+        },
+        "test_state": _parse_test_state_table(lines),
+        "deployment_state": {
+            "remote": remote,
+            "capabilities": capabilities,
+            "manual_deploy_verified": manual_verified,
+            "automation_implemented": automation_implemented,
+            "custom_domain_configured": capabilities.get("Custom domain", "").lower()
+            != "not configured"
+            if capabilities
+            else None,
+            "cicd_deploy_implemented": not any(
+                key.lower() == "ci/cd deployment"
+                and _capability_flag(value, "NOT IMPLEMENTED")
+                for key, value in capabilities.items()
+            )
+            if capabilities
+            else None,
+        },
+        "working_tree_state": {
+            "dirty": any(is_dirty_status_line(line) for line in status_lines),
+            "untracked": any(is_untracked_status_line(line) for line in status_lines),
+            "untracked_paths": untracked_paths,
+            "status_lines": status_lines,
+        },
+        "blockers": _parse_blockers(lines),
+        "unresolved_decisions": _parse_numbered_items(unresolved_body),
+        "do_not_change": _parse_do_not_change(constraints_body),
+        "source_files": list(HERMES_SOURCE_FILES),
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
 
 
 def detect_test_configs(repo_root: Path) -> dict[str, bool]:
@@ -315,6 +617,18 @@ def main(argv: list[str] | None = None) -> int:
     if repo_root is None:
         print("error: not inside a git repository", file=sys.stderr)
         return 1
+
+    if args.hermes_json:
+        try:
+            hermes_context = build_hermes_context(repo_root)
+        except FileNotFoundError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        except ValueError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps(hermes_context, indent=2, sort_keys=True))
+        return 0
 
     context = build_context(repo_root)
     if args.json:
