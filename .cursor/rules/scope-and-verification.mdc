@@ -1,0 +1,28 @@
+---
+description: Scope discipline and post-implementation verification
+alwaysApply: true
+---
+
+# Scope and Verification
+
+## Scope discipline
+
+- Make the smallest change that satisfies the task.
+- No opportunistic cleanup, refactors, or drive-by fixes in untouched files.
+- Preserve unrelated working-tree state.
+- For non-trivial work, use `.cursor/templates/task-contract.md` mentally or explicitly.
+
+## After implementation (before commit/stage unless authorized)
+
+1. `git diff` — review all hunks.
+2. `git status --short` — confirm only intended files changed.
+3. Run verification gates for touched subsystems only:
+
+| Subsystem | Gate |
+|-----------|------|
+| Python / export / tests | `python3 -m pytest tests/ -q` (or scoped path) |
+| `web-dashboard/` | `npm run test` and/or `npm run build` in `web-dashboard/` |
+| Docs-only | diff review; no build unless task requires |
+
+4. Report: exact files changed, tests/build commands run and results, any unexpected mutations.
+5. Stop before `git add` / `git commit` unless staging was explicitly authorized.

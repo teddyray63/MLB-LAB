@@ -1,0 +1,22 @@
+---
+description: Pre-mutation repository orientation ritual
+alwaysApply: true
+---
+
+# Session Preflight (before first mutation)
+
+Before creating, editing, or deleting repository files:
+
+1. Confirm repository root (`git rev-parse --show-toplevel`).
+2. Report current branch and HEAD.
+3. Run `git status --short`.
+4. List files changed/untracked that are **outside** the task's allowed scope.
+5. Read applicable guidance:
+   - `PROJECT_STATE.md`
+   - `AGENTS.md`
+   - `docs/DECISIONS.md` (if reopening settled behavior)
+   - subsystem docs for touched paths (e.g. `web-dashboard/ARCHITECTURE.md`)
+
+Optional enrichment: `python3 scripts/repo_context.py` or `--json`.
+
+If the task is read-only planning or review, skip mutation steps but still run orientation when investigating repository state.

@@ -1,0 +1,35 @@
+---
+description: MLB-LAB canonical architecture and product constraints
+alwaysApply: true
+---
+
+# MLB-LAB Baseline
+
+## Repository
+
+- Canonical branch: `main`
+- Operational snapshot: `PROJECT_STATE.md` (prefer over stale docs)
+
+## Canonical deployed architecture (G0b static export)
+
+MLB/Statcast → `scripts/build_daily_export.py` → validation/promotion →
+`daily_export.json` → Vite/React (`web-dashboard/`) → Cloudflare Pages
+
+FastAPI/SQLite is **not** the canonical deployed architecture. Treat `BUILD_PLAN.md` FastAPI paths as aspirational unless a decision reopens them.
+
+## Do not without explicit authorization
+
+- Delete or redirect `/legacy/*` routes (DEC-001)
+- Fabricate Top Plays / Category Boards when export arrays are empty (DEC-005)
+- Change export schemas, promotion policy (DEC-002), or `.gitignore`
+- Remote deploy or merge branches
+- Promote `evidence/**/*.raw.json` to test fixtures (DEC-006)
+
+## Evidence
+
+- Raw captures: `evidence/**/*.raw.json` — local only (gitignored)
+- Metadata may be committed in general (DEC-006), but do not stage/commit evidence files unless the task explicitly names them (e.g. `evidence/mlb/game-995731-feed-live.metadata.txt` remains untracked by default)
+
+## Generated artifacts
+
+Do not commit: `data/daily_export.json`, `web-dashboard/dist/`, export candidates/backups (see `.gitignore`, `docs/DEPLOYMENT.md`).

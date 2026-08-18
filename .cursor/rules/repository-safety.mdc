@@ -1,0 +1,27 @@
+---
+description: Git safety and mutation authorization — never without explicit user authorization
+alwaysApply: true
+---
+
+# Repository Safety
+
+## Never without explicit user authorization
+
+- `git push --force` / force push to `main`
+- `git reset --hard`, destructive checkout, `git clean -fd`
+- `git rebase`, branch delete, file delete
+- `git add` / stage unrelated or out-of-scope files
+- `git commit`, `git push`, `git merge`
+- Modify `.github/workflows/`, deployment config, or unrelated subsystems
+
+Commit and push only when the user explicitly requests them in the current task.
+
+## Preserve working tree
+
+- Do not stage, commit, or delete intentionally untracked evidence files unless the task names that artifact.
+- Do not alter unrelated modified files visible in `git status --short`.
+- Stop and report if repository state differs materially from the task's approved baseline.
+
+## When blocked
+
+Report current branch, HEAD, `git status --short`, and what authorization is needed. Do not proceed speculatively.
