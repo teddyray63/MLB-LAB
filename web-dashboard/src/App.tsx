@@ -34,7 +34,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
       <p className="mt-2 text-sm text-[#F0F6FC]">{message}</p>
       <p className="mt-3 text-xs text-[#8B949E]">
         Run{' '}
-        <code className="rounded bg-[#21262D] px-1 py-0.5">python3 scripts/mlb_lab_runner.py</code>{' '}
+        <code className="rounded bg-[#21262D] px-1 py-0.5">python3 scripts/build_daily_export.py</code>{' '}
         from the repo root to generate{' '}
         <code className="rounded bg-[#21262D] px-1 py-0.5">data/daily_export.json</code>.
       </p>

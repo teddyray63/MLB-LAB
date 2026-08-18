@@ -1,6 +1,6 @@
 # MLB-LAB Project State
 
-Last Updated: 2026-08-15
+Last Updated: 2026-08-18
 
 Canonical operational snapshot for agents and operators. Historical design documents
 (`BUILD_PLAN.md`, early README paths) may describe aspirational or superseded
@@ -12,19 +12,19 @@ G0b export pipeline complete; first manual Cloudflare Pages deploy verified (202
 
 ## Active Branch
 
-sports-resource-hub
+main
 
 ## Active Phase
 
-Post-deployment stabilization — branch and operational ownership reconciliation
+Post-reconciliation stabilization — canonical baseline on `main`
 
 ---
 
 ## 1. VERIFIED CURRENT STATE
 
-**Branch:** `sports-resource-hub`
+**Branch:** `main`
 
-**HEAD:** `f0141f4` (`chore: add manual static deployment workflow`)
+**HEAD:** `8a2ba23` (`feat: add Hermes project context adapter`)
 
 **Verified on this machine (2026-08-15):**
 
@@ -97,7 +97,7 @@ runtime from `/data/daily_export.json` (bundled via prebuild sync). See
 
 ## 2. CURRENT ARCHITECTURE
 
-**Production-intent dashboard path (verified on `sports-resource-hub`):**
+**Production-intent dashboard path (verified on `main`):**
 
 ```
 MLB Stats API + pybaseball
@@ -164,7 +164,7 @@ as roadmap/history, not operational truth.
 Phase F commit message: *"Complete Phase F visual polish and cleanup"*. Formal Codex
 sign-off is **not recorded** in git or decision log — see §4.
 
-### Export pipeline G0b (on `sports-resource-hub`, **not on `main`**)
+### Export pipeline G0b (on `main`)
 
 | Milestone | Status | Key commits / artifacts |
 |-----------|--------|-------------------------|
@@ -207,7 +207,6 @@ Superseded locally by 2026-08-14 promotion (§1). Policy unchanged (DEC-002).
 | Browser Back behavior | **Not fully verified** |
 | `top_plays` / `category_boards` formulas | **Unavailable** — empty arrays accepted (DEC-005) |
 | CI alignment with export pipeline | CI still runs `mlb_lab_runner.py` — **not verified** against G0b path |
-| `sports-resource-hub` → `main` merge | **Not performed** — 20 commits ahead of `main` |
 
 **L5/L10 clarification:** Timeframe slicing **is implemented** for Research workspace
 player game logs (`player_logs` export + `sliceGameLogByTimeframe` in
@@ -270,7 +269,6 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 
 **Documentation drift (not corrected in this reconciliation):**
 
-- `web-dashboard/README.md` still instructs `mlb_lab_runner.py` → `daily_export.json`.
 - `BUILD_PLAN.md` still describes FastAPI → React as primary architecture.
 
 ---
@@ -279,21 +277,21 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 
 | Item | Value |
 |------|-------|
-| Active branch | `sports-resource-hub` |
-| HEAD | `f0141f4b8083b0d3f55380d69c91ba283eb49a30` |
-| `main` HEAD | `54ca81a` (`Merge branch 'cursor/fix-dashboard-blank-panels'`) |
-| Merge-base (`main`…`HEAD`) | `54ca81a` |
-| Commits on branch not on `main` | **20** |
+| Canonical branch | `main` |
+| `main` HEAD | `8a2ba23` (`feat: add Hermes project context adapter`) |
+| `origin/main` HEAD | `8a2ba23` (matches local `main`) |
+| `sports-resource-hub` HEAD | `8a2ba23` (matches `main`; branch retained) |
+| Reconciliation | **Complete** — 22 commits fast-forwarded from `54ca81a` to `8a2ba23` on 2026-08-18 |
 | Working tree | clean except untracked `evidence/mlb/game-995731-feed-live.metadata.txt` |
 
-**Recent commits on `sports-resource-hub`:**
+**Recent commits on `main`:**
 
 ```
+8a2ba23 feat: add Hermes project context adapter
+58098f2 docs: reconcile verified project state
 f0141f4 chore: add manual static deployment workflow
 0fd4d73 fix: report missing player logs accurately
 37775e8 feat: wire research timeframe to player logs
-f871ef5 feat: enable player logs in full candidate builds
-1d524dd docs: clarify primary position semantics
 ```
 
 **Stable GitHub artifacts (historical):**
@@ -326,13 +324,13 @@ Documented here for agent awareness. **This reconciliation updates PROJECT_STATE
 
 | Contradiction | Resolution in PROJECT_STATE | Other docs (unchanged) |
 |---------------|----------------------------|------------------------|
-| Stale active branch (`cursor/fix-dashboard-blank-panels`) | Updated to `sports-resource-hub` | `LEGACY_PARITY_MATRIX.md` header still references old branch |
+| Stale active branch (`cursor/fix-dashboard-blank-panels`) | Updated to `main` | `LEGACY_PARITY_MATRIX.md` header still references old branch |
 | L5/L10 “not fully implemented” | Clarified: **yes** for Research player logs; **no** for leaderboard export rows | — |
 | Old promotion record (2026-08-01) as “current” | Updated current export to 2026-08-14; prior promotion kept as history | DEC-002 evidence cites old PROJECT_STATE text |
 | Phase F “in progress” | Marked **implemented**; sign-off **unverified** | — |
 | FastAPI path as active dashboard | Labeled aspirational in §2 | `BUILD_PLAN.md` |
 | CI runs legacy runner | Documented in §6 | `.github/workflows/*.yml` |
-| README points to wrong export script | Documented in §6 | `web-dashboard/README.md` |
+| README points to wrong export script | Corrected in stabilization (2026-08-18) | — |
 | Empty leaderboard arrays | Still accepted (DEC-005) | — |
 | Duplicate `game_pk` export warning | Still present | — |
 | Misleading legacy subtitles on empty sections | Partially addressed (`2bdaab1`); UI-copy cleanup may remain | — |
@@ -343,13 +341,12 @@ Documented here for agent awareness. **This reconciliation updates PROJECT_STATE
 
 Do **not** decide these without explicit stakeholder approval:
 
-1. **Merge `sports-resource-hub` → `main`** — 20 commits including G0b pipeline not on main.
-2. **Cloudflare deployment automation** — whether/how to automate deploys while preserving SHA-pinned export promotion semantics (provider selected: Cloudflare Pages; first manual deploy complete).
-3. **Retirement of `mlb_lab_runner.py`** — parallel to G0b path; CI still depends on it.
-4. **Restoration of leaderboard formulas** — `top_plays` / `category_boards` empty.
-5. **Retirement of legacy routes** — deferred pending parity sign-off (DEC-001).
-6. **CI redesign** — align automation with `build_daily_export.py` vs keep legacy runner.
-7. **Phase F formal sign-off** — implementation complete; approval not recorded.
+1. **Cloudflare deployment automation** — whether/how to automate deploys while preserving SHA-pinned export promotion semantics (provider selected: Cloudflare Pages; first manual deploy complete).
+2. **Retirement of `mlb_lab_runner.py`** — parallel to G0b path; CI still depends on it.
+3. **Restoration of leaderboard formulas** — `top_plays` / `category_boards` empty.
+4. **Retirement of legacy routes** — deferred pending parity sign-off (DEC-001).
+5. **CI redesign** — align automation with `build_daily_export.py` vs keep legacy runner.
+6. **Phase F formal sign-off** — implementation complete; approval not recorded.
 
 Recorded decisions: `docs/DECISIONS.md` (DEC-001 through DEC-007).
 
@@ -357,15 +354,15 @@ Recorded decisions: `docs/DECISIONS.md` (DEC-001 through DEC-007).
 
 ## 11. CURRENT OBJECTIVE
 
-Stabilize the verified post-deployment project state, reconcile branch and
-operational ownership, and choose the next bounded MLB-LAB product/operations task.
+Maintain the reconciled canonical baseline on `main` and choose the next bounded
+MLB-LAB product task.
 
 ---
 
 ## 12. EXACT NEXT ACTION
 
-Choose the next bounded task from unresolved decisions (§10) — merge review,
-Cloudflare deploy automation design, companion-doc refresh, or product backlog item.
+Choose the next bounded product task — `/today` → `/research` handoff or another
+backlog item from §10.
 
 Do not start without explicit authorization for the chosen task.
 

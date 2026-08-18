@@ -1,22 +1,24 @@
 # MLB-LAB Web Dashboard
 
-Research-only dashboard. **Single data source:** `data/daily_export.json` from the Python runner.
+Research-only dashboard. **Single data source:** promoted `data/daily_export.json` from the G0b export pipeline.
 
 ## Data flow
 
 ```
-scripts/mlb_lab_runner.py  →  data/daily_export.json  →  web-dashboard/public/data/  →  fetch /data/daily_export.json
+scripts/build_daily_export.py  →  data/daily_export.json  →  web-dashboard/public/data/  →  fetch /data/daily_export.json
 ```
 
-- **Source of truth:** repo root `data/daily_export.json`
+- **Source of truth:** repo root `data/daily_export.json` (gitignored; built and promoted locally)
+- **Canonical builder:** `scripts/build_daily_export.py` — see `docs/DEPLOYMENT.md` for validation, promotion, and deploy injection
 - **Dev/build:** `npm run sync-data` copies into `public/data/` (runs automatically before `dev` and `build`)
 - **Fallback:** Vite dev middleware also serves `../data/daily_export.json` if the copy is missing
 
 ## Run
 
 ```bash
-# 1. Generate export (repo root)
-python3 scripts/mlb_lab_runner.py
+# 1. Build or promote export (repo root)
+python3 scripts/build_daily_export.py --help
+# See docs/DEPLOYMENT.md for promotion and SHA-pinned deploy flow.
 
 # 2. Dashboard
 cd web-dashboard
@@ -24,20 +26,12 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 — Command Center renders `top_plays` for all five categories from the real JSON.
+Open http://localhost:5173 — canonical routes include `/today`, `/research`, and `/leaderboards`.
 
-Click **Reload** after re-running the Python export (or run `npm run sync-data` then reload).
+Click **Reload** after updating the promoted export (or run `npm run sync-data` then reload).
 
-## JSON schema (Command Center)
+## JSON schema
 
-Uses `top_plays.{hits,singles,total_bases,hrr,home_runs}` — 5 rows each:
+Primary export sections consumed by the dashboard include `games`, `matchups`, `game_details`, `player_logs`, `top_plays`, and `category_boards`. See `web-dashboard/src/types/slate.ts` and `scripts/build_daily_export.py` for the G0b contract.
 
-`rank`, `hitter`, `team`, `game`, `opp_sp`, `pitch`, `score`, `tier`, `key_stat`, `key_val`
-
-Tiers: **T1** green · **T2** yellow · **T3** orange
-
-## Next views (same file)
-
-- Category Boards → `category_boards` (20 rows per category)
-- Game Hub → per-game detail (not in JSON yet)
-- Player Matchup Card → filter `matchups` by hitter
+Legacy pages under `/legacy/*` remain available per DEC-001.

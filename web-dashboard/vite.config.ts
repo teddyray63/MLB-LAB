@@ -20,7 +20,7 @@ function serveDailyExport() {
         }
         if (!fs.existsSync(EXPORT_SRC)) {
           res.statusCode = 404
-          res.end('daily_export.json not found — run mlb_lab_runner.py first')
+          res.end('daily_export.json not found — run scripts/build_daily_export.py first')
           return
         }
         res.setHeader('Content-Type', 'application/json')
