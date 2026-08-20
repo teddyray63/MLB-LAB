@@ -1,0 +1,46 @@
+# MLB-LAB local quality gates (pre-commit).
+#
+# Purpose: catch obvious repository problems before GitHub Actions.
+# These hooks are deterministic file checks. They do not fetch live MLB
+# data, deploy, commit, or push.
+#
+# Full pytest and web-dashboard production build remain in
+# .github/workflows/verify-g0b.yml (required GitHub check: verify).
+#
+# Optional local install (does not commit anything):
+#   python3 -m pip install pre-commit
+#   pre-commit install
+#   pre-commit run --all-files
+#
+# Auto-fixing formatters are intentionally omitted. Historical trailing
+# whitespace, missing-newline, and mixed CR progress-bar bytes in tracked
+# log files exist; rewriting them is out of scope for this gate.
+
+default_stages: [pre-commit]
+fail_fast: false
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-json
+      - id: check-yaml
+      - id: check-ast
+      - id: detect-private-key
+      - id: check-case-conflict
+      - id: debug-statements
+      - id: check-executables-have-shebangs
+
+  - repo: local
+    hooks:
+      - id: no-generated-artifacts
+        name: block generated and raw evidence artifacts
+        language: fail
+        entry: >-
+          Do not commit generated exports, dashboard build output, or raw
+          evidence captures (see .gitignore and DEC-006).
+        files: >-
+          ^(data/daily_export\.json|data/candidates/.*|data/backups/.*|web-dashboard/dist/.*|web-dashboard/public/data/daily_export\.json|evidence/.*\.raw\.json)$
