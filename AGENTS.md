@@ -2,6 +2,21 @@
 
 This file provides repository-level guidance for AI coding agents working in MLB-LAB.
 
+## Orchestration and retrieval
+
+Canonical policies (link only — do not duplicate here):
+
+- `~/teddy-os-infrastructure/docs/agent-orchestration.md`
+- `~/teddy-os-infrastructure/docs/retrieval-router-policy.md`
+
+Task contracts (`.cursor/templates/task-contract.md`) control authority and scope.
+Subagents must not redefine immutable contract fields.
+
+- **Live git state** (`git status`, `git diff`, `git branch`, `git rev-parse`) overrides
+  stale `PROJECT_STATE.md` branch/worktree claims unless re-verified in the same task.
+- Preserve unrelated staged or untracked work; do not mix it into commits.
+- No independent agent memory — durable knowledge stays in Teddy OS and repository docs.
+
 ## Implementation context
 
 When applicable, consult:
