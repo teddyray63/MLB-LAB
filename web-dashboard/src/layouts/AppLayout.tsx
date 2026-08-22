@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { ResearchChrome } from '../components/ResearchChrome'
 import { useLayoutHeightVar } from '../hooks/useLayoutHeightVar'
+import { primaryNavLinkTo } from '../lib/researchChromeNav'
 
 interface NavItem {
   to: string
@@ -30,7 +31,7 @@ function isActive(pathname: string, item: NavItem): boolean {
 }
 
 export function AppLayout({ exportDate, onReload }: AppLayoutProps) {
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
   const headerRef = useRef<HTMLElement>(null)
   useLayoutHeightVar(headerRef, '--app-header-height')
 
@@ -66,7 +67,7 @@ export function AppLayout({ exportDate, onReload }: AppLayoutProps) {
                 return (
                   <Link
                     key={item.to}
-                    to={item.to}
+                    to={primaryNavLinkTo(item.to, search)}
                     aria-current={active ? 'page' : undefined}
                     className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                       active

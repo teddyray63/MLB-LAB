@@ -22,6 +22,10 @@ export function TodayPage() {
         <GameCardGrid />
       </section>
 
+      <p className="text-xs text-[#8B949E]">
+        Select a hitter from Lineups, Matchups, or Team Splits to open Research.
+      </p>
+
       <TodayTabPanels />
     </WorkspacePage>
   )

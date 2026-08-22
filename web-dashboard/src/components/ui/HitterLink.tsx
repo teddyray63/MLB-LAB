@@ -65,9 +65,12 @@ export function HitterLink({
     const resolvedGame =
       gamePk !== undefined ? gamePk : gameCtx.selection.gamePk
 
+    const isTodayHandoff = location.pathname === '/today'
+
     return (
       <button
         type="button"
+        aria-label={`Open research for ${name}`}
         onClick={() =>
           gameCtx.openResearch({
             player: name,
@@ -75,6 +78,7 @@ export function HitterLink({
             side: resolvedSide,
             pitcher: opposingPitcher ?? undefined,
             tab: 'overview',
+            ...(isTodayHandoff ? { filters: { timeframe: 'l10' } } : {}),
           })
         }
         className={`text-left ${linkClass}`}

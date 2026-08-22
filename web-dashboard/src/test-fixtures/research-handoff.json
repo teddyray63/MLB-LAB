@@ -1,0 +1,87 @@
+{
+  "date": "2026-08-01",
+  "games": [
+    {
+      "game_pk": 100001,
+      "game_id": "Away Team @ Home Team",
+      "away_team": "Away Team",
+      "home_team": "Home Team",
+      "away_sp": "Away Pitcher",
+      "home_sp": "Home Pitcher",
+      "away_sp_id": 200001,
+      "home_sp_id": 200002
+    },
+    {
+      "game_pk": 100002,
+      "game_id": "Other Away @ Other Home",
+      "away_team": "Other Away",
+      "home_team": "Other Home",
+      "away_sp": "SP A",
+      "home_sp": "SP B",
+      "away_sp_id": null,
+      "home_sp_id": null
+    }
+  ],
+  "matchups": [
+    {
+      "hitter": "Test Hitter",
+      "team": "Away Team",
+      "game": "Away Team @ Home Team",
+      "game_pk": 100001,
+      "opp_sp": "Home Pitcher",
+      "pitch": "FF",
+      "pa": 12
+    }
+  ],
+  "game_details": [
+    {
+      "game_pk": 100001,
+      "game_id": "Away Team @ Home Team",
+      "away_team": "Away Team",
+      "home_team": "Home Team",
+      "away_sp": "Away Pitcher",
+      "home_sp": "Home Pitcher",
+      "away_hitters": [],
+      "home_hitters": [],
+      "away_pitch_mix": [],
+      "home_pitch_mix": [],
+      "away_bullpen": [],
+      "home_bullpen": [],
+      "away_lineup": [
+        {
+          "order": 1,
+          "hitter": "Test Hitter",
+          "hand": "L",
+          "status": null,
+          "ab": 100,
+          "hits": 30,
+          "hr": 5,
+          "avg": 0.3,
+          "slg": 0.5,
+          "k_pct": 0.2,
+          "barrel_pct": 0.1
+        }
+      ],
+      "home_lineup": []
+    }
+  ],
+  "player_logs": {
+    "Test Hitter": [
+      { "date": "2026-07-20", "pa": 4, "hits": 2, "singles": 1, "tb": 3, "hr": 0, "avg_ev": 90, "barrels": 0 },
+      { "date": "2026-07-19", "pa": 3, "hits": 1, "singles": 1, "tb": 1, "hr": 0, "avg_ev": 88, "barrels": 0 },
+      { "date": "2026-07-18", "pa": 5, "hits": 0, "singles": 0, "tb": 0, "hr": 0, "avg_ev": 85, "barrels": 0 },
+      { "date": "2026-07-17", "pa": 4, "hits": 3, "singles": 2, "tb": 5, "hr": 1, "avg_ev": 95, "barrels": 1 },
+      { "date": "2026-07-16", "pa": 4, "hits": 1, "singles": 1, "tb": 1, "hr": 0, "avg_ev": 87, "barrels": 0 },
+      { "date": "2026-07-15", "pa": 3, "hits": 2, "singles": 1, "tb": 4, "hr": 1, "avg_ev": 92, "barrels": 1 },
+      { "date": "2026-07-14", "pa": 4, "hits": 0, "singles": 0, "tb": 0, "hr": 0, "avg_ev": 84, "barrels": 0 },
+      { "date": "2026-07-13", "pa": 5, "hits": 2, "singles": 2, "tb": 2, "hr": 0, "avg_ev": 89, "barrels": 0 },
+      { "date": "2026-07-12", "pa": 4, "hits": 1, "singles": 0, "tb": 2, "hr": 0, "avg_ev": 91, "barrels": 0 },
+      { "date": "2026-07-11", "pa": 3, "hits": 0, "singles": 0, "tb": 0, "hr": 0, "avg_ev": 83, "barrels": 0 },
+      { "date": "2026-07-10", "pa": 4, "hits": 2, "singles": 1, "tb": 3, "hr": 0, "avg_ev": 90, "barrels": 0 },
+      { "date": "2026-07-09", "pa": 4, "hits": 1, "singles": 1, "tb": 1, "hr": 0, "avg_ev": 86, "barrels": 0 }
+    ],
+    "No Log Hitter": []
+  },
+  "top_plays": {},
+  "category_boards": {}
+}
