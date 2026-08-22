@@ -1,6 +1,6 @@
 # MLB-LAB Project State
 
-Last Updated: 2026-08-18
+Last Updated: 2026-08-22
 
 Canonical operational snapshot for agents and operators. Historical design documents
 (`BUILD_PLAN.md`, early README paths) may describe aspirational or superseded
@@ -24,7 +24,7 @@ Post-reconciliation stabilization — canonical baseline on `main`
 
 **Branch:** `main`
 
-**HEAD:** `8a2ba23` (`feat: add Hermes project context adapter`)
+**HEAD:** `cff0ceb` (`Merge pull request #5 from teddyray63/infra/repo-health-monitor`)
 
 **Verified on this machine (2026-08-15):**
 
@@ -278,20 +278,22 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 | Item | Value |
 |------|-------|
 | Canonical branch | `main` |
-| `main` HEAD | `8a2ba23` (`feat: add Hermes project context adapter`) |
-| `origin/main` HEAD | `8a2ba23` (matches local `main`) |
-| `sports-resource-hub` HEAD | `8a2ba23` (matches `main`; branch retained) |
+| `main` HEAD | `cff0ceb` (`Merge pull request #5 from teddyray63/infra/repo-health-monitor`) |
+| `origin/main` HEAD | `cff0ceb` (matches local `main`) |
+| `sports-resource-hub` HEAD | `8a2ba23` (behind `main`; branch retained) |
 | Reconciliation | **Complete** — 22 commits fast-forwarded from `54ca81a` to `8a2ba23` on 2026-08-18 |
-| Working tree | clean except untracked `evidence/mlb/game-995731-feed-live.metadata.txt` |
+| Upgrade 7 health monitor | PR #5 merged to `main` at `cff0ceb` (2026-08-22); `scripts/repo_health.py` present |
+| Index | empty |
+| Working tree | clean except untracked `evidence/mlb/game-995731-feed-live.metadata.txt` (SHA256 `29c9635f376100332bef248bdc5c12063ca1d1c230e3938a062e9e5d11624c95`) |
 
 **Recent commits on `main`:**
 
 ```
-8a2ba23 feat: add Hermes project context adapter
-58098f2 docs: reconcile verified project state
-f0141f4 chore: add manual static deployment workflow
-0fd4d73 fix: report missing player logs accurately
-37775e8 feat: wire research timeframe to player logs
+cff0ceb Merge pull request #5 from teddyray63/infra/repo-health-monitor
+e142f9b chore: add repository health monitor
+c612df2 Merge pull request #4 from teddyray63/infra/upgrade6-agent-orchestration
+b093410 chore: add agent orchestration governance
+c4a3573 Merge pull request #3 from teddyray63/product/today-research-handoff
 ```
 
 **Stable GitHub artifacts (historical):**
