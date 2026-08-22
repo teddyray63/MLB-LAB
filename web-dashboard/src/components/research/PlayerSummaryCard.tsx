@@ -7,6 +7,8 @@ export function PlayerSummaryCard() {
     opponentTeam,
     recentTrend,
     gameDetail,
+    gameLog,
+    filters,
   } = useResearchPlayerData()
 
   const player = selection.player
@@ -27,6 +29,12 @@ export function PlayerSummaryCard() {
       ? `${player.team} vs ${opponentTeam} · ${pitcher.name}`
       : player.team
 
+  const hasGameLog = Boolean(gameLog?.length)
+  const timeframeLabel =
+    filters.timeframe === 'season'
+      ? 'season'
+      : filters.timeframe.toUpperCase().replace('l', 'L')
+
   return (
     <div className="rounded-lg border border-[#30363D] bg-[#161B22] p-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -37,15 +45,28 @@ export function PlayerSummaryCard() {
           <h2 className="text-xl font-bold tracking-tight text-[#F0F6FC]">{player.name}</h2>
           <p className="mt-1 text-sm text-[#58A6FF]">{matchupLabel}</p>
         </div>
-        {recentTrend && (
+        {hasGameLog && recentTrend ? (
           <div className="text-right">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8B949E]">
               Recent
             </p>
             <p className="text-sm font-medium tabular-nums text-[#F0F6FC]">{recentTrend}</p>
           </div>
-        )}
+        ) : null}
       </div>
+
+      {!hasGameLog && (
+        <p className="mt-3 text-sm text-[#D29922]">
+          No recent game log is available for this hitter in the current export.
+        </p>
+      )}
+
+      {hasGameLog && (
+        <p className="mt-3 text-[10px] text-[#6E7681]">
+          {gameLog!.length} logged game{gameLog!.length === 1 ? '' : 's'}
+          {filters.timeframe !== 'season' ? ` · ${timeframeLabel} window` : ''}
+        </p>
+      )}
 
       <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <SummaryItem label="Team" value={player.team} />
