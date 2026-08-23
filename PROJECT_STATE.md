@@ -207,7 +207,7 @@ Superseded locally by 2026-08-14 promotion (§1). Policy unchanged (DEC-002).
 | BVP (“vs Today’s SP”) team split | Available on `/legacy/splits`; **not exposed** in new-IA Today Team Splits tab |
 | Browser Back behavior | **Not fully verified** |
 | `top_plays` / `category_boards` formulas | **Unavailable** — empty arrays accepted (DEC-005) |
-| CI alignment with export pipeline | CI still runs `mlb_lab_runner.py` — **not verified** against G0b path |
+| CI alignment with export pipeline | Canonical CI (`verify-g0b.yml`) validates G0b export path; legacy `mlb_lab_runner.py` **not in CI** |
 
 **L5/L10 clarification:** Timeframe slicing **is implemented** for Research workspace
 player game logs (`player_logs` export + `sliceGameLogByTimeframe` in
@@ -260,8 +260,9 @@ reports/  (markdown + Excel)
 - Uses MLB Stats API + pybaseball + openpyxl.
 - Outputs to `reports/mlb-lab-v5-matchup-engine.md` and `.xlsx`.
 - Does **not** produce `daily_export.json`.
-- Still invoked by GitHub Actions (`.github/workflows/daily-run.yml`,
-  `.github/workflows/run-mlb-lab.yml`).
+- GitHub-hosted legacy workflows **retired** (Upgrade 8: `daily-run.yml` PR #8;
+  `run-mlb-lab.yml` Phase 2b). Local/ad-hoc execution only:
+  `python3 scripts/mlb_lab_runner.py`.
 
 **Legacy dashboard routes:** `/legacy/*` frozen until parity sign-off (DEC-001).
 Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
@@ -284,6 +285,7 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 | Reconciliation | **Complete** — 22 commits fast-forwarded from `54ca81a` to `8a2ba23` on 2026-08-18 |
 | Upgrade 7 health monitor | PR #5 merged to `main` at `cff0ceb` (2026-08-22); `scripts/repo_health.py` present |
 | Upgrade 7 PROJECT_STATE reconciliation | PR #6 source `1adb5be` (2026-08-23); documentation-only |
+| Upgrade 8 legacy workflow retirement | PR #8 merged `daily-run.yml`; Phase 2b retires `run-mlb-lab.yml` |
 | Index | empty |
 | Working tree | clean except untracked `evidence/mlb/game-995731-feed-live.metadata.txt` (SHA256 `29c9635f376100332bef248bdc5c12063ca1d1c230e3938a062e9e5d11624c95`) |
 
@@ -332,7 +334,7 @@ Documented here for agent awareness. **This reconciliation updates PROJECT_STATE
 | Old promotion record (2026-08-01) as “current” | Updated current export to 2026-08-14; prior promotion kept as history | DEC-002 evidence cites old PROJECT_STATE text |
 | Phase F “in progress” | Marked **implemented**; sign-off **unverified** | — |
 | FastAPI path as active dashboard | Labeled aspirational in §2 | `BUILD_PLAN.md` |
-| CI runs legacy runner | Documented in §6 | `.github/workflows/*.yml` |
+| CI runs legacy runner | Resolved — legacy GitHub workflows retired; Verify G0b canonical | `.github/workflows/verify-g0b.yml` |
 | README points to wrong export script | Corrected in stabilization (2026-08-18) | — |
 | Empty leaderboard arrays | Still accepted (DEC-005) | — |
 | Duplicate `game_pk` export warning | Still present | — |
@@ -345,10 +347,12 @@ Documented here for agent awareness. **This reconciliation updates PROJECT_STATE
 Do **not** decide these without explicit stakeholder approval:
 
 1. **Cloudflare deployment automation** — whether/how to automate deploys while preserving SHA-pinned export promotion semantics (provider selected: Cloudflare Pages; first manual deploy complete).
-2. **Retirement of `mlb_lab_runner.py`** — parallel to G0b path; CI still depends on it.
+2. **Retirement of `mlb_lab_runner.py`** — parallel legacy script; GitHub Actions
+   invocation retired (Upgrade 8). Local/ad-hoc use and tracked `reports/` remain.
 3. **Restoration of leaderboard formulas** — `top_plays` / `category_boards` empty.
 4. **Retirement of legacy routes** — deferred pending parity sign-off (DEC-001).
-5. **CI redesign** — align automation with `build_daily_export.py` vs keep legacy runner.
+5. **CI redesign** — legacy mutating workflows retired; Verify G0b canonical. Deploy
+   automation and optional artifact-only legacy report workflows unresolved.
 6. **Phase F formal sign-off** — implementation complete; approval not recorded.
 
 Recorded decisions: `docs/DECISIONS.md` (DEC-001 through DEC-007).
