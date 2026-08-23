@@ -1,6 +1,6 @@
 # MLB-LAB Project State
 
-Last Updated: 2026-08-22
+Last Updated: 2026-08-23
 
 Canonical operational snapshot for agents and operators. Historical design documents
 (`BUILD_PLAN.md`, early README paths) may describe aspirational or superseded
@@ -281,8 +281,13 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 |------|-------|
 | Canonical branch | `main` |
 | Live commit identity | determined from Git at scan/runtime (health monitor `GIT SYNC`; not pinned here) |
-| `sports-resource-hub` HEAD | `8a2ba23` (historical branch tip; behind current `main`; branch retained) |
+| Local branches | `main`, `review/phase-d` (local review/reference only) |
+| Remote branches | `origin/main` only |
+| Archive recovery tags | `archive/pre-dashboard-merge-2026-07-16`; 2026-08-02 recovery tag (object `72891ca1b19ab1f9a4e2a6fdaf1b7ffec71d7d76`, peeled `54ca81af23a01fcf001e30ba084ae372d8617acc`); `archive/claude-odds-engine-experiment-2026-06-30` |
+| Branch/archive policy | `docs/BRANCH_ARCHIVE_POLICY.md` (DEC-008) |
+| `sports-resource-hub` | **Retired** — reconciled into `main` (2026-08-18); branch deleted during Upgrade 9; tip was `8a2ba23` |
 | Reconciliation | **Complete** — 22 commits fast-forwarded from `54ca81a` to `8a2ba23` on 2026-08-18 |
+| Upgrade 9 branch cleanup | **Complete** (2026-08-23) — merged/backup/experiment branches removed; archive tags retained |
 | Upgrade 7 health monitor | PR #5 merged to `main` at `cff0ceb` (2026-08-22); `scripts/repo_health.py` present |
 | Upgrade 7 PROJECT_STATE reconciliation | PR #6 source `1adb5be` (2026-08-23); documentation-only |
 | Upgrade 8 legacy workflow retirement | PR #8 merged `daily-run.yml`; Phase 2b retires `run-mlb-lab.yml` |
@@ -355,7 +360,7 @@ Do **not** decide these without explicit stakeholder approval:
    automation and optional artifact-only legacy report workflows unresolved.
 6. **Phase F formal sign-off** — implementation complete; approval not recorded.
 
-Recorded decisions: `docs/DECISIONS.md` (DEC-001 through DEC-007).
+Recorded decisions: `docs/DECISIONS.md` (DEC-001 through DEC-008).
 
 ---
 
@@ -397,8 +402,9 @@ Read these first:
 1. `PROJECT_STATE.md` (this file)
 2. `web-dashboard/ARCHITECTURE.md`
 3. `docs/DECISIONS.md`
-4. `docs/DEPLOYMENT.md` (static deploy; export injection before build)
-5. `docs/LEGACY_PARITY_MATRIX.md` (legacy retirement gate)
+4. `docs/BRANCH_ARCHIVE_POLICY.md` (branch cleanup and archive tags, DEC-008)
+5. `docs/DEPLOYMENT.md` (static deploy; export injection before build)
+6. `docs/LEGACY_PARITY_MATRIX.md` (legacy retirement gate)
 
 Do not modify export logic or shared context without understanding the architecture.
 
