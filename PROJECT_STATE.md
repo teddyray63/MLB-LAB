@@ -24,7 +24,8 @@ Post-reconciliation stabilization — canonical baseline on `main`
 
 **Branch:** `main`
 
-**HEAD:** `cff0ceb` (`Merge pull request #5 from teddyray63/infra/repo-health-monitor`)
+**Live commit identity:** not pinned in this document — verified live from Git by the
+repository health monitor (`GIT SYNC` category).
 
 **Verified on this machine (2026-08-15):**
 
@@ -278,22 +279,22 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 | Item | Value |
 |------|-------|
 | Canonical branch | `main` |
-| `main` HEAD | `cff0ceb` (`Merge pull request #5 from teddyray63/infra/repo-health-monitor`) |
-| `origin/main` HEAD | `cff0ceb` (matches local `main`) |
-| `sports-resource-hub` HEAD | `8a2ba23` (behind `main`; branch retained) |
+| Live commit identity | determined from Git at scan/runtime (health monitor `GIT SYNC`; not pinned here) |
+| `sports-resource-hub` HEAD | `8a2ba23` (historical branch tip; behind current `main`; branch retained) |
 | Reconciliation | **Complete** — 22 commits fast-forwarded from `54ca81a` to `8a2ba23` on 2026-08-18 |
 | Upgrade 7 health monitor | PR #5 merged to `main` at `cff0ceb` (2026-08-22); `scripts/repo_health.py` present |
+| Upgrade 7 PROJECT_STATE reconciliation | PR #6 source `1adb5be` (2026-08-23); documentation-only |
 | Index | empty |
 | Working tree | clean except untracked `evidence/mlb/game-995731-feed-live.metadata.txt` (SHA256 `29c9635f376100332bef248bdc5c12063ca1d1c230e3938a062e9e5d11624c95`) |
 
 **Recent commits on `main`:**
 
 ```
+b885d56 Merge pull request #6 from teddyray63/infra/project-state-reconciliation
+1adb5be docs: reconcile project state with live repository
 cff0ceb Merge pull request #5 from teddyray63/infra/repo-health-monitor
 e142f9b chore: add repository health monitor
 c612df2 Merge pull request #4 from teddyray63/infra/upgrade6-agent-orchestration
-b093410 chore: add agent orchestration governance
-c4a3573 Merge pull request #3 from teddyray63/product/today-research-handoff
 ```
 
 **Stable GitHub artifacts (historical):**

@@ -125,28 +125,67 @@ def findings_by_code(result: repo_health.ScanResult) -> dict[str, list[repo_heal
 
 
 class RepoHealthTests(unittest.TestCase):
-    def test_matching_head_claim_passes_project_state(self) -> None:
+    def test_durable_project_state_passes_on_main(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = init_repo(Path(tmp))
-            write_minimal_repo(repo)
-            head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()[:7]
-            state = (FIXTURES / "project_state_matching.md").read_text(encoding="utf-8").replace(
-                "abc1234", head
+            write_minimal_repo(
+                repo,
+                project_state=(FIXTURES / "project_state_durable.md").read_text(encoding="utf-8"),
             )
-            (repo / "PROJECT_STATE.md").write_text(state, encoding="utf-8")
             result = scan_repo(repo)
             codes = findings_by_code(result)
             self.assertNotIn("PROJECT_STATE_HEAD_MISMATCH", codes)
             self.assertNotIn("PROJECT_STATE_MAIN_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_ORIGIN_MAIN_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_BRANCH_MISMATCH", codes)
+            project_state = next(cat for cat in result.categories if cat.id == "project_state")
+            self.assertEqual(project_state.status, repo_health.Severity.PASS)
 
-    def test_stale_project_state_head_fails(self) -> None:
+    def test_project_state_survives_head_advance_after_reconciliation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = init_repo(Path(tmp))
+            write_minimal_repo(
+                repo,
+                project_state=(FIXTURES / "project_state_durable.md").read_text(encoding="utf-8"),
+            )
+            checkpoint = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+            run_git(repo, "commit", "--allow-empty", "-m", "simulate PROJECT_STATE merge advance")
+            advanced = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+            self.assertNotEqual(checkpoint, advanced)
+            result = scan_repo(repo)
+            codes = findings_by_code(result)
+            self.assertNotIn("PROJECT_STATE_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_MAIN_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_ORIGIN_MAIN_MISMATCH", codes)
+            project_state = next(cat for cat in result.categories if cat.id == "project_state")
+            self.assertEqual(project_state.status, repo_health.Severity.PASS)
+
+    def test_deprecated_normative_head_claim_warns(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = init_repo(Path(tmp))
             write_minimal_repo(repo, project_state=(FIXTURES / "project_state_stale.md").read_text())
             result = scan_repo(repo)
             codes = findings_by_code(result)
-            self.assertIn("PROJECT_STATE_HEAD_MISMATCH", codes)
-            self.assertEqual(result.exit_code, 2)
+            self.assertIn("PROJECT_STATE_NORMATIVE_HEAD_DEPRECATED", codes)
+            self.assertNotIn("PROJECT_STATE_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_MAIN_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_ORIGIN_MAIN_MISMATCH", codes)
+            self.assertGreaterEqual(result.exit_code, 1)
+
+    def test_historical_milestone_sha_does_not_trigger_head_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = init_repo(Path(tmp))
+            write_minimal_repo(
+                repo,
+                project_state=(FIXTURES / "project_state_durable.md").read_text(encoding="utf-8"),
+            )
+            result = scan_repo(repo)
+            codes = findings_by_code(result)
+            self.assertNotIn("PROJECT_STATE_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_MAIN_HEAD_MISMATCH", codes)
+            self.assertNotIn("PROJECT_STATE_ORIGIN_MAIN_MISMATCH", codes)
+            project_state = next(cat for cat in result.categories if cat.id == "project_state")
+            self.assertEqual(project_state.status, repo_health.Severity.PASS)
 
     def test_branch_mismatch_warns(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -267,7 +306,7 @@ class RepoHealthTests(unittest.TestCase):
             }
             self.assertTrue(payload["scan_version"])
             self.assertEqual(payload["mode"], "fast")
-            self.assertEqual(payload["exit_code"], 2)
+            self.assertGreaterEqual(payload["exit_code"], 1)
             self.assertIsInstance(payload["categories"], list)
             json.dumps(payload)
 
@@ -327,7 +366,7 @@ class RepoHealthTests(unittest.TestCase):
             codes = findings_by_code(result)
             self.assertTrue(any(code.endswith("_PLANNED") for code in codes))
 
-    def test_production_fast_scan_detects_project_state_drift(self) -> None:
+    def test_production_fast_scan_project_state_has_no_normative_head_failures(self) -> None:
         options = repo_health.ScanOptions(
             mode="fast",
             json_output=False,
@@ -340,9 +379,9 @@ class RepoHealthTests(unittest.TestCase):
         )
         result = repo_health.run_scan(options)
         codes = findings_by_code(result)
-        self.assertTrue(
-            "PROJECT_STATE_HEAD_MISMATCH" in codes or "PROJECT_STATE_MAIN_HEAD_MISMATCH" in codes
-        )
+        self.assertNotIn("PROJECT_STATE_HEAD_MISMATCH", codes)
+        self.assertNotIn("PROJECT_STATE_MAIN_HEAD_MISMATCH", codes)
+        self.assertNotIn("PROJECT_STATE_ORIGIN_MAIN_MISMATCH", codes)
 
 
 if __name__ == "__main__":

@@ -19,4 +19,5 @@ repository health monitor (`GIT SYNC` category).
 |------|-------|
 | Canonical branch | `main` |
 | Live commit identity | determined from Git at scan/runtime (health monitor `GIT SYNC`; not pinned here) |
+| Upgrade 7 health monitor | PR #5 merged to `main` at `cff0ceb` (2026-08-22); historical milestone |
 | Working tree | clean except untracked `evidence/mlb/game-995731-feed-live.metadata.txt` |
