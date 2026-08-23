@@ -317,9 +317,12 @@ def parse_documented_head(section_lines: list[str]) -> str | None:
     return None
 
 
-def parse_origin_main_from_table(value: str) -> str | None:
-    match = re.search(r"([0-9a-f]{7,40})", value)
-    return match.group(1) if match else None
+def is_normative_main_head_key(key: str) -> bool:
+    return strip_md(key).lower() == "main head"
+
+
+def is_normative_origin_main_key(key: str) -> bool:
+    return strip_md(key).lower() == "origin/main head"
 
 
 def is_untracked_line(line: str) -> bool:
@@ -611,24 +614,35 @@ def check_project_state(options: ScanOptions, result: ScanResult) -> None:
     code, branch_out, _ = git(repo, "branch", "--show-current")
     if code == 0:
         live_branch = branch_out.strip()
-    live_head = normalize_commit(repo, "HEAD")
-    live_main = normalize_commit(repo, "main")
-    live_origin_main = normalize_commit(repo, "origin/main")
 
     documented_active_branch = first_content_after_heading(lines, "Active Branch")
     documented_head = parse_documented_head(verified_section)
-    documented_main = None
-    documented_origin_main = None
     documented_worktree = None
+    deprecated_normative_claims: list[str] = []
+
+    if documented_head:
+        deprecated_normative_claims.append(
+            "**HEAD:** normative claim in VERIFIED CURRENT STATE"
+        )
 
     for key, value in git_table.items():
         lower = key.lower()
-        if "main" in lower and "origin" not in lower and "head" in lower:
-            documented_main = parse_origin_main_from_table(value) or value.split()[0]
-        elif "origin/main" in lower:
-            documented_origin_main = parse_origin_main_from_table(value)
+        if is_normative_main_head_key(key):
+            deprecated_normative_claims.append("`main` HEAD table row")
+        elif is_normative_origin_main_key(key):
+            deprecated_normative_claims.append("`origin/main` HEAD table row")
         elif "working tree" in lower:
             documented_worktree = value
+
+    for claim in deprecated_normative_claims:
+        cat.add(
+            Finding(
+                code="PROJECT_STATE_NORMATIVE_HEAD_DEPRECATED",
+                severity=Severity.WARN,
+                message="deprecated exact-SHA live HEAD claim; Git is authoritative",
+                observed=claim,
+            )
+        )
 
     if documented_active_branch and live_branch:
         active = documented_active_branch.strip("`")
@@ -642,41 +656,6 @@ def check_project_state(options: ScanOptions, result: ScanResult) -> None:
                     observed=active,
                 )
             )
-
-    if documented_head and live_head and not commits_match(repo, documented_head, live_head):
-        cat.add(
-            Finding(
-                code="PROJECT_STATE_HEAD_MISMATCH",
-                severity=Severity.FAIL,
-                message="documented HEAD differs from live HEAD",
-                expected=live_head,
-                observed=documented_head,
-            )
-        )
-
-    if documented_main and live_main and not commits_match(repo, documented_main, live_main):
-        cat.add(
-            Finding(
-                code="PROJECT_STATE_MAIN_HEAD_MISMATCH",
-                severity=Severity.FAIL,
-                message="documented main HEAD differs from live main",
-                expected=live_main,
-                observed=documented_main,
-            )
-        )
-
-    if documented_origin_main and live_origin_main and not commits_match(
-        repo, documented_origin_main, live_origin_main
-    ):
-        cat.add(
-            Finding(
-                code="PROJECT_STATE_ORIGIN_MAIN_MISMATCH",
-                severity=Severity.FAIL,
-                message="documented origin/main HEAD differs from live origin/main",
-                expected=live_origin_main,
-                observed=documented_origin_main,
-            )
-        )
 
     if documented_worktree:
         _, status_out, _ = git(repo, "status", "--porcelain")
