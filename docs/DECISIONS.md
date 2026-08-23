@@ -300,3 +300,58 @@ defensive position.
 
 **Supersedes:**
 None
+
+---
+
+## DEC-008 — Branch and archive lifecycle policy
+
+**Status:** Accepted
+
+**Date:** 2026-08-23
+
+**Context:**
+Infrastructure Upgrade 9 cleaned merged, backup, experimental, and review branches
+while preserving durable recovery points. Mutable backup branches were replaced with
+annotated `archive/*` tags. A divergent Claude experiment branch was archive-tagged
+before remote deletion. One review branch (`review/phase-d`) remains intentionally
+preserved pending extraction decision. No consolidated repository policy documented
+these proven steps.
+
+**Decision:**
+Adopt the branch and archive lifecycle policy in `docs/BRANCH_ARCHIVE_POLICY.md` as
+the operational standard for:
+
+- merged branch cleanup (ancestry proof, zero unique commits, safe `-d`)
+- split-tip handling (audit both tips; no `-D` shortcut)
+- backup branch → annotated archive tag migration before deletion
+- archive tag immutability and single-tag push discipline
+- divergent experiment evaluation (archive-tag when not integration-worthy)
+- `review/*` retention rules and naming conventions
+
+Current intentional exception: preserve `review/phase-d` at
+`7a016e81d1ae6e4ebc90c1ea702fad2664f69d4d` as a local review/reference branch; do
+not cherry-pick or merge wholesale; reimplement against G0b contracts if product work
+later requires equivalent behavior.
+
+**Evidence:**
+- Upgrade 9 Phase 2d closeout audit (2026-08-23): final topology verified — remote
+  `origin/main` only; local `main` + `review/phase-d`; three `archive/*` tags present
+- Archive tags verified local and remote:
+  `archive/pre-dashboard-merge-2026-07-16`,
+  `archive/pre-betting-removal-2026-08-02`,
+  `archive/claude-odds-engine-experiment-2026-06-30`
+- Retired branches absent locally and remotely (including `sports-resource-hub`,
+  `backup/*`, `claude/odds-engine-integration-zhe77q`)
+
+**Consequences:**
+Branch cleanup and archival tasks must follow `docs/BRANCH_ARCHIVE_POLICY.md`.
+`PROJECT_STATE.md` records current topology; policy doc holds operational detail.
+Deleting `review/phase-d` or converting it to a tag requires a separate authorized
+task after the extraction decision is closed.
+
+**Revisit only if:**
+Repository workflow constraints change materially (for example mandatory long-lived
+integration branches), or a new recovery mechanism supersedes annotated archive tags.
+
+**Supersedes:**
+None
