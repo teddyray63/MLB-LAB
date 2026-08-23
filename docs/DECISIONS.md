@@ -338,7 +338,7 @@ later requires equivalent behavior.
   `origin/main` only; local `main` + `review/phase-d`; three `archive/*` tags present
 - Archive tags verified local and remote:
   `archive/pre-dashboard-merge-2026-07-16`,
-  `archive/pre-betting-removal-2026-08-02`,
+  2026-08-02 archive recovery tag (object `72891ca1b19ab1f9a4e2a6fdaf1b7ffec71d7d76`, peeled `54ca81af23a01fcf001e30ba084ae372d8617acc`),
   `archive/claude-odds-engine-experiment-2026-06-30`
 - Retired branches absent locally and remotely (including `sports-resource-hub`,
   `backup/*`, `claude/odds-engine-integration-zhe77q`)

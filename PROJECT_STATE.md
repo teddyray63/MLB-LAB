@@ -283,7 +283,7 @@ Parity matrix: `docs/LEGACY_PARITY_MATRIX.md` (last updated 2026-08-02 on branch
 | Live commit identity | determined from Git at scan/runtime (health monitor `GIT SYNC`; not pinned here) |
 | Local branches | `main`, `review/phase-d` (local review/reference only) |
 | Remote branches | `origin/main` only |
-| Archive recovery tags | `archive/pre-dashboard-merge-2026-07-16`, `archive/pre-betting-removal-2026-08-02`, `archive/claude-odds-engine-experiment-2026-06-30` |
+| Archive recovery tags | `archive/pre-dashboard-merge-2026-07-16`; 2026-08-02 recovery tag (object `72891ca1b19ab1f9a4e2a6fdaf1b7ffec71d7d76`, peeled `54ca81af23a01fcf001e30ba084ae372d8617acc`); `archive/claude-odds-engine-experiment-2026-06-30` |
 | Branch/archive policy | `docs/BRANCH_ARCHIVE_POLICY.md` (DEC-008) |
 | `sports-resource-hub` | **Retired** — reconciled into `main` (2026-08-18); branch deleted during Upgrade 9; tip was `8a2ba23` |
 | Reconciliation | **Complete** — 22 commits fast-forwarded from `54ca81a` to `8a2ba23` on 2026-08-18 |
