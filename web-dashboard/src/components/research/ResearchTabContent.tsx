@@ -3,7 +3,7 @@ import { GameLogChart } from '../GameLogChart'
 import { ExitVeloScatter } from '../ExitVeloScatter'
 import { BattedBallProfileCard } from '../BattedBallProfileCard'
 import { PlayerDayNightTable } from '../PlayerDayNightTable'
-import { TeamSplitsTable, type SplitKey } from '../TeamSplitsTable'
+import { TeamSplitsTable } from '../TeamSplitsTable'
 import { ZoneHeatmap } from '../ZoneHeatmap'
 import { StatCell } from '../ui/StatCell'
 import { ScoutingSummaryCard } from './ScoutingSummaryCard'
@@ -13,25 +13,10 @@ import { fmtInt, fmtMph, fmtPct, fmtRate } from '../../design/format'
 import { battingRateToHeat, powerRateToHeat, rateToHeat, type HeatLevel } from '../../design/tokens'
 import { formatPitchName } from '../../lib/pitchNames'
 import type { SituationKey } from '../../types/research'
-import { TIMEFRAME_OPTIONS, SITUATION_OPTIONS } from '../../types/research'
+import { TIMEFRAME_OPTIONS, SITUATION_OPTIONS, situationToSplitKey } from '../../types/research'
 
 function NoPlayer() {
   return <p className="text-sm text-[#8B949E]">Select a player in the header to load this panel.</p>
-}
-
-function situationToSplitKey(situation: SituationKey): SplitKey {
-  switch (situation) {
-    case 'vlhp':
-      return 'vs_lhp'
-    case 'vrhp':
-      return 'vs_rhp'
-    case 'day':
-      return 'day_split'
-    case 'night':
-      return 'night_split'
-    default:
-      return 'overall'
-  }
 }
 
 function situationToPlayerSplit(situation: SituationKey): 'overall' | 'day_split' | 'night_split' {
@@ -131,8 +116,8 @@ export function ResearchSplitsTab() {
   const situation = data.filters.situation
   const sitLabel = SITUATION_OPTIONS.find((o) => o.key === situation)?.label ?? situation
 
-  if (situation === 'vlhp' || situation === 'vrhp') {
-    const split = situationToSplitKey(situation)
+  const split = situationToSplitKey(situation)
+  if (split === 'vs_lhp' || split === 'vs_rhp' || split === 'bvp') {
     const rows = data.teamSplitHitter ? [data.teamSplitHitter] : []
     return (
       <ResearchPanelShell title="Splits" subtitle={`${sitLabel} · team export splits`}>

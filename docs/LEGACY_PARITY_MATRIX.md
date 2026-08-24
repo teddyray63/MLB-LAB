@@ -290,7 +290,7 @@ Curated **Top 5 per category** across the full slate — Excel “Top Plays” t
 ### 7. Exact missing capabilities
 | Capability | Legacy | New IA |
 |------------|--------|--------|
-| **BVP / vs Today’s SP** split mode | Yes (`bvp` button) | **Missing** — `situationToSplit()` has no bvp mapping |
+| **BVP / vs Today’s SP** split mode | Yes (`bvp` button) | Yes — shared `bvp` situation maps to `SplitHitter.bvp` |
 | Local game picker | Yes | Shared header game selector |
 | Dedicated splits page | Yes | Tab under Today |
 | Home/Away situation filters | No | Yes (new IA adds home/away via situation) |

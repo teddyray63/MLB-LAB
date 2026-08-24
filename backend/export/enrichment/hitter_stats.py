@@ -46,7 +46,8 @@ def build_hitter_enrichments(
             )
             continue
 
-        opponent_starter_id = opponent_starter_by_team.get((player.game_pk, opponent_team_id))
+        # Map is keyed by the hitter's team: the starter that team faces today.
+        opponent_starter_id = opponent_starter_by_team.get((player.game_pk, player.team_id))
         player_rows = filter_rows(events, batter_id=player.player_id)
         if not player_rows:
             warnings.append(f"No Statcast events for hitter {player.player_id}")
@@ -81,6 +82,10 @@ def build_hitter_enrichments(
             if split_rows:
                 splits[split_name] = compute_split_block(split_rows, split=split_name)  # type: ignore[arg-type]
 
+        bvp_block = _bvp_split(player_rows, opponent_starter_id)
+        if bvp_block is not None:
+            splits["bvp"] = bvp_block
+
         recent: dict[str, SplitBlock] = {}
         for window_name, game_count in RECENT_WINDOWS.items():
             dates = recent_game_dates(player_rows, game_count)
@@ -107,6 +112,16 @@ def build_hitter_enrichments(
         )
 
     return HitterEnrichmentResult(enrichments=enrichments, warnings=_dedupe(warnings))
+
+
+def _bvp_split(player_rows: StatcastEvents, opponent_starter_id: int | None) -> SplitBlock | None:
+    """Aggregate observed Statcast rows vs today's opposing starter ID only."""
+    if opponent_starter_id is None:
+        return None
+    bvp_rows = filter_rows(player_rows, pitcher_id=opponent_starter_id)
+    if not bvp_rows:
+        return None
+    return compute_split_block(bvp_rows, split="overall")
 
 
 def _dedupe(items: list[str]) -> list[str]:

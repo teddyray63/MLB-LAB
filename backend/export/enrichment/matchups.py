@@ -189,12 +189,15 @@ def apply_enrichment_to_game_details(
         away_lineup = _enrich_lineup(detail.away_lineup, detail.game_pk, hitters_by_key)
         home_lineup = _enrich_lineup(detail.home_lineup, detail.game_pk, hitters_by_key)
 
+        away_lineup_model = lineups_by_key.get((detail.game_pk, "away"))
+        home_lineup_model = lineups_by_key.get((detail.game_pk, "home"))
         away_splits = _build_split_hitters(
             detail.away_lineup,
             detail.game_pk,
             detail.home_sp,
             hitters_by_key,
             events,
+            team_id=away_lineup_model.team_id if away_lineup_model else None,
         )
         home_splits = _build_split_hitters(
             detail.home_lineup,
@@ -202,6 +205,7 @@ def apply_enrichment_to_game_details(
             detail.away_sp,
             hitters_by_key,
             events,
+            team_id=home_lineup_model.team_id if home_lineup_model else None,
         )
 
         away_hitters = _build_game_hitter_pool(detail.game_pk, "away", players_by_key, events)
@@ -388,6 +392,7 @@ def _build_split_hitters(
     opposing_sp_name: str,
     hitters_by_key: dict[tuple[int, int], HitterEnrichment],
     events: StatcastEvents,
+    team_id: int | None = None,
 ) -> list[SplitHitter]:
     if not lineup:
         return []
@@ -396,8 +401,10 @@ def _build_split_hitters(
         enrichment = next(
             (
                 item
-                for (pk, pid), item in hitters_by_key.items()
-                if pk == game_pk and item.lineup_slot == batter.order
+                for (pk, _pid), item in hitters_by_key.items()
+                if pk == game_pk
+                and item.lineup_slot == batter.order
+                and (team_id is None or item.team_id == team_id)
             ),
             None,
         )
@@ -408,6 +415,7 @@ def _build_split_hitters(
         vs_rhp = _split_line_from_block(enrichment.splits.get("vs_rhp"))
         day_split = _split_line_from_block(enrichment.splits.get("day"))
         night_split = _split_line_from_block(enrichment.splits.get("night"))
+        bvp = _split_line_from_block(enrichment.splits.get("bvp"))
         rows.append(
             SplitHitter(
                 hitter=batter.hitter,
@@ -415,7 +423,7 @@ def _build_split_hitters(
                 overall=overall or SplitLine(),
                 vs_lhp=vs_lhp or SplitLine(),
                 vs_rhp=vs_rhp or SplitLine(),
-                bvp=None,
+                bvp=bvp,
                 day_split=day_split,
                 night_split=night_split,
             )

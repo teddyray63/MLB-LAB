@@ -13,6 +13,16 @@ export type SituationKey =
   | 'night'
   | 'vlhp'
   | 'vrhp'
+  | 'bvp'
+
+/** Shared situation → export SplitHitter field mapping (Today + Research). */
+export type SituationSplitKey =
+  | 'overall'
+  | 'vs_lhp'
+  | 'vs_rhp'
+  | 'bvp'
+  | 'day_split'
+  | 'night_split'
 
 export type TeamSide = 'away' | 'home'
 
@@ -102,4 +112,22 @@ export const SITUATION_OPTIONS: { key: SituationKey; label: string }[] = [
   { key: 'night', label: 'Night' },
   { key: 'vlhp', label: 'vs LHP' },
   { key: 'vrhp', label: 'vs RHP' },
+  { key: 'bvp', label: 'vs Today’s SP' },
 ]
+
+export function situationToSplitKey(situation: SituationKey): SituationSplitKey {
+  switch (situation) {
+    case 'vlhp':
+      return 'vs_lhp'
+    case 'vrhp':
+      return 'vs_rhp'
+    case 'day':
+      return 'day_split'
+    case 'night':
+      return 'night_split'
+    case 'bvp':
+      return 'bvp'
+    default:
+      return 'overall'
+  }
+}
