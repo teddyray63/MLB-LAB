@@ -1,4 +1,4 @@
-import type { DailyExport } from '../types/slate'
+import type { DailyExport, SplitHitter } from '../types/slate'
 import type {
   FilterSupportMatrix,
   ResolvedFilters,
@@ -65,6 +65,9 @@ export function buildFilterSupportMatrix(
     night: supported('export'),
     vlhp: supported('export'),
     vrhp: supported('export'),
+    bvp: bvpSupported(exportData, selection)
+      ? supported('export')
+      : unsupported('No Statcast sample vs today’s starting pitcher'),
   }
 
   return {
@@ -103,6 +106,26 @@ export function resolveFilters(
 }
 
 const TIMEFRAME_KEYS: TimeframeKey[] = ['season', 'l20', 'l15', 'l10', 'l7', 'l5']
+
+function splitHittersForSelection(
+  exportData: DailyExport,
+  selection: Pick<ResolvedResearchSelection, 'player' | 'gamePk'>,
+): SplitHitter[] {
+  const detail = exportData.game_details?.find((g) => g.game_pk === selection.gamePk)
+  if (!detail) return []
+  const rows = [...(detail.away_splits ?? []), ...(detail.home_splits ?? [])]
+  const playerName = selection.player?.name
+  if (!playerName) return rows
+  return rows.filter((r) => r.hitter.toLowerCase() === playerName.toLowerCase())
+}
+
+function bvpSupported(
+  exportData: DailyExport,
+  selection: Pick<ResolvedResearchSelection, 'player' | 'gamePk'>,
+): boolean {
+  return splitHittersForSelection(exportData, selection).some((row) => row.bvp != null)
+}
+
 const SITUATION_KEYS: SituationKey[] = [
   'overall',
   'home',
@@ -111,6 +134,7 @@ const SITUATION_KEYS: SituationKey[] = [
   'night',
   'vlhp',
   'vrhp',
+  'bvp',
 ]
 
 export function parseTimeframe(value: string | null | undefined): TimeframeKey | null {

@@ -5,23 +5,8 @@ import { Card } from '../ui/Card'
 import { useExport } from '../../context/ExportContext'
 import { useGameContext, useFilters } from '../../context/ResearchContext'
 import { formatPitchName } from '../../lib/pitchNames'
-import type { SituationKey } from '../../types/research'
+import { situationToSplitKey } from '../../types/research'
 import type { GameDetail, HitterRow, SplitHitter } from '../../types/slate'
-
-function situationToSplit(situation: SituationKey): SplitKey {
-  switch (situation) {
-    case 'vlhp':
-      return 'vs_lhp'
-    case 'vrhp':
-      return 'vs_rhp'
-    case 'day':
-      return 'day_split'
-    case 'night':
-      return 'night_split'
-    default:
-      return 'overall'
-  }
-}
 
 function splitSubtitle(split: SplitKey, sp: string, pitchFilter: string | null): string {
   if (pitchFilter) {
@@ -29,6 +14,7 @@ function splitSubtitle(split: SplitKey, sp: string, pitchFilter: string | null):
   }
   if (split === 'vs_lhp') return 'vs left-handed pitching'
   if (split === 'vs_rhp') return 'vs right-handed pitching'
+  if (split === 'bvp') return `vs ${sp || "today’s starting pitcher"} · observed Statcast sample only`
   if (split === 'day_split') return 'Day games · MLB Stats API dayNight joined on game_pk'
   if (split === 'night_split') return 'Night games · MLB Stats API dayNight joined on game_pk'
   return '120-day season line · driven by shared situation filter'
@@ -92,7 +78,7 @@ export function TodayTeamSplitsTab() {
   const { filters } = useFilters()
   const detail = useSelectedGameDetail()
 
-  const split = situationToSplit(filters.situation)
+  const split = situationToSplitKey(filters.situation)
   const pitchFilter = filters.pitchType
 
   const awayMatchups = useMemo(() => {

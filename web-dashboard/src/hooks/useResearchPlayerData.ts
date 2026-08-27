@@ -49,6 +49,8 @@ function situationSplitLine(
       return teamSplit?.vs_lhp ?? null
     case 'vrhp':
       return teamSplit?.vs_rhp ?? null
+    case 'bvp':
+      return teamSplit?.bvp ?? null
     case 'overall':
     default:
       return dayNight?.overall ?? teamSplit?.overall ?? null
