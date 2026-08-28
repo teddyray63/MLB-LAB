@@ -4,8 +4,10 @@ import { useGameContext } from '../context/ResearchContext'
 import { useFilters } from '../context/ResearchContext'
 import {
   applyPitchFilter,
+  countExportLeaderboardRows,
   dedupeLeaderboardRows,
   exportDataWindowLabel,
+  exportHasLeaderboardSections,
   filterRowsByScope,
   flattenTopPlays,
   getCategoryBoardRows,
@@ -23,6 +25,8 @@ export interface LeaderboardDataResult {
   pitchFilterApplied: boolean
   isTopPlaysView: boolean
   categoryLabel: string
+  exportHasSourceRows: boolean
+  exportHasLeaderboardSections: boolean
 }
 
 /**
@@ -59,6 +63,7 @@ export function useLeaderboardData(
 
     const rowCount = isTopPlaysView ? topPlays.length : boardRows.length
     const categoryLabel = isTopPlaysView ? 'Top Plays' : CATEGORY_LABELS[category]
+    const exportHasSourceRows = countExportLeaderboardRows(exportData, category) > 0
 
     return {
       topPlays,
@@ -68,6 +73,8 @@ export function useLeaderboardData(
       pitchFilterApplied,
       isTopPlaysView,
       categoryLabel,
+      exportHasSourceRows,
+      exportHasLeaderboardSections: exportHasLeaderboardSections(exportData),
     }
   }, [exportData, scope, category, selection.gamePk, filters.pitchType])
 }

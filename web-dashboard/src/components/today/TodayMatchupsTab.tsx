@@ -5,6 +5,10 @@ import { useExport } from '../../context/ExportContext'
 import { useGameContext, useFilters } from '../../context/ResearchContext'
 import { useFilteredMatchupRows } from '../../hooks/useFilteredData'
 import { formatPitchName } from '../../lib/pitchNames'
+import {
+  pitchMatchupScopeNote,
+  pitchMatchupTeamCardSubtitle,
+} from '../../lib/pitchTypeCopy'
 import type { GameDetail, HitterRow } from '../../types/slate'
 
 function MatchupTeamCard({
@@ -21,7 +25,7 @@ function MatchupTeamCard({
   return (
     <Card
       title={`${team} · ${side}`}
-      subtitle={`Per-pitch vs ${oppSp || 'opposing SP'} · ${rows.length} rows`}
+      subtitle={pitchMatchupTeamCardSubtitle(oppSp, rows.length)}
     >
       <CategoryBoardTable rows={rows} hideIdentity />
     </Card>
@@ -73,7 +77,7 @@ export function TodayMatchupsTab() {
   return (
     <div className="space-y-4">
       <p className="text-xs text-[#8B949E]">
-        Batter vs opposing SP by pitch type · filtered by shared pitch filter ({pitchNote})
+        {pitchMatchupScopeNote("today's SP", pitchNote)}
       </p>
       <div className="grid gap-5 xl:grid-cols-2">
         <MatchupTeamCard

@@ -12,6 +12,7 @@ import { useResearchPlayerData } from '../../hooks/useResearchPlayerData'
 import { fmtInt, fmtMph, fmtPct, fmtRate } from '../../design/format'
 import { battingRateToHeat, powerRateToHeat, rateToHeat, type HeatLevel } from '../../design/tokens'
 import { formatPitchName } from '../../lib/pitchNames'
+import { pitchMatchupPanelSubtitle } from '../../lib/pitchTypeCopy'
 import type { SituationKey } from '../../types/research'
 import { TIMEFRAME_OPTIONS, SITUATION_OPTIONS, situationToSplitKey } from '../../types/research'
 
@@ -145,7 +146,7 @@ export function ResearchPitchMatchupTab() {
   return (
     <ResearchPanelShell
       title="Pitch matchup"
-      subtitle={`Per-pitch vs opposing SP · ${pitchNote}`}
+      subtitle={pitchMatchupPanelSubtitle(pitchNote)}
     >
       <CategoryBoardTable rows={data.pitcherMatchupRows} hideIdentity />
     </ResearchPanelShell>

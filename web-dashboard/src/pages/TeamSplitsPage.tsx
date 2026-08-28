@@ -6,6 +6,7 @@ import { Card } from '../components/ui/Card'
 import { SectionBanner } from '../components/ui/SectionBanner'
 import { useExport } from '../context/ExportContext'
 import type { GameDetail, HitterRow, SplitHitter } from '../types/slate'
+import { pitchFilterHitterLine } from '../lib/pitchTypeCopy'
 
 const SPLITS: { key: SplitKey; label: string }[] = [
   { key: 'overall', label: 'Overall' },
@@ -80,8 +81,7 @@ function TeamSplitCard({
       {pitchFilter ? (
         <>
           <p className="mb-2 text-[10px] text-[#58A6FF]">
-            Per-pitch stats vs {sp} · {filteredMatchups.length} hitter
-            {filteredMatchups.length === 1 ? '' : 's'}
+            {pitchFilterHitterLine(sp || 'opposing SP', filteredMatchups.length)}
           </p>
           <CategoryBoardTable rows={filteredMatchups} hideIdentity />
         </>
