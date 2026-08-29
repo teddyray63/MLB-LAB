@@ -19,6 +19,31 @@ class MatchupBuildResult:
     warnings: list[str] = field(default_factory=list)
 
 
+def _matchup_effective_bats(hitter_bats: str | None, pitcher_throws: str | None) -> str | None:
+    """Derive pregame platoon side for pitcher split selection only (DEC-009).
+
+    Does not mutate inputs. Canonical switch-hitter identity remains ``S`` elsewhere.
+    """
+    if hitter_bats == "L":
+        return "L"
+    if hitter_bats == "R":
+        return "R"
+    if hitter_bats == "S":
+        if pitcher_throws == "R":
+            return "L"
+        if pitcher_throws == "L":
+            return "R"
+    return None
+
+
+def _pitcher_split_key(effective_bats: str | None) -> str | None:
+    if effective_bats == "L":
+        return "vs_lhb"
+    if effective_bats == "R":
+        return "vs_rhb"
+    return None
+
+
 def build_matchups(
     *,
     games: list[Game],
@@ -107,13 +132,14 @@ def build_matchups(
                 pitcher_enrichment = pitchers_by_key.get((detail.game_pk, opposing_starter_id))
                 pitcher_hand = opposing_pitcher.throws
                 hitter_hand = hitter_player.bats
+                effective_bats = _matchup_effective_bats(hitter_hand, pitcher_hand)
                 split_key = "vs_lhp" if pitcher_hand == "L" else "vs_rhp" if pitcher_hand == "R" else None
                 hitter_split = (
                     hitter_enrichment.splits.get(split_key)
                     if hitter_enrichment and split_key
                     else None
                 )
-                pitcher_split_key = "vs_lhb" if hitter_hand == "L" else "vs_rhb" if hitter_hand == "R" else None
+                pitcher_split_key = _pitcher_split_key(effective_bats)
                 pitcher_split = (
                     pitcher_enrichment.splits.get(pitcher_split_key)
                     if pitcher_enrichment and pitcher_split_key
@@ -130,6 +156,7 @@ def build_matchups(
                     pitcher_team_id=opposing_pitcher.team_id,
                     lineup_slot=batter.order,
                     hitter_bats=hitter_hand,
+                    matchup_effective_bats=effective_bats,
                     pitcher_throws=pitcher_hand,
                     is_home_hitter=side == "home",
                     hitter_split_vs_pitcher_hand=hitter_split,
