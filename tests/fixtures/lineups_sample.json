@@ -21,6 +21,44 @@
     "probablePitchers": {
       "away": { "id": 680732, "fullName": "Sean Burke" },
       "home": { "id": 702056, "fullName": "Trey Yesavage" }
+    },
+    "players": {
+      "ID680732": {
+        "id": 680732,
+        "fullName": "Sean Burke",
+        "batSide": { "code": "R", "description": "Right" },
+        "pitchHand": { "code": "R", "description": "Right" }
+      },
+      "ID7000001": {
+        "id": 7000001,
+        "fullName": "Player One",
+        "batSide": { "code": "L", "description": "Left" },
+        "pitchHand": { "code": "R", "description": "Right" }
+      },
+      "ID7000002": {
+        "id": 7000002,
+        "fullName": "Player Two",
+        "batSide": { "code": "S", "description": "Switch" },
+        "pitchHand": { "code": "R", "description": "Right" }
+      },
+      "ID7000101": {
+        "id": 7000101,
+        "fullName": "Reliever One",
+        "batSide": { "code": "L", "description": "Left" },
+        "pitchHand": { "code": "L", "description": "Left" }
+      },
+      "ID702056": {
+        "id": 702056,
+        "fullName": "Trey Yesavage",
+        "batSide": { "code": "R", "description": "Right" },
+        "pitchHand": { "code": "R", "description": "Right" }
+      },
+      "ID7000003": {
+        "id": 7000003,
+        "fullName": "Player Three",
+        "batSide": { "code": "R", "description": "Right" },
+        "pitchHand": { "code": "R", "description": "Right" }
+      }
     }
   },
   "liveData": {
@@ -33,29 +71,21 @@
             "ID680732": {
               "person": { "id": 680732, "fullName": "Sean Burke" },
               "position": { "abbreviation": "P" },
-              "batSide": { "code": "R" },
-              "pitchSide": { "code": "R" },
               "status": { "description": "Active" }
             },
             "ID7000001": {
               "person": { "id": 7000001, "fullName": "Player One" },
               "position": { "abbreviation": "DH" },
-              "batSide": { "code": "L" },
-              "pitchSide": { "code": "R" },
               "status": { "description": "Active" }
             },
             "ID7000002": {
               "person": { "id": 7000002, "fullName": "Player Two" },
               "position": { "abbreviation": "SS" },
-              "batSide": { "code": "R" },
-              "pitchSide": { "code": "R" },
               "status": { "description": "Active" }
             },
             "ID7000101": {
               "person": { "id": 7000101, "fullName": "Reliever One" },
               "position": { "abbreviation": "P" },
-              "batSide": { "code": "L" },
-              "pitchSide": { "code": "L" },
               "status": { "description": "Active" }
             }
           }
@@ -67,15 +97,11 @@
             "ID702056": {
               "person": { "id": 702056, "fullName": "Trey Yesavage" },
               "position": { "abbreviation": "P" },
-              "batSide": { "code": "R" },
-              "pitchSide": { "code": "R" },
               "status": { "description": "Active" }
             },
             "ID7000003": {
               "person": { "id": 7000003, "fullName": "Player Three" },
               "position": { "abbreviation": "1B" },
-              "batSide": { "code": "L" },
-              "pitchSide": { "code": "R" },
               "status": { "description": "Active" }
             }
           }
