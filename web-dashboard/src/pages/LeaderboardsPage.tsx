@@ -24,7 +24,11 @@ export function LeaderboardsPage() {
       <PageHeader
         kicker="Leaderboards"
         title={selection.date}
-        description="Top Plays and Category Boards · use the header for date, game, and filters"
+        description={
+          data.exportHasLeaderboardSections
+            ? 'Top Plays and Category Boards · use the header for date, game, and filters'
+            : 'Top Plays and Category Boards · not populated in the current export'
+        }
         warning={
           schemaWarning
             ? `${schemaWarning} — app expects v${RESEARCH_SCHEMA_VERSION}.`
@@ -51,6 +55,7 @@ export function LeaderboardsPage() {
           categoryLabel={data.categoryLabel}
           hasValidGame={hasValidGame}
           pitchFilterApplied={data.pitchFilterApplied}
+          exportHasSourceRows={data.exportHasSourceRows}
         />
       ) : (
         <LeaderboardResults

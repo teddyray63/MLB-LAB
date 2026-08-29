@@ -6,6 +6,8 @@ interface LeaderboardEmptyStateProps {
   categoryLabel: string
   hasValidGame: boolean
   pitchFilterApplied: boolean
+  /** Export contains rows for this view before scope/pitch filtering. */
+  exportHasSourceRows: boolean
 }
 
 export function LeaderboardEmptyState({
@@ -13,7 +15,18 @@ export function LeaderboardEmptyState({
   categoryLabel,
   hasValidGame,
   pitchFilterApplied,
+  exportHasSourceRows,
 }: LeaderboardEmptyStateProps) {
+  if (!exportHasSourceRows) {
+    return (
+      <EmptyState>
+        {categoryLabel} are not populated in the current export. The G0b pipeline does not
+        yet generate ranked leaderboard rows — re-run export when ranking formulas are
+        available.
+      </EmptyState>
+    )
+  }
+
   let message = `No rows for ${categoryLabel} in the current scope.`
 
   if (scope === 'game' && !hasValidGame) {

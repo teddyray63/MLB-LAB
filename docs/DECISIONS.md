@@ -355,3 +355,109 @@ integration branches), or a new recovery mechanism supersedes annotated archive 
 
 **Supersedes:**
 None
+
+---
+
+## DEC-009 — Switch-hitter matchup-effective batting side for pitcher platoon splits
+
+**Status:** Accepted
+
+**Date:** 2026-08-29
+
+**Context:**
+G0b enrichment populates `pitcher_split_vs_hitter_side` by mapping hitter
+canonical `bats` to pitcher Statcast split keys (`L→vs_lhb`, `R→vs_rhb`).
+Switch hitters have canonical `bats=S`. The mapping yields null, leaving
+matchup rows without pitcher platoon context despite working identity plumbing
+and available pitcher split blocks.
+
+Hitter-side splits (`hitter_split_vs_pitcher_hand`) already work for switch
+hitters because they key off opposing pitcher `throws`, not hitter identity.
+
+**Decision:**
+Introduce a **matchup-effective batting side** used solely to select
+`pitcher_split_vs_hitter_side` when canonical `bats=S`.
+
+Rule (pregame default):
+- Switch hitter vs RHP → effective side **L** → select pitcher split **vs_lhb**
+- Switch hitter vs LHP → effective side **R** → select pitcher split **vs_rhb**
+
+Canonical identity semantics are unchanged: `bats`, `hitter_bats`, and
+`LineupBatter.hand` remain **S** for switch hitters. The effective side is
+contextual, derived at matchup construction time, and must not overwrite or
+replace canonical identity fields.
+
+**CANONICAL IDENTITY SEMANTICS:**
+- Source: MLB feed `gameData.players[].batSide.code`
+- Values: `L`, `R`, `S`
+- Switch hitters MUST remain `S` in all identity and export identity fields
+- Never infer or convert `S` to `L`/`R` in identity objects
+
+**MATCHUP-EFFECTIVE SIDE SEMANTICS:**
+- Derived only when canonical `bats=S` and opposing starter `throws` is known
+- Used ONLY for selecting `pitcher_split_vs_hitter_side` split key
+- Serialized as `matchup_effective_bats` on `EnrichmentMatchup`
+- Not stored as a substitute for canonical `bats`
+- DERIVED PREGAME MATCHUP SIDE — NOT OBSERVED PA STAND
+
+**SWITCH-HITTER RULE:**
+```
+if hitter_bats == "S" and pitcher_throws == "R":
+    effective_bats = "L"  → pitcher_split_key = "vs_lhb"
+if hitter_bats == "S" and pitcher_throws == "L":
+    effective_bats = "R"  → pitcher_split_key = "vs_rhb"
+if hitter_bats in ("L", "R"):
+    effective_bats = hitter_bats  (unchanged)
+else:
+    pitcher_split_key = None
+```
+
+**KNOWN LIMITATIONS:**
+- Assumes conventional platoon default (~99%+ of observed switch-hitter PAs)
+- Does not model rare same-handed switch-hitter PAs
+- Does not handle switch-pitcher declaration order (MLB Rule 5.07(f))
+- Pregame only; does not predict in-game pinch-hit or side changes
+- Does not alter hitter split formulas, BVP, pitch-type, L5/L10, or Statcast
+  aggregation logic
+
+**UI/EXPORT DISCLOSURE REQUIREMENTS:**
+- Display canonical `bats=S` as identity (never show effective L/R as identity)
+- When effective side is used, consumers should indicate that pitcher platoon
+  split is selected via platoon-default rule
+- Do not imply observed tonight-side certainty
+- Disclosure semantics: "Switch-hitter side is derived from the opposing
+  pitcher's throwing hand for platoon-split context; actual in-game batting
+  side may differ."
+
+**TEST REQUIREMENTS:**
+1. Switch hitter vs RHP selects `vs_lhb`; canonical `bats` remains `S`
+2. Switch hitter vs LHP selects `vs_rhb`; canonical `bats` remains `S`
+3. L/R hitters unchanged (regression)
+4. Unknown `throws` → pitcher split remains null
+5. Identity fields never mutated to L/R for switch hitters
+
+**NON-GOALS:**
+- Converting switch hitters to L/R in identity
+- Observed-side historical modeling
+- Switch-pitcher rule handling
+- Changing Statcast split aggregation formulas
+- Changing hitter-side split selection logic
+
+**Evidence:**
+- `backend/export/enrichment/matchups.py` — prior L/R-only pitcher split mapping
+- `backend/export/enrichment/pitcher_stats.py` — `vs_lhb`/`vs_rhb` keyed on Statcast `stand`
+- Aug 28 validation — 54/54 hitter splits, 49/54 pitcher splits before DEC-009
+- Cached Statcast analysis — platoon-opposite on 4,900/4,908 switch-hitter PAs (99.8%)
+
+**Consequences:**
+- Switch-hitter matchup rows gain pitcher platoon context under platoon-default rule
+- Identity and hitter-side splits unchanged
+- `matchup_effective_bats` exposes derived side for audit/disclosure
+
+**Revisit only if:**
+- Product requires observed-side modeling
+- Switch-pitcher matchups become common enough to warrant special handling
+- MLB feed begins supplying pregame expected batting side
+
+**Supersedes:**
+None

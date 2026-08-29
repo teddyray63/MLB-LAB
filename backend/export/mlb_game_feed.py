@@ -52,6 +52,26 @@ def fetch_team_roster_json(
     return payload
 
 
+def _handedness_by_player_id(game_data: dict[str, Any]) -> dict[int, dict[str, Any]]:
+    """Index canonical MLB handedness codes by player ID.
+
+    The feed exposes `batSide`/`pitchHand` only on `gameData.players` person
+    objects; boxscore player objects do not carry them.
+    """
+    index: dict[int, dict[str, Any]] = {}
+    for person in (game_data.get("players") or {}).values():
+        if not isinstance(person, dict):
+            continue
+        player_id = person.get("id")
+        if player_id is None:
+            continue
+        index[int(player_id)] = {
+            "bats": (person.get("batSide") or {}).get("code"),
+            "throws": (person.get("pitchHand") or {}).get("code"),
+        }
+    return index
+
+
 def parse_game_feed_side(
     feed: dict[str, Any],
     side: str,
@@ -64,6 +84,8 @@ def parse_game_feed_side(
     players_raw = box_team.get("players") or {}
     batting_order = box_team.get("battingOrder") or []
 
+    handedness = _handedness_by_player_id(game_data)
+
     players: list[dict[str, Any]] = []
     for key, player_obj in players_raw.items():
         if not isinstance(player_obj, dict):
@@ -72,14 +94,15 @@ def parse_game_feed_side(
         player_id = person.get("id")
         if player_id is None:
             continue
+        hands = handedness.get(int(player_id)) or {}
         players.append(
             {
                 "player_id": int(player_id),
                 "full_name": person.get("fullName") or "",
                 "display_name": person.get("nickName") or person.get("fullName"),
                 "primary_position": (player_obj.get("position") or {}).get("abbreviation"),
-                "bats": (player_obj.get("batSide") or {}).get("code"),
-                "throws": (player_obj.get("pitchSide") or {}).get("code"),
+                "bats": hands.get("bats"),
+                "throws": hands.get("throws"),
                 "roster_status": (player_obj.get("status") or {}).get("description"),
                 "game_status_code": (player_obj.get("gameStatus") or {}).get("code"),
             }

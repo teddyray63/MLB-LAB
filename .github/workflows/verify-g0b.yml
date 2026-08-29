@@ -60,6 +60,10 @@ jobs:
         working-directory: web-dashboard
         run: npm ci
 
+      - name: Dashboard unit tests
+        working-directory: web-dashboard
+        run: npm test
+
       - name: Dashboard production build
         working-directory: web-dashboard
         run: npm run build

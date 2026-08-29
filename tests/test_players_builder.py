@@ -68,13 +68,56 @@ def test_duplicate_names_different_ids_remain_distinct() -> None:
     assert len(names) == 2
 
 
+def _handedness_by_id(side: str, team_id: int, feed: dict | None = None) -> dict[int, tuple]:
+    result = build_players_for_game(
+        game_pk=822786, side=side, team_id=team_id, feed=feed or _feed()
+    )
+    return {p.player_id: (p.bats, p.throws) for p in result.players}
+
+
+def test_hitter_bats_survive_feed_to_export() -> None:
+    away = _handedness_by_id("away", 145)
+    home = _handedness_by_id("home", 141)
+    assert away[7000001][0] == "L"
+    assert home[7000003][0] == "R"
+
+
+def test_switch_hitter_preserved_as_switch() -> None:
+    away = _handedness_by_id("away", 145)
+    assert away[7000002][0] == "S"
+
+
+def test_pitcher_throws_survive_feed_to_export() -> None:
+    away = _handedness_by_id("away", 145)
+    assert away[680732][1] == "R"
+    assert away[7000101][1] == "L"
+
+
 def test_missing_handedness_stays_null() -> None:
     feed = deepcopy(_feed())
-    player = feed["liveData"]["boxscore"]["teams"]["away"]["players"]["ID7000001"]
-    player.pop("batSide", None)
-    result = build_players_for_game(game_pk=822786, side="away", team_id=145, feed=feed)
-    one = next(p for p in result.players if p.player_id == 7000001)
-    assert one.bats is None
+    feed["gameData"]["players"]["ID7000001"].pop("batSide", None)
+    feed["gameData"]["players"].pop("ID7000101", None)
+    away = _handedness_by_id("away", 145, feed)
+    assert away[7000001][0] is None
+    assert away[7000001][1] == "R"
+    assert away[7000101] == (None, None)
+
+
+def test_handedness_keyed_by_mlb_id_not_name() -> None:
+    """A name collision must not move handedness between distinct MLB IDs."""
+    feed = deepcopy(_feed())
+    feed["gameData"]["players"]["ID7000002"]["fullName"] = "Player One"
+    feed["liveData"]["boxscore"]["teams"]["away"]["players"]["ID7000002"]["person"][
+        "fullName"
+    ] = "Player One"
+    away = _handedness_by_id("away", 145, feed)
+    assert away[7000001] == ("L", "R")
+    assert away[7000002] == ("S", "R")
+
+
+def test_player_ids_unchanged_by_handedness_lookup() -> None:
+    result = build_players_for_game(game_pk=822786, side="away", team_id=145, feed=_feed())
+    assert {p.player_id for p in result.players} == {680732, 7000001, 7000002, 7000101}
 
 
 def test_missing_position_stays_null() -> None:

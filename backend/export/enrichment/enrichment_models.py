@@ -134,6 +134,11 @@ class EnrichmentMatchup(_ExportModel):
     pitcher_team_id: int
     lineup_slot: int | None = None
     hitter_bats: str | None = None
+    # DERIVED PREGAME MATCHUP SIDE — NOT OBSERVED PA STAND.
+    # Used only to select pitcher platoon splits when canonical hitter_bats is S.
+    # Switch-hitter side is derived from the opposing pitcher's throwing hand for
+    # platoon-split context; actual in-game batting side may differ (DEC-009).
+    matchup_effective_bats: str | None = None
     pitcher_throws: str | None = None
     is_home_hitter: bool | None = None
     day_night: str | None = None

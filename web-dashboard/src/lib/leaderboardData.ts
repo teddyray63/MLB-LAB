@@ -1,5 +1,6 @@
 import type { DailyExport, Game, HitterRow, PlayCategory, TopPlay } from '../types/slate'
-import type { LeaderboardScope } from '../types/leaderboard'
+import type { LeaderboardCategory, LeaderboardScope } from '../types/leaderboard'
+import { PLAY_CATEGORIES } from '../types/slate'
 
 /** Exclude duplicate placeholder slate entries (TBD starters sharing a game_pk). */
 export function isValidSlateGame(game: Game): boolean {
@@ -95,4 +96,21 @@ export function exportDataWindowLabel(exportData: DailyExport): string | null {
   const meta = exportData.export_meta
   if (!meta?.statcast_start || !meta?.statcast_end) return null
   return `${meta.statcast_start} – ${meta.statcast_end}`
+}
+
+/** Unscoped row count for the active leaderboard view (before scope/pitch filters). */
+export function countExportLeaderboardRows(
+  exportData: DailyExport,
+  category: LeaderboardCategory,
+): number {
+  if (category === 'top-plays') {
+    return flattenTopPlays(exportData, 'all').length
+  }
+  return getCategoryBoardRows(exportData, category as PlayCategory).length
+}
+
+/** True when the export contains any Top Plays or Category Board rows at all. */
+export function exportHasLeaderboardSections(exportData: DailyExport): boolean {
+  if (flattenTopPlays(exportData, 'all').length > 0) return true
+  return PLAY_CATEGORIES.some((cat) => getCategoryBoardRows(exportData, cat).length > 0)
 }
